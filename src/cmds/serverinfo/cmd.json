@@ -1,0 +1,8 @@
+{
+  "type": "public",
+  "que": "discord",
+  "cmd": {
+    "name": "serverinfo",
+    "description": "Get Server Info"
+  }
+}

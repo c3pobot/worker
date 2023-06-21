@@ -1,0 +1,8 @@
+{
+  "type": "private",
+  "que": "discord",
+  "hidden": true,
+  "cmd": {
+    "name": "runner"
+  }
+}

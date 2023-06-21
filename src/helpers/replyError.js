@@ -1,9 +1,10 @@
 'use strict'
 const JobCache = require('./jobCache')
-module.exports = async(obj = {})=>{
+module.exports = async(obj = {}, content)=>{
   try{
     await JobCache.removeJob(obj.jobId)
-    MSG.WebHookMsg(obj.token, {content: 'Critical Error occured'}, 'PATCH')
+    let msg2send = content || {content: 'Critical Error occured'}
+    MSG.WebHookMsg(obj.token, msg2send, 'PATCH')
   }catch(e){
     console.error(e)
   }

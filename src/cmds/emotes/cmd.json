@@ -1,0 +1,8 @@
+{
+  "type": "private",
+  "que": "discord",
+  "cmd": {
+    "name": "emotes",
+    "description": "Get Server Emojis"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "type": "public",
+  "que": "discord",
+  "cmd": {
+    "name": "roles",
+    "description": "Get Server Roles"
+  }
+}

@@ -2,7 +2,13 @@
 const MongoWrapper = require('mongowrapper')
 const RedisWrapper = require('rediswrapper')
 const SocketWrapper = require('socketclient')
+const SaveCmds = require('./saveCmds')
+const PRIVATE_BOT = +(process.env.PRIVATE_BOT || 0)
+const WORKER_NUM = process.env.WORKER_NUM || '0'
+const GAME_API_NEEDED = +(process.env.GAME_API_NEEDED || 0)
 global.BotSocket = new SocketWrapper({  url: process.env.SOCKET_SVC_URI })
+global.mongoReady = 0
+global.apiReady = 0
 global.mongo = new MongoWrapper({
   url: 'mongodb://'+process.env.MONGO_USER+':'+process.env.MONGO_PASS+'@'+process.env.MONGO_HOST+'/',
   authDb: process.env.MONGO_AUTH_DB,
@@ -67,6 +73,7 @@ const CheckMongo = async()=>{
 }
 const StartServices = async()=>{
   try{
+    if(!PRIVATE_BOT && WORKER_NUM?.toString()?.endsWith('0')) await SaveCmds(baseDir+'/src/cmds')
     require('./cmdQue')
   }catch(e){
     console.error(e);

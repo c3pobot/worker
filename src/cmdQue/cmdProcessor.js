@@ -5,9 +5,9 @@ if(process.env.WORKER_TYPES) workerTypes = JSON.parse(process.env.WORKER_TYPES)
 const UpdateCmdMap = async(notify = false)=>{
   try{
     let tempMap = {}
-    for(let i in workerType){
-      if(notify) console.log('Add '+workerType[i]+' commands...')
-      const obj = (await mongo.find('slashCmds', {_id: workerType[i]}))[0]
+    for(let i in workerTypes){
+      if(notify) console.log('Add '+workerTypes[i]+' commands...')
+      const obj = (await mongo.find('slashCmds', {_id: workerTypes[i]}))[0]
       if(obj?.cmdMap) tempMap = {...tempMap,...obj.cmdMap}
     }
     if(Object.values(tempMap)?.length > 0){
@@ -47,6 +47,7 @@ module.exports.process = async(obj ={})=>{
     await HP.RemoveJob(obj.jobId)
   }catch(e){
     console.error(e);
+    HP.ReplyError(obj, {content: 'Oh dear! Critical command Error occured...'})
   }
 }
 module.exports.checkCmdMap = ()=>{

@@ -1,5 +1,6 @@
 const QueWrapper = require('quewrapper')
 const CmdProcessor = require('./cmdProcessor')
+const localQueKey = process.env.LOCAL_QUE_KEY
 const CmdQue = {}
 const redisConnection = {
   host: process.env.QUE_SERVER,
@@ -20,7 +21,7 @@ const CreateQues = async()=>{
         opts.localQueKey = localQueKey
       }
       console.log('Creating '+opts.queName+' worker que...')
-      CmdQue[queName] = new QueWrapper(opts)
+      CmdQue[opts.queName] = new QueWrapper(opts)
     }
     StartQues()
   }catch(e){

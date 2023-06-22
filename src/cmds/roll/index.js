@@ -1,5 +1,5 @@
 'use stict'
-module.exports = (obj)=>{
+module.exports = (obj = {})=>{
   try{
     let min = 1, max = 100
     if(obj.data.options && obj.data.options.find(x=>x.name == 'min')) min = obj.data.options.find(x=>x.name == 'min').value
@@ -9,7 +9,7 @@ module.exports = (obj)=>{
     msg2Send.content += '\n```\n'
     HP.ReplyMsg(obj, msg2Send)
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

@@ -9,7 +9,7 @@ const TruncateString = (str, num)=>{
 }
 module.exports = async(obj, opt = [] )=>{
     try{
-      let msg2send = {content: 'This command is only avaliable to server Admins'}, auth = 0, polls, poll, pollId, chId, sendResp = 1
+      let msg2send = {content: 'This command is only avaliable to server Admins'}, auth = 0, polls, poll, pollId, chId
       if(await HP.CheckServerAdmin(obj)){
         auth ++
         msg2send.content = 'Error finding poll'
@@ -31,7 +31,6 @@ module.exports = async(obj, opt = [] )=>{
             if(polls.filter(x=>x.status).length == 1){
               poll = polls.filter(x=>x.status)[0]
             }else{
-              sendResp = 0
               const embedMsg = {
                 content: 'There are multiple polls'+(chId ? ' running in <#'+chId+'>':'')+'. Which one do you want to end?',
                 components: []
@@ -49,6 +48,7 @@ module.exports = async(obj, opt = [] )=>{
                 if(embedMsg.components[x].components.length == 5 && embedMsg.components.length < 5) x++;
               }
               await HP.ButtonPick(obj, embedMsg)
+              return
             }
           }
         }
@@ -67,9 +67,9 @@ module.exports = async(obj, opt = [] )=>{
           }
         }
       }
-      if(sendResp) HP.ReplyMsg(obj, msg2send)
+      HP.ReplyMsg(obj, msg2send)
     }catch(e){
-      console.log(e)
+      console.error(e)
       HP.ReplyError(obj)
     }
 }

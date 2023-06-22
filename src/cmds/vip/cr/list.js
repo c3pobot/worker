@@ -1,8 +1,8 @@
 'use strict'
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'you have no personal custom reactions'}, crQuery, cr = []
-    if(opt.find(x=>x.name == 'query')) crQuery = opt.find(x=>x.name == 'query').value.trim().toLowerCase()
+    let crQuery = await HP.GetOptValue(opt, 'query')
     const localCR = (await mongo.find('reactions', {_id: obj.member.user.id}))[0]
     if(localCR && localCR.cr) cr = localCR.cr
     if(crQuery) msg2send.content = 'There where no custom reactions that matched **'+crQuery+'**'

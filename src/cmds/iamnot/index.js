@@ -21,26 +21,26 @@ module.exports = async(obj = {})=>{
     if(!roleId) msg2send.content = 'No role was provided'
     if(roleId){
       msg2send.content = 'Error getting role info'
-      const role = await BotSocket.call('botInfo', {sId: obj.guild_id, roleId: roleId}, 'role')
-      if(role) roleName = role.name
+      const roles = await HP.DiscordQuery('guilds/'+obj.guild_id+'/roles')
+      roleName = roles?.find(x=>x?.id === roleId)?.name
     }
     if(guild?.selfassignroles?.length > 0 && roleId && roleName){
       msg2send.content = 'The **@'+roleName+'** is not a self assign role'
       if(guild.selfassignroles.filter(x=>x.id === roleId).length > 0){
         msg2send.content = 'Error getting permissions info for the bot'
-        botPerms = await BotSocket.call('botInfo', {sId: obj.guild_id, dId: process.env.DISCORD_CLIENT_ID}, 'guildUser')
+        botPerms = await BotSocket.call('getGuildMember', {sId: obj.guild_id, dId: process.env.DISCORD_CLIENT_ID})
       }
     }
     if(botPerms?.perms){
       msg2send.content = 'The bot does not have permission to remove roles from users'
-      if(botPerms.perms.filter(x=>x === 'MANAGE_ROLES').length > 0) hasRolePerm = true
+      if(botPerms.perms.filter(x=>x === 'ManageRoles').length > 0) hasRolePerm = true
     }
     if(hasRolePerm){
       msg2send.content = 'Error removing the **@'+roleName+'** role'
-      const status = await MSG.GuildMemberRoleRemove(obj.guild_id, dId, roleId)
-      if(status > 0) msg2send.content = '**@'+roleName+'** has been removed as a role'
+      const status = await HP.DiscordQuery('guilds/'+obj.guild_id+'/members/'+dId+'/roles/'+roleId, 'DELETE')
+      if(status === 204) msg2send.content = '**@'+roleName+'** has been removed as a role'
     }
-    await HP.ReplyMsg(obj, msg2send)
+    HP.ReplyMsg(obj, msg2send)
   }catch(e){
     console.error(e);
   }

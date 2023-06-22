@@ -2,14 +2,14 @@
 const Cache = require('node-cache')
 const JobCache = new Cache({stdTTL: 1800, checkperiod: 60})
 const Cmds = {}
-Cmds.addJob = async(obj)=>{
+Cmds.addJob = async(obj = {})=>{
   try{
     if(obj?.jobId) await JobCache.set(obj.jobId, obj)
   }catch(e){
     console.error(e)
   }
 }
-Cmds.getJob = async(obj)=>{
+Cmds.getJob = async(obj = {})=>{
   try{
     if(obj?.jobId){
       if(localQue && process.env.LOCAL_QUE_KEY) localQue.del(process.env.LOCAL_QUE_KEY+'-'+obj.jobId)
@@ -20,7 +20,7 @@ Cmds.getJob = async(obj)=>{
     console.error(e);
   }
 }
-Cmds.checkJob = async(obj)=>{
+Cmds.checkJob = async(obj = {})=>{
   try{
     if(obj?.jobId) return await JobCache.get(obj.jobId)
   }catch(e){

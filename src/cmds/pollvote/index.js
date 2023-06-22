@@ -1,7 +1,6 @@
 'use strict'
 module.exports = async(obj)=>{
   try{
-    console.log(obj)
     let msg2send = {content: 'Error'}, resp, sendResp = 0, poll, usrname = obj.member.user.username, sendMethod = 'POST'
     if(obj.member.nick) usrname = obj.member.nick
     if(obj.data && obj.data.custom_id) resp = JSON.parse(obj.data.custom_id)

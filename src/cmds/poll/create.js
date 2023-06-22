@@ -65,8 +65,8 @@ module.exports = async(obj, opt = [])=>{
         }
       }
       respMsg.description += '```'
-      const status = await MSG.SendMsg({chId: chId, sId: channel?.guild_id}, pollMsg)
-      if(status && status.id){
+      const status = await MSG.SendMsg(chId, pollMsg)
+      if(status?.id){
         msg2send.content = null
         msg2send.embeds = [respMsg]
         await mongo.set('poll', {_id: pollId}, tempObj)

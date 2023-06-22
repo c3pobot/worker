@@ -1,11 +1,11 @@
 'use strict'
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
-    let searchTerm, msg2Send = {content: 'Error with search'}
-    if(obj.data.options.find(x=>x.name == 'query')) searchTerm = obj.data.options.find(x=>x.name == 'query').value
+    let msg2Send = {content: 'Error with search'}
+    let searchTerm = await HP.GetOptValue(obj.data?.options, 'query')
     if(searchTerm){
       const gifs = await HP.apiFetch("http://api.giphy.com/v1/gifs/search?api_key="+process.env.GIPHY_API_KEY+"&q="+encodeURI(searchTerm))
-      if(gifs && gifs.data && gifs.data.length > 0 && gifs.data[0].embed_url){
+      if(gifs?.data?.length > 0 && gifs.data[0].embed_url){
         msg2Send.content = gifs.data[0].embed_url
       }else{
         msg2Send.content = 'Could not find a gif for **'+searchTerm+'**'

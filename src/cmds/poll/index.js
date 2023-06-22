@@ -21,7 +21,7 @@ module.exports = async(obj)=>{
       HP.ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
     }
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

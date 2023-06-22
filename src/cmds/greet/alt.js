@@ -1,13 +1,13 @@
 'use strict'
-module.exports = async(obj, opt)=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'You did not provide the correct information'}, welcomeMsg, tempObj = {status: 1}
     const server = (await mongo.find('discordServer', {_id: obj.guild_id}))[0]
-    if(server && server.welcomeAlt) tempObj = server.welcomeAlt
-    if(opt){
-      if(opt.find(x=>x.name == 'channel')) tempObj.chId = opt.find(x=>x.name == 'channel').value
-      if(opt.find(x=>x.name == 'message')) tempObj.msg = opt.find(x=>x.name == 'message').value
-      if(opt.find(x=>x.name == 'status')) tempObj.status = (opt.find(x=>x.name == 'status').value == 'enable' ? 1:0)
+    if(server?.welcomeAlt) tempObj = server.welcomeAlt
+    for(let i in opt){
+      if(opt[i].name === 'channel') tempObj.chId = opt[i].value
+      if(opt[i].name === 'message') tempObj.msg = opt[i].value
+      if(opt[i].name === 'status') tempObj.status = (opt[i].value === 'enable' ? 1:0)
     }
     if(tempObj.chId && tempObj.msg){
       await mongo.set('discordServer', {_id: obj.guild_id}, {welcomeAlt: tempObj})

@@ -1,48 +1,55 @@
 'use strict'
 module.exports = async(obj = {})=>{
   try{
-    let avatarURL, msgName, footerText, msg2Send = {content: 'Error getting avatar'}, username = (obj.member.nick ? obj.member.nick:obj.member.user.username)
+    let msgName, footerText, msg2Send = {content: 'Error getting avatar'}, username = (obj.member.nick ? obj.member.nick:obj.member.user.username), iconId, iconName, iconType, embedColor = 15844367
     let sId = await HP.GetOptValue(obj.data?.options, 'server')
     if(sId?.toString()?.toLowerCase() === 'this') sId = obj.guild_id
     let dId = await HP.GetOptValue(obj.data?.options, 'user')
-    if(dId){
-      if(obj.data?.resolved?.users && obj.data?.resolved?.users[dId]){
-        username = (obj.data.resolved.members[dId] && obj.data.resolved.members[dId].nick ? obj.data.resolved.members[dId].nick:obj.data.resolved.users[dId].username)
-      }
-    }else{
-      if(!sId) dId = obj.member?.user?.id
-    }
+    if(!sId && !dId) dId = obj.member?.user?.id
     if(sId){
-      const guild = await BotSocket.send('getAvatar', {sId: sId} )
-      if(guild && guild.iconURL){
-        avatarURL = guild.iconURL
+      const guild = await HP.DiscordQuery('guilds/'+sId,  'GET')
+      if(guild?.id && guild?.icon){
+        iconId = guild.id
+        iconName = guild.icon
+        iconType = 'icons'
         msgName = guild.name
-        footerText = sId
       }
     }else{
-      avatarURL = await BotSocket.call('getAvatar', {dId: dId, sId: obj.guild_id})
-      msgName = '@'+username
-      footerText = dId
+      if(dId){
+        const member = await HP.DiscordQuery('guilds/'+obj.guild_id+'/members/'+dId, 'GET')
+        if(member?.user){
+          iconId = dId
+          iconName = member.avatar
+          if(!iconName) iconName = member.user.avatar
+          iconType = 'avatars'
+          msgName = member.nick
+          if(member.user.accent_color) embedColor = member.user.accent_color
+          if(!msgName) msgName = member.user.global_name
+          if(!msgName) msgName = member.user.username
+          if(member.user.bot && msgName) msgName += ' (bot)'
+        }
+      }
     }
+    const avatarURL = await HP.getDiscordAvatarUrl(iconId, iconName, iconType)
     if(avatarURL){
       const embedMsg = {
         author: {
           name: msgName,
           icon_url: avatarURL
         },
-        color: 15844367,
+        color: embedColor,
         image: {
           url: avatarURL
         },
         footer: {
-          text: 'ID: '+footerText
+          text: 'ID: '+iconId
         },
         timestamp: new Date()
       }
       msg2Send.content = null
       msg2Send.embeds = [embedMsg]
     }
-    await HP.ReplyMsg(obj, msg2Send)
+    HP.ReplyMsg(obj, msg2Send)
   }catch(e){
     console.error(e)
     HP.ReplyError(obj)

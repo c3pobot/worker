@@ -8,7 +8,7 @@ const TruncateString = (str, num)=>{
 }
 module.exports = async(obj, opt = [] )=>{
     try{
-      let msg2send = {content: 'This command is only avaliable to server Admins'}, auth = 0, polls, poll, pollId, sendResp = 1
+      let msg2send = {content: 'This command is only avaliable to server Admins'}, auth = 0, polls, poll, pollId
       if(await HP.CheckServerAdmin(obj)){
         auth ++
         msg2send.content = 'Error finding poll'
@@ -29,7 +29,6 @@ module.exports = async(obj, opt = [] )=>{
             if(polls.filter(x=>x.status).length == 1){
               poll = polls.filter(x=>x.status)[0]
             }else{
-              sendResp = 0
               const embedMsg = {
                 content: 'There are multiple polls running in <#'+obj.channel_id+'>. Which one do you want to repost the message for?',
                 components: []
@@ -47,12 +46,13 @@ module.exports = async(obj, opt = [] )=>{
                 if(embedMsg.components[x].components.length == 5 && embedMsg.components.length < 5) x++;
               }
               await HP.ButtonPick(obj, embedMsg)
+              return
             }
           }
         }
       }
       if(poll && poll.question && poll.answers && poll.answers.length > 0){
-        await HP.ReplyButton(obj, 'Getting poll stats')
+        await HP.ReplyButton(obj, 'Getting poll stats...')
         let usrname = obj.member.user.username
         if(obj.member.nick) usrname = obj.member.nick
         msg2send.content = null
@@ -77,7 +77,7 @@ module.exports = async(obj, opt = [] )=>{
           if(msg2send.components[x].components.length == 5) x++;
         }
       }
-      if(sendResp) HP.ReplyMsg(obj, msg2send)
+      HP.ReplyMsg(obj, msg2send)
     }catch(e){
       console.log(e)
       HP.ReplyError(obj)

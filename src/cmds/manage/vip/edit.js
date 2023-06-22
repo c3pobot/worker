@@ -1,12 +1,12 @@
 'use strict'
 module.exports = async(obj, opt = [])=>{
   try{
-    let dId, crLimit, vipLevel, status, msg2send = {content: 'You must specify a @user'}, usr
-    if(opt.find(x=>x.name == 'user')) dId = opt.find(x=>x.name == 'user').value
-    if(opt.find(x=>x.name == 'status')) status = opt.find(x=>x.name == 'status').value
-    if(opt.find(x=>x.name == 'cr-limit')) crLimit = opt.find(x=>x.name == 'cr-limit').value
-    if(opt.find(x=>x.name == 'level')) vipLevel = opt.find(x=>x.name == 'level').value
-    if(!dId && opt.find(x=>x.name == 'discordid')) dId = opt.find(x=>x.name == 'discordid').value.trim()
+    let msg2send = {content: 'You must specify a @user'}, usr
+    let dId = await HP.GetOptValue(opt, 'user')
+    let crLimit = await HP.GetOptValue(opt, 'cr-limit')
+    let vipLevel = await HP.GetOptValue(opt, 'level')
+    let status = await HP.GetOptValue(opt, 'status')
+    if(!dId) dId = await HP.GetOptValue(opt, 'discordid')
     if(dId){
       if(obj.data && obj.data.resolved){
         if(obj.data.resolved.members && obj.data.resolved.members[dId] && obj.data.resolved.members[dId].nick) usr = obj.data.resolved.members[dId].nick

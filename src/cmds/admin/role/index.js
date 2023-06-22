@@ -16,7 +16,7 @@ module.exports = async(obj = {}, opt = [])=>{
       if(await HP.CheckServerAdmin(obj)){
         await Cmds[tempCmd](obj, opts)
       }else{
-        HP.ReplyMsg(obj, {content: 'This command requires bot server admin role'})
+        HP.AdminNotAuth(obj)
       }
     }else{
       HP.ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})

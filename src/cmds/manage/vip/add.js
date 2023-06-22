@@ -1,10 +1,10 @@
 'use strict'
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
-    let dId, crLimit = 100, vipLevel = 1, msg2send = {content: 'You must specify a @user'}, usr
-    if(opt.find(x=>x.name == 'user')) dId = opt.find(x=>x.name == 'user').value
-    if(opt.find(x=>x.name == 'cr-limit')) crLimit = opt.find(x=>x.name == 'cr-limit').value
-    if(opt.find(x=>x.name == 'level')) vipLevel = opt.find(x=>x.name == 'level').value
+    let msg2send = {content: 'You must specify a @user'}, usr
+    let dId = await HP.GetOptValue(opt, 'user')
+    let crLimit = await HP.GetOptValue(opt, 'cr-limit', 100)
+    let vipLevel = await HP.GetOptValue(opt, 'level', 1)
     if(dId){
       if(obj.data && obj.data.resolved){
         if(obj.data.resolved.members && obj.data.resolved.members[dId] && obj.data.resolved.members[dId].nick) usr = obj.data.resolved.members[dId].nick

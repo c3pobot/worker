@@ -1,5 +1,5 @@
 'use strict'
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   let auth = 0, roles
   const guild = await MSG.GetGuild(obj.guild_id)
   if(guild && obj && obj.member && obj.member.user && obj.member.user.id && guild.owner_id == obj.member.user.id) auth++

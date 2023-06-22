@@ -1,11 +1,8 @@
 'use strict'
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     let msg2Send = {content: 'Error getting guild info'}
-    const tempObj = {
-      sId: obj.guild_id
-    }
-    const guild = await BotSocket.call('botInfo', tempObj, 'guild')
+    const guild = await BotSocket.call('getGuild', {sId: obj.guild_id})
     if(guild){
       const adminRoles = guild.gRoles.filter(x=>x.perms.some(p=>p == 'ADMINISTRATOR' || p == 'Administrator'))
       const tempAdmin = adminRoles.map(x=>x.id)
@@ -55,7 +52,7 @@ module.exports = async(obj)=>{
     }
     HP.ReplyMsg(obj, msg2Send)
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

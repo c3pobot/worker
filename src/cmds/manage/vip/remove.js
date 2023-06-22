@@ -1,10 +1,10 @@
 'use strict'
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
-    let dId, status, msg2send = {content: 'You must specify a @user or discordid'}, usr, deleteConfirm, sendResponse = 0
-    if(opt.find(x=>x.name == 'user')) dId = opt.find(x=>x.name == 'user').value
-    if(!dId && opt.find(x=>x.name == 'discordid')) dId = opt.find(x=>x.name == 'discordid').value.trim()
-    if(obj.confirm && obj.confirm.response) deleteConfirm = obj.confirm.response
+    let dId, status, msg2send = {content: 'You must specify a @user or discordid'}, usr, deleteConfirm
+    let dId = await HP.GetOptValue(opt, 'user')
+    if(!dId) dId = await HP.GetOptValue(opt, 'discordid')
+    if(obj.confirm?.response) deleteConfirm = obj.confirm.response
     if(dId){
       if(obj.data && obj.data.resolved){
         if(obj.data.resolved.members && obj.data.resolved.members[dId] && obj.data.resolved.members[dId].nick) usr = obj.data.resolved.members[dId].nick
@@ -12,9 +12,9 @@ module.exports = async(obj, opt = [])=>{
       }
       if(!deleteConfirm){
         await HP.ConfirmButton(obj, 'Are you sure you want to remove vip member '+(usr ? '**@'+usr+'**':'with discord Id **'+dId+'**')+'?')
+        return
       }else{
         msg2send.components = null
-        sendResponse++
         if(deleteConfirm == 'yes'){
           await mongo.del('vip', {_id: dId})
           msg2send.content = (usr ? '**@'+usr+'**':'User with discord id **'+dId+'**')+' was removed as a vip member'
@@ -23,7 +23,7 @@ module.exports = async(obj, opt = [])=>{
         }
       }
     }
-    if(sendResponse) HP.ReplyMsg(obj, msg2send)
+    HP.ReplyMsg(obj, msg2send)
   }catch(e){
     console.error(e)
     HP.ReplyError(obj)

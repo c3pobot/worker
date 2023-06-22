@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "update": "chmod a+x updategitdependency.sh && ./updategitdependency.sh"
+    "update": "chmod a+x updategitdependency.sh && ./updategitdependency.sh",
+    "build": "chmod a+x buildtestimage.sh && ./buildtestimage.sh c3pobot/worker",
+    "prod": "chmod a+x buildprodimage.sh && ./buildprodimage.sh c3pobot/worker"
   },
   "author": "scuba75",
   "license": "ISC",

@@ -7,7 +7,7 @@ module.exports = async(obj = {})=>{
     let dId = await HP.GetOptValue(obj.data?.options, 'user')
     if(!sId && !dId) dId = obj.member?.user?.id
     if(sId){
-      const guild = await HP.DiscordQuery('guilds/'+sId,  'GET')
+      const guild = await HP.GetGuild(sId)
       if(guild?.id && guild?.icon){
         iconId = guild.id
         iconName = guild.icon
@@ -16,7 +16,7 @@ module.exports = async(obj = {})=>{
       }
     }else{
       if(dId){
-        const member = await HP.DiscordQuery('guilds/'+obj.guild_id+'/members/'+dId, 'GET')
+        const member = await HP.GetGuildMember(obj.guild_id, dId)
         if(member?.user){
           iconId = dId
           iconName = member.avatar

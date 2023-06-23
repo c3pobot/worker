@@ -18,10 +18,10 @@ module.exports = async(obj = {})=>{
     if(tempCmd && Cmds[tempCmd]){
       await Cmds[tempCmd](obj, opt)
     }else{
-      await HP.ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
+      HP.ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
     }
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

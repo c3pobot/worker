@@ -42,7 +42,7 @@ module.exports = async(obj = {})=>{
     }
     HP.ReplyMsg(obj, msg2Send)
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

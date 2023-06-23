@@ -1,7 +1,7 @@
 'use strict'
 const Cmds = {}
 Cmds.vip = require('./vip')
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     const auth = await HP.CheckBotOwner(obj)
     let tempCmd, opt

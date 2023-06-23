@@ -1,5 +1,5 @@
 'use strict'
-module.exports = async(obj, opt)=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'There are not servers with basic commands enabled'}
     const guilds = await mongo.find('discordServer', {basicStatus: 1})
@@ -10,7 +10,7 @@ module.exports = async(obj, opt)=>{
         description: '```\n'
       }
       for(let i in guilds){
-        const guild = await MSG.GetGuild(guilds[i]._id)
+        const guild = await HP.GetGuild(guilds[i]._id)
         embedMsg.description += guilds[i]._id+' : '+(guild ? guild.name:'UNKNOWN')+'\n'
       }
       embedMsg.description += '```'
@@ -19,7 +19,7 @@ module.exports = async(obj, opt)=>{
     }
     HP.ReplyMsg(obj, msg2send)
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

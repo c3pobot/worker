@@ -3,6 +3,10 @@ module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'This command requires bot admin'}, roleId, roleName, guild
     let auth = await HP.CheckServerAdmin(obj)
+    if(!auth){
+      await HP.AdminNotAuth(obj)
+      return;
+    }
     if(auth){
       msg2send.content = 'No role to add was provided'
       roleId = await HP.GetOptValue(opt, 'role')
@@ -30,7 +34,7 @@ module.exports = async(obj = {}, opt = [])=>{
         msg2send.content = '**@'+roleName+'** was added as a self assign role'
       }
     }
-    await HP.ReplyMsg(obj, msg2send)
+    HP.ReplyMsg(obj, msg2send)
   }catch(e){
     console.error(e);
     HP.ReplyError(obj)

@@ -32,7 +32,7 @@ const TranslateBasic = (data)=>{
   }
   return translatedData;
 }
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     let chId, msgId, msg2send = {content: 'Error Translating text'}, toLang = 'en', translated
     if(obj.reference) msg2send.message_reference = {message_id: obj.reference.messageID}
@@ -64,9 +64,10 @@ module.exports = async(obj)=>{
       }
       msg2send.content = null,
       msg2send.embeds = [embedMsg]
+      await HP.RemoveJob(obj.jobId)
       await HP.SendMsg({sId: obj.sId, chId: obj.chId}, msg2send)
     }
   }catch(e){
-    console.log(e)
+    console.error(e)
   }
 }

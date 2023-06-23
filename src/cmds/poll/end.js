@@ -1,26 +1,19 @@
 'use strict'
 const { PollStats } = require('./helper')
-const TruncateString = (str, num)=>{
-  if(str.length > num){
-    str = str.slice(0, (num - 3))
-    str += '...'
-  }
-  return str
-}
-module.exports = async(obj, opt = [] )=>{
+module.exports = async(obj = {}, opt = [] )=>{
     try{
       let msg2send = {content: 'This command is only avaliable to server Admins'}, auth = 0, polls, poll, pollId, chId
       if(await HP.CheckServerAdmin(obj)){
         auth ++
         msg2send.content = 'Error finding poll'
-        if(opt.find(x=>x.name == 'channel')) chId = opt.find(x=>x.name == 'channel').value
-        if(obj.confirm && obj.confirm.pollId) pollId = obj.confirm.pollId
+        chId = await HP.GetOptValue(opt, 'channel')
+        if(obj.confirm?.pollId) pollId = obj.confirm.pollId
       }
       if(auth){
         msg2send.content = 'there are no polls running in this server'
         polls = await mongo.find('poll', {sId: obj.guild_id, status: 1})
       }
-      if(polls && polls.length > 0){
+      if(polls?.length > 0){
         msg2send.content = 'Error finding poll'
         if(pollId){
           if(polls.filter(x=>x._id == pollId)) poll = polls.find(x=>x._id == pollId)
@@ -38,7 +31,7 @@ module.exports = async(obj, opt = [] )=>{
               let x = 0
               for(let i in polls){
                 if(!embedMsg.components[x]) embedMsg.components[x] = { type:1, components: []}
-                const buttonLabel = await TruncateString(polls[i].question, 75)
+                const buttonLabel = await HP.TruncateString(polls[i].question, 75)
                 embedMsg.components[x].components.push({
                   type: 2,
                   label: buttonLabel,
@@ -55,13 +48,13 @@ module.exports = async(obj, opt = [] )=>{
       }
       if(poll){
         await HP.ReplyButton(obj, 'Getting poll stats')
-        const channel = await MSG.GetChannel(poll.chId)
+        const channel = await HP.GetChannel(poll.chId)
         msg2send.content = 'Error getting poll stats'
-        if(poll && poll.votes && poll.answers && poll.answers.length > 0){
+        if(poll?.votes && poll?.answers?.length > 0){
           await mongo.set('poll', {_id: poll._id}, {status: 0})
           const embedMsg = await PollStats(poll)
           if(embedMsg){
-            embedMsg.title = (channel && channel.name ? '#'+channel.name:'<#'+poll.chId+'>')+' closed poll final stats'
+            embedMsg.title = (channel?.name ? '#'+channel.name:'<#'+poll.chId+'>')+' closed poll final stats'
             msg2send.content = null
             msg2send.embeds = [embedMsg]
           }

@@ -17,7 +17,7 @@ module.exports = async(obj = {}, opt = [])=>{
     }
     HP.ReplyMsg(obj, msg2send)
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

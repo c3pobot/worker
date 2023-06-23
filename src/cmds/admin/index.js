@@ -2,7 +2,7 @@
 const Cmds = {}
 Cmds.role = require('./role')
 Cmds.show = require('./show')
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     let tempCmd, opt = []
     if(obj.data.options){
@@ -19,7 +19,7 @@ module.exports = async(obj)=>{
       HP.ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
     }
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

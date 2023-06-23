@@ -5,7 +5,7 @@ module.exports = async(obj = {}, opt = [])=>{
     let msg2send = {content: 'This command requires bot admin'}, roleId, role, roles = []
     let auth = await HP.CheckServerAdmin(obj)
     if(!auth){
-      await HP.ReplyMsg(obj)
+      await HP.AdminNotAuth(obj)
       return;
     }
     if(obj.confirm?.roleId){
@@ -29,7 +29,7 @@ module.exports = async(obj = {}, opt = [])=>{
       await mongo.set('discordServer', {_id: obj.guild_id}, {selfassignroles: roles.filter(x=>x.id != roleId)})
       msg2send.content = '**@'+role.name+'** was removed as a self assign role'
     }
-    await HP.ReplyMsg(obj, msg2send)
+    HP.ReplyMsg(obj, msg2send)
   }catch(e){
     console.error(e);
     HP.ReplyError(obj)

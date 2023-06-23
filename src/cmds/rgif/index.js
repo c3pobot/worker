@@ -1,5 +1,5 @@
 'use strict'
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     let searchTerm, msg2Send = {content: 'Error with search'}
     let searchTerm = await HP.GetOptValue(obj.data?.options, 'query')
@@ -23,7 +23,7 @@ module.exports = async(obj)=>{
     }
     HP.ReplyMsg(obj, msg2Send)
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

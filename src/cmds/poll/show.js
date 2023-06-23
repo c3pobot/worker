@@ -1,12 +1,5 @@
 'use strict'
-const TruncateString = (str, num)=>{
-  if(str.length > num){
-    str = str.slice(0, (num - 3))
-    str += '...'
-  }
-  return str
-}
-module.exports = async(obj, opt = [] )=>{
+module.exports = async(obj = {}, opt = [] )=>{
     try{
       let msg2send = {content: 'This command is only avaliable to server Admins'}, auth = 0, polls, poll, pollId
       if(await HP.CheckServerAdmin(obj)){
@@ -36,7 +29,7 @@ module.exports = async(obj, opt = [] )=>{
               let x = 0
               for(let i in polls){
                 if(!embedMsg.components[x]) embedMsg.components[x] = { type:1, components: []}
-                const buttonLabel = await TruncateString(polls[i].question, 75)
+                const buttonLabel = await HP.TruncateString(polls[i].question, 75)
                 embedMsg.components[x].components.push({
                   type: 2,
                   label: buttonLabel,
@@ -79,7 +72,7 @@ module.exports = async(obj, opt = [] )=>{
       }
       HP.ReplyMsg(obj, msg2send)
     }catch(e){
-      console.log(e)
+      console.error(e)
       HP.ReplyError(obj)
     }
 }

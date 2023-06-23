@@ -3,12 +3,12 @@ const Cmds = {}
 Cmds.basic = require('./basic')
 Cmds.all = require('./all')
 Cmds.private = require('./private')
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     if(await HP.CheckBotOwner(obj)){
-      let tempCmd, opt
+      let opt
       if(obj.data.options) opt = obj.data.options
-      if(opt && opt.find(x=>x.name == 'option')) tempCmd = opt.find(x=>x.name == 'option').value
+      let tempCmd = await HP.GetOptValue(opt, 'option')
       if(tempCmd && Cmds[tempCmd]){
         await Cmds[tempCmd](obj, opt)
       }else{

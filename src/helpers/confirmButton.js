@@ -1,11 +1,12 @@
 'use strict'
 const JobCache = require('./jobCache')
+const { WebHookMsg } = require('discordapiwrapper')
 module.exports = async(obj = {}, msg)=>{
   try{
     await redis.setTTL('button-'+obj.id, obj, 600)
     const job = await JobCache.getJob(obj)
     if(!job) return;
-    await MSG.WebHookMsg(obj?.token, {
+    await WebHookMsg(obj?.token, {
       content: msg,
       components: [{
         type: 1,

@@ -1,24 +1,24 @@
 'use strict'
 const { v4: uuidv4 } = require('uuid')
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
-    let msg2send = {content: 'This command is only avaliable to server Admins'}, responses = [], question, chId = obj.channel_id, auth = 0
+    let msg2send = {content: 'This command is only avaliable to server Admins'}, responses = [], question, chId, auth = 0
     if(await HP.CheckServerAdmin(obj)){
       msg2send.content = 'You must provide a poll question'
-      if(opt.find(x=>x.name == 'question')) question = opt.find(x=>x.name == 'question').value.trim()
-      if(opt.find(x=>x.name == 'channel')) chId = opt.find(x=>x.name == 'channel').value
+      question = await HP.GetOptValue(opt, 'question')
+      chId = await HP.GetOptValue(opt, 'channel', obj.channel_id)
     }
     if(question){
       msg2send.content = 'You must provide poll response(s)'
-      let tempResp = []
-      if(opt.find(x=>x.name == 'responses')) tempResp = opt.find(x=>x.name == 'responses').value.trim().split(';')
-      if(tempResp.filter(x=>x != '').length > 0){
+      let tempResp = await HP.GetOptValue(opt, 'responses')
+      if(tempResp) tempResp = tempResp.toString()?.trim().split(';')
+      if(tempResp?.filter(x=>x != '').length > 0){
         msg2send.content = 'You can only provide 25 responses'
         if(tempResp.length < 26) responses = tempResp.filter(x=>x != '')
       }
     }
     if(responses.length > 0){
-      const channel = await MSG.GetChannel(chId)
+      const channel = await HP.GetChannel(chId)
       let usrname = obj.member.user.username
       if(obj.member.nick) usrname = obj.member.nick
       msg2send.content = 'Unable to send messages to <#'+chId+'>'
@@ -65,16 +65,19 @@ module.exports = async(obj, opt = [])=>{
         }
       }
       respMsg.description += '```'
-      const status = await MSG.SendMsg(chId, pollMsg)
-      if(status?.id){
+      const status = await HP.SendMsg({sId: obj.guild_id, chId: chId}, pollMsg)
+      if(status?.status === 'ok'){
         msg2send.content = null
         msg2send.embeds = [respMsg]
         await mongo.set('poll', {_id: pollId}, tempObj)
+      }else{
+        msg2send.content = 'Error creating poll in <#'+chId+'>'
+        if(status?.msg) msg2send.content = status.msg
       }
     }
     HP.ReplyMsg(obj, msg2send)
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

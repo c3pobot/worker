@@ -4,7 +4,7 @@ Cmds.create = require('./create')
 Cmds.stats = require('./stats')
 Cmds.show = require('./show')
 Cmds.end = require('./end')
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     let tempCmd, opt = []
     if(obj.data.options){

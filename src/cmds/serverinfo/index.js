@@ -12,7 +12,7 @@ module.exports = async(obj)=>{
     const tempObj = {
       sId: obj.guild_id
     }
-    const guild = await BotSocket.call('botInfo', tempObj, 'guild')
+    const guild = await BotSocket.call('getGuild', {sId: obj.guild_id})
     if(guild){
       const embedMsg = {
         color: 15844367,

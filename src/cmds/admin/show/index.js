@@ -1,11 +1,11 @@
 'use strict'
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'Error getting info'}, ownerName
-    const server = await MSG.GetGuild(obj.guild_id)
+    const server = await HP.GetGuild(obj.guild_id)
     if(server){
       const guild = (await mongo.find('discordServer', {_id: obj.guild_id}))[0]
-      const owner = await MSG.GetGuildMember(obj.guild_id, server.owner_id)
+      const owner = await HP.GetGuildMember(obj.guild_id, server.owner_id)
       if(owner){
         ownerName = owner.user.username
         if(owner.nick) ownerName = owner.nick
@@ -49,7 +49,7 @@ module.exports = async(obj, opt = [])=>{
     }
     HP.ReplyMsg(obj, msg2send)
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

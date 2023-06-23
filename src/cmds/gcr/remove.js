@@ -1,8 +1,9 @@
 'use strict'
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
-    let id, msg2send = {content: 'You did not provide the correct information'}
-    if(opt.find(x=>x.name == 'id')) id = opt.find(x=>x.name == 'id').value
+    let msg2send = {content: 'You did not provide the correct information'}
+    let id = await HP.GetOptValue(opt, 'id')
+    if(+id >= 0) id = +id
     if(id >= 0){
       msg2send.content = 'ID **'+id+'** is not for a global custom reaction'
       const lCR = (await mongo.find('reactions', {_id: 'global'}))[0]
@@ -13,7 +14,7 @@ module.exports = async(obj, opt = [])=>{
     }
     HP.ReplyMsg(obj, msg2send)
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

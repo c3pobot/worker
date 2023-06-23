@@ -37,7 +37,7 @@ SyncCmdMap(true)
 module.exports.process = async(obj ={})=>{
   try{
     if(!obj?.data?.name) return
-    if(cmdCount === 0) await ReplyMsg({content: 'Oh dear! I am still starting up my services...'})
+    if(cmdCount === 0) await HP.ReplyMsg({content: 'Oh dear! I am still starting up my services...'})
     await HP.AddJob(obj)
     if(CmdMap[obj.data.name]){
       await require(baseDir+'/src/cmds/'+obj.data.name)(obj)

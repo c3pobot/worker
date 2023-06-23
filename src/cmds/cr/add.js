@@ -1,12 +1,14 @@
 'use strict'
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
-    let trigger, response, crca = 0, msg2send = {content: 'You did not provide the correct information'}
-    if(opt.find(x=>x.name == 'trigger')) trigger = opt.find(x=>x.name == 'trigger').value.trim().toLowerCase()
-    if(opt.find(x=>x.name == 'response')) response = opt.find(x=>x.name == 'response').value
-    if(opt.find(x=>x.name == 'anywhere')) crca = opt.find(x=>x.name == 'anywhere').value
+    let msg2send = {content: 'You did not provide the correct information'}
+    let trigger = await HP.GetOptValue(opt, 'trigger')
+    let response = await HP.GetOptValue(opt, 'response')
+    let crca = await HP.GetOptValue(opt, 'anywhere' 0)
+    crca = +crca
+    if(trigger) trigger = trigger?.toString().toLowerCase()
     if(trigger && response){
-      const guild = await MSG.GetGuild(obj.guild_id)
+      const guild = await HP.GetGuild(obj.guild_id)
       const lCR = (await mongo.find('reactions', {_id: obj.guild_id}))[0]
       if(lCR && lCR.cr && lCR.cr.filter(x=>x.trigger == trigger).length > 0){
         msg2send.content = 'A custom reaction for **'+trigger+'** already exists'
@@ -34,7 +36,7 @@ module.exports = async(obj, opt = [])=>{
     }
     HP.ReplyMsg(obj, msg2send)
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

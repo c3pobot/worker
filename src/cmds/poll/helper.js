@@ -1,6 +1,6 @@
 'use strict'
 const Cmds = {}
-Cmds.PollStats = async(poll)=>{
+Cmds.PollStats = async(poll ={})=>{
   const embedMsg = {
     color: 15844367,
     timestamp: new Date(),

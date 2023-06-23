@@ -9,6 +9,8 @@ const GAME_API_NEEDED = +(process.env.GAME_API_NEEDED || 0)
 global.BotSocket = new SocketWrapper({  url: process.env.SOCKET_SVC_URI })
 global.mongoReady = 0
 global.apiReady = 0
+global.sorter = require('json-array-sorter')
+global.numeral = require('numeral')
 global.mongo = new MongoWrapper({
   url: 'mongodb://'+process.env.MONGO_USER+':'+process.env.MONGO_PASS+'@'+process.env.MONGO_HOST+'/',
   authDb: process.env.MONGO_AUTH_DB,

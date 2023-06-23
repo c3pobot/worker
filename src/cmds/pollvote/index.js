@@ -1,5 +1,5 @@
 'use strict'
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     let msg2send = {content: 'Error'}, resp, sendResp = 0, poll, usrname = obj.member.user.username, sendMethod = 'POST'
     if(obj.member.nick) usrname = obj.member.nick
@@ -22,9 +22,9 @@ module.exports = async(obj)=>{
         msg2send.components = []
       }
     }
-    if(sendResp) MSG.WebHookMsg(obj.token, msg2send, sendMethod)
+    if(sendResp) HP.WebHookMsg(obj.token, msg2send, sendMethod)
     HP.RemoveJob(obj.id)
   }catch(e){
-    console.log(e)
+    console.error(e)
   }
 }

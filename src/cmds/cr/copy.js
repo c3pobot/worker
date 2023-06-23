@@ -1,8 +1,8 @@
 'use strict'
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
-    let sId, msg2send = {content: 'You did not provide the correct information'}, lCR = [], rCR = []
-    if(opt.find(x=>x.name == 'serverid')) sId = opt.find(x=>x.name == 'serverid').value.trim()
+    let msg2send = {content: 'You did not provide the correct information'}, lCR = [], rCR = []
+    let sId = await HP.GetOptValue(opt, 'serverid')
     if(sId){
       msg2send.content = 'Server with ID **'+sId+'** has not been set up with the bot to use custom reactions'
       const shard = (await mongo.find('discordServer', {_id: sId, basicStatus: 1}))[0]
@@ -16,7 +16,7 @@ module.exports = async(obj, opt = [])=>{
           if(localCr && localCr.cr && localCr.cr.length > 0) lCR = localCr.cr
           if(remoteCr && remoteCr.cr && remoteCr.cr.length > 0) rCR = remoteCr.cr
           if(lCR && lCR.length > 0){
-            MSG.WebHookMsg(obj.token, {content: 'Copying Custom reactions please wait...'}, 'PATCH')
+            await HP.ReplyButton(obj, 'Copying Custom reactions please wait...')
             let count = 0
             for(let i in lCR){
               if(rCR.filter(x=>x.trigger == lCR[i].trigger).length > 0){
@@ -35,7 +35,7 @@ module.exports = async(obj, opt = [])=>{
     }
     HP.ReplyMsg(obj, msg2send)
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

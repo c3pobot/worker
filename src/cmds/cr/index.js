@@ -6,7 +6,7 @@ Cmds.copy = require('./copy')
 Cmds.edit = require('./edit')
 Cmds.list = require('./list')
 Cmds.remove = require('./remove')
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     const auth = await HP.CheckServerAdmin(obj)
     let tempCmd, opt
@@ -29,7 +29,7 @@ module.exports = async(obj)=>{
       HP.ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
     }
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

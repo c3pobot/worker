@@ -18,7 +18,7 @@ module.exports = async(obj = {})=>{
       HP.AdminNotAuth(obj)
     }
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

@@ -1,18 +1,20 @@
 'use strict'
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
-    let id, trigger, response, crca, msg2send = {content: 'That is not a custom reaction for this server'}, tempObj
-    if(opt.find(x=>x.name == 'id')) id = opt.find(x=>x.name == 'id').value
-    if(opt.find(x=>x.name == 'trigger')) trigger = opt.find(x=>x.name == 'trigger').value.trim().toLowerCase()
-    if(opt.find(x=>x.name == 'response')) response = opt.find(x=>x.name == 'response').value
-    if(opt.find(x=>x.name == 'anywhere')) crca = opt.find(x=>x.name == 'anywhere').value
+    let msg2send = {content: 'That is not a custom reaction for this server'}, tempObj
+    let id = await HP.GetOptValue(opt, 'id')
+    let trigger = await HP.GetOptValue(opt, 'trigger')
+    let response = await HP.GetOptValue(opt, 'response')
+    let crca = await HP.GetOptValue(opt, 'anywhere')
+    if(trigger) trigger = trigger?.toString().toLowerCase()
+    if(+id >= 0) id = +id
     const lCR = (await mongo.find('reactions', {_id: obj.guild_id}))[0]
     if(lCR && lCR.cr && lCR.cr.find(x=>x.id == id)) tempObj = Object.assign({}, lCR.cr.find(x=>x.id == id))
     if(tempObj){
       if(trigger && lCR.cr.filter(x=>x.trigger == trigger && x.id != id).length > 0){
         msg2send.content = 'There is already another reaction for **'+trigger+'**'
       }else{
-        const guild = await MSG.GetGuild(obj.guild_id)
+        const guild = await HP.GetGuild(obj.guild_id)
         if(trigger) tempObj.trigger = trigger
         if(response) tempObj.response = response
         if(crca >= 0) tempObj.anywhere = crca
@@ -29,7 +31,7 @@ module.exports = async(obj, opt = [])=>{
     }
     HP.ReplyMsg(obj, msg2send)
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

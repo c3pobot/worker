@@ -27,12 +27,12 @@ module.exports = async(obj = {})=>{
       msg2send.content = '**@'+roleName+'** is not a self assign role'
       if(guild.selfassignroles.filter(x=>x.id === roleId).length > 0){
         msg2send.content = 'Error getting permissions info for the bot'
-        botPerms = await BotSocket.call('getGuildMember', {sId: obj.guild_id, dId: process.env.DISCORD_CLIENT_ID})
+        botPerms = await HP.GetBotPerms(obj.guild_id)
       }
     }
-    if(botPerms?.perms){
+    if(botPerms?.length > 0){
       msg2send.content = 'The bot does not have permission to add roles to users'
-      if(botPerms.perms.filter(x=>x === 'ManageRoles').length > 0) hasRolePerm = true
+      if(botPerms.filter(x=>x === 'ManageRoles').length > 0) hasRolePerm = true
     }
     if(hasRolePerm){
       msg2send.content = 'Error assing you the **@'+roleName+'** role'
@@ -42,5 +42,6 @@ module.exports = async(obj = {})=>{
     HP.ReplyMsg(obj, msg2send)
   }catch(e){
     console.error(e);
+    HP.ReplyError(obj)
   }
 }

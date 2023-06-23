@@ -9,21 +9,20 @@ module.exports = async(obj = {})=>{
       let usr = await HP.GetOptValue(obj.data?.options, 'user')
       if(msg && usr) msg = msg.replace(/%user%/g, '<@'+usr+'>')
       if(msg && chId){
-        msg2send.content = 'I don\'t have permissions to see <#'+chId+'>'
-        const checkPerm = await HP.DiscordQuery('channels/'+chId)
-        if(checkPerm?.id) channelPerm = 1
-      }
-      if(channelPerm){
         msg2send.content = 'Error sending message to <#'+chId+'>'
-        const status = await MSG.SendMsg(chId, {content: msg})
-        if(status?.id) msg2send.content = 'Messages successfully sent to <#'+chId+'>'
+        const status = await HP.SendMsg({sId: obj.guild_id, chId: chId}, {content: msg})
+        if(status?.status === 'ok'){
+          msg2send.content = 'Messages successfully sent to <#'+chId+'>'
+        }else{
+          if(status?.msg) msg2send.content = status.msg
+        }
       }
       HP.ReplyMsg(obj, msg2send)
     }else{
       HP.AdminNotAuth(obj)
     }
   }catch(e){
-    console.log(e)
+    console.error(e)
     HP.ReplyError(obj)
   }
 }

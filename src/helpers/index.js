@@ -13,6 +13,7 @@ Cmds.GetBotPerms = require('./getBotPerms')
 Cmds.GetChannel = DiscordMsg.GetChannel
 Cmds.GetGuild = DiscordMsg.GetGuild
 Cmds.GetGuildMember = DiscordMsg.GetGuildMember
+Cmds.GetScreenShot = require('./getScreenShot')
 Cmds.DiscordQuery = require('./discordQuery')
 Cmds.getDiscordAvatarUrl = require('./getDiscordAvatarUrl')
 Cmds.GetOptValue = require('./getOptValue')

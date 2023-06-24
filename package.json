@@ -23,10 +23,8 @@
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.7",
     "numeral": "^2.0.6",
-    "puppeteer": "^15.4.0",
     "quewrapper": "github:c3pobot/quewrapper",
     "rediswrapper": "github:c3pobot/rediswrapper",
-    "sharp": "^0.30.7",
     "socketclient": "github:c3pobot/socketclient",
     "ttl-file-cache": "^1.0.5",
     "uuid": "^8.3.2"

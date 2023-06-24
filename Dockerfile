@@ -1,21 +1,9 @@
 FROM node:16-alpine AS builder
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 COPY package*.json ./
 # don't install dev dependencies for the docker image
 RUN npm install --omit=dev
 
 FROM node:16-alpine AS app
-RUN apk add --no-cache \
-      chromium \
-      nss \
-      freetype \
-      harfbuzz \
-      ca-certificates \
-      ttf-freefont
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
-RUN mkdir -p /app/cache; mkdir -p /app/data; mkdir -p /app/node_modules && chown -R node:node /app
 WORKDIR /app
 
 COPY --from=builder node_modules node_modules/

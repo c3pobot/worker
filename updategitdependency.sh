@@ -7,5 +7,7 @@ echo updating quewrapper
 npm i --package-lock-only github:/c3pobot/quewrapper
 echo updating rediswrapper
 npm i --package-lock-only github:/c3pobot/rediswrapper
-echo updating socketclient
-npm i --package-lock-only github:/c3pobot/socketclient
+echo updating statcalc
+npm i --package-lock-only github:/c3pobot/statcalc
+echo updating googletokenwrapper
+npm i --package-lock-only github:c3pobot/googletokenwrapper

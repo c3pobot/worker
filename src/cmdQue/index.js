@@ -1,3 +1,6 @@
+const { mongoStatus, localQue } = require('helpers')
+const GAME_API_NEEDED = process.env.GAME_API_NEEDED
+
 const QueWrapper = require('quewrapper')
 const CmdProcessor = require('./cmdProcessor')
 const localQueKey = process.env.LOCAL_QUE_KEY
@@ -7,10 +10,31 @@ const redisConnection = {
 	port: +process.env.QUE_PORT,
 	password: process.env.QUE_PASS
 }
-let workerTypes = ['discord']
+let workerTypes = ['discord', 'oauth', 'swgoh']
 if(process.env.WORKER_TYPES) workerTypes = JSON.parse(process.env.WORKER_TYPES)
-const PRIVATE_WORKER = +(process.env.PRIVATE_WORKER || 0)
+const PRIVATE_WORKER = process.env.PRIVATE_WORKER || false
 const NUM_QUE_JOBS = +(process.env.NUM_JOBS || 3)
+let gameApiReady = false, swgohClient
+if(GAME_API_NEEDED){
+  swgohClient = require('swgohClient')
+  const CheckApiReady = async()=>{
+    try{
+      let status = await swgohClient('getStatus')
+      if(status){
+        gameApiReady = true
+        return
+      }
+      setTimeout(CheckApiReady, 5000)
+    }catch(e){
+      console.error(e)
+      setTimeout(CheckApiReady, 5000)
+    }
+  }
+  CheckApiReady()
+}else{
+  gameApiReady = true
+}
+
 const CreateQues = async()=>{
   try{
     for(let i in workerTypes){
@@ -31,8 +55,9 @@ const CreateQues = async()=>{
 }
 const StartQues = async()=>{
   try{
+    let mongoReady = mongoStatus()
     let cmdCount = await CmdProcessor.checkCmdMap()
-    if(cmdCount > 0){
+    if(cmdCount > 0 && mongoReady && gameApiReady){
       for(let i in CmdQue) CmdQue[i].start()
     }else{
       setTimeout(StartQues, 5000)

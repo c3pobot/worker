@@ -1,4 +1,5 @@
 'use strict'
+const { mongo } = require('helpers/mongo')
 const { GetGuild, GetGuildMember } = require('discordapiwrapper')
 module.exports = async(obj = {})=>{
   let auth = 0, roles

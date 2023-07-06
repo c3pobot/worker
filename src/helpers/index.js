@@ -1,14 +1,21 @@
 'use strict'
 const Cmds = {}
 const DiscordMsg = require('discordapiwrapper')
+const MongoCmd = require('./mongo')
+const RedisCmd = require('./redis')
+const LocalQueCmd = require('./localQue')
 const JobCache = require('./jobCache')
 Cmds.AddJob = JobCache.addJob
 Cmds.apiFetch = require('./apiFetch')
 Cmds.AdminNotAuth = require('./adminNotAuth')
 Cmds.ButtonPick = require('./buttonPick')
+
 Cmds.CheckBotOwner = require('./checkBotOwner')
 Cmds.CheckServerAdmin = require('./checkServerAdmin')
+Cmds.EnumPerms = require('./enumPerms')
 Cmds.ConfirmButton = require('./confirmButton')
+Cmds.GetAllyCodeObj = require('./getAllyCodeObj')
+Cmds.GetAllyCodeFromDiscordId = require('./getAllyCodeFromDiscordId')
 Cmds.GetBotPerms = require('./getBotPerms')
 Cmds.GetChannel = DiscordMsg.GetChannel
 Cmds.GetGuild = DiscordMsg.GetGuild
@@ -22,5 +29,13 @@ Cmds.ReplyButton = require('./replyButton')
 Cmds.ReplyError = require('./replyError')
 Cmds.ReplyMsg = require('./replyMsg')
 Cmds.SendMsg = require('./sendMsg')
+Cmds.StatCalc = require('statcalc')
 Cmds.TruncateString = require('./truncateString')
+
+Cmds.mongo = MongoCmd.mongo
+Cmds.mongoStatus = MongoCmd.mongoStatus
+Cmds.redis = RedisCmd.redis
+Cmds.redisStatus = RedisCmd.redisStatus
+Cmds.localQue = LocalQueCmd.localQue
+Cmds.localQueStatus = LocalQueCmd.localQueStatus
 module.exports = Cmds

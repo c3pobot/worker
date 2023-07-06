@@ -1,0 +1,18 @@
+'use strict'
+const { GetOptValue, ReplyMsg } = require('helpers')
+const Cmds = {}
+Cmds.add = require('./add')
+Cmds.list = require('./list')
+Cmds.remove = require('./remove')
+module.exports = async(obj = {}, opt = [])=>{
+  try{
+      let tempCmd = await GetOptValue(opt, 'action')
+      if(tempCmd && Cmds[tempCmd]){
+        await Cmds[tempCmd](obj, opt)
+      }else{
+        ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
+      }
+  }catch(e){
+    throw(e)
+  }
+}

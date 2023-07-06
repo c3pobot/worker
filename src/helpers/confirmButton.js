@@ -1,5 +1,6 @@
 'use strict'
 const JobCache = require('./jobCache')
+const { redis } = require('./redis')
 const { WebHookMsg } = require('discordapiwrapper')
 module.exports = async(obj = {}, msg)=>{
   try{

@@ -1,4 +1,5 @@
 'use strict'
+const { localQue } = require('./localQue')
 const Cache = require('node-cache')
 const JobCache = new Cache({stdTTL: 1800, checkperiod: 60})
 const Cmds = {}

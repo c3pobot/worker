@@ -1,8 +1,10 @@
 'use strict'
+const path = require('path')
+const { mongo } = require('helpers/mongo')
 const ReadFiles = require('./readFiles')
-const GetCmdArray = async(dir, dbKey)=>{
+const GetCmdArray = async()=>{
   try{
-    const cmdArray = await ReadFiles(dir)
+    const cmdArray = await ReadFiles(path.join(baseDir, 'src', 'workerCmds'))
     if(cmdArray){
       for(let i in cmdArray){
         if(!cmdArray[i]) continue;
@@ -11,11 +13,11 @@ const GetCmdArray = async(dir, dbKey)=>{
       }
     }else{
       console.log('Did not find any commands. Will try again in 5 seconds')
-      setTimeout(()=>GetCmdArray(dir, dbKey), 5000)
+      setTimeout(()=>GetCmdArray(), 5000)
     }
   }catch(e){
     console.error(e)
-    setTimeout(()=>GetCmdArray(dir, dbKey), 5000)
+    setTimeout(()=>GetCmdArray(), 5000)
   }
 }
 module.exports = GetCmdArray

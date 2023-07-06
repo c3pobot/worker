@@ -1,85 +1,96 @@
 'use strict'
-const MongoWrapper = require('mongowrapper')
-const RedisWrapper = require('rediswrapper')
-const SocketWrapper = require('socketclient')
 const SaveCmds = require('./saveCmds')
+const UpdateGameData = require('./updateGameData')
 const PRIVATE_BOT = +(process.env.PRIVATE_BOT || 0)
-const WORKER_NUM = process.env.WORKER_NUM || '0'
-const GAME_API_NEEDED = +(process.env.GAME_API_NEEDED || 0)
-global.BotSocket = new SocketWrapper({  url: process.env.SOCKET_SVC_URI })
-global.mongoReady = 0
-global.apiReady = 0
-global.sorter = require('json-array-sorter')
-global.numeral = require('numeral')
-global.mongo = new MongoWrapper({
-  url: 'mongodb://'+process.env.MONGO_USER+':'+process.env.MONGO_PASS+'@'+process.env.MONGO_HOST+'/',
-  authDb: process.env.MONGO_AUTH_DB,
-  appDb: process.env.MONGO_DB,
-  repSet: process.env.MONGO_REPSET
-})
-global.redis = new RedisWrapper({
-  host: process.env.REDIS_SERVER,
-  port: process.env.REDIS_PORT,
-  passwd: process.env.REDIS_PASS
-})
-global.localQue = new RedisWrapper({
-  host: process.env.QUE_SERVER,
-  port: process.env.QUE_PORT,
-  passwd: process.env.QUE_PASS,
-  type: "localQue"
-})
-global.HP = require('./helpers')
-global.MSG = require('discordapiwrapper')
-const InitRedis = async()=>{
+const WORKER_NAME = process.env.WORKER_NAME || '0'
+const GAME_API_NEEDED = process.env.GAME_API_NEEDED
+const { mongoStatus, redisStatus, localQueStatus } = require('helpers')
+let swgohClient
+if(GAME_API_NEEDED){
+  swgohClient = require('./swgohClient')
+  require('./helpers/configMaps')
+}
+const CheckRedis = async()=>{
   try{
-    await redis.init()
-    const redisStatus = await redis.ping()
-    if(redisStatus == 'PONG'){
-      console.log('redis connection successful...')
-      InitLocalQue()
+    let status = redisStatus()
+    if(status){
+      CheckLocalQue()
     }else{
-      console.log('redis connection error. Will try again in 5 seconds...')
-      setTimeout(InitRedis, 5000)
+      setTimeout(CheckRedis, 5000)
     }
   }catch(e){
-    console.error('redis connection error. Will try again in 5 seconds...')
-    setTimeout(InitRedis, 5000)
+    console.error(e);
+    setTimeout(CheckRedis, 5000)
   }
 }
-const InitLocalQue = async()=>{
+const CheckLocalQue = async()=>{
   try{
-    await localQue.init()
-    const queStatus = await localQue.ping()
-    if(queStatus == 'PONG'){
-      console.log('localQue connection successful...')
+    let status = localQueStatus()
+    if(status){
       CheckMongo()
     }else{
-      console.log('localQue connection error. Will try again in 5 seconds...')
-      setTimeout(InitLocalQue, 5000)
+      setTimeout(CheckLocalQue, 5000)
     }
   }catch(e){
-    console.error('localQue connection error. Will try again in 5 seconds...')
-    setTimeout(InitLocalQue, 5000)
+    console.error(e);
+    setTimeout(CheckLocalQue, 5000)
   }
 }
 const CheckMongo = async()=>{
-  const status = await mongo.init();
-  if(status > 0){
-    mongoReady = 1
-    console.log('Mongo connection successful...')
-    StartServices()
-  }else{
-    console.error('Mongo connection error. Will try again in 10 seconds')
-    setTimeout(()=>CheckMongo(), 5000)
+  try{
+    let status = mongoStatus()
+    if(status){
+      CheckApiReady()
+    }else{
+      setTimeout(CheckMongo, 5000)
+    }
+  }catch(e){
+    console.error(e);
+    setTimeout(CheckMongo, 5000)
+  }
+}
+const CheckApiReady = async()=>{
+  try{
+    if(GAME_API_NEEDED){
+      let status = await swgohClient('getStatus')
+      if(status){
+        CheckGameData()
+      }else{
+        setTimeout(CheckApiReady, 5000)
+      }
+    }else{
+      StartServices()
+    }
+  }catch(e){
+    console.error(e)
+    setTimeout(CheckApiReady, 5000)
+  }
+}
+const CheckGameData = async()=>{
+  try{
+    let status = false
+    if(GAME_API_NEEDED){
+      status = await UpdateGameData()
+    }else{
+      status = true
+    }
+    if(status){
+      StartServices()
+    }else{
+      setTimeout(CheckGameData, 5000)
+    }
+  }catch(e){
+    console.error(e);
+    setTimeout(CheckApiReady, 5000)
   }
 }
 const StartServices = async()=>{
   try{
-    if(!PRIVATE_BOT && WORKER_NUM?.toString()?.endsWith('0')) await SaveCmds(baseDir+'/src/cmds')
+    if(!PRIVATE_BOT && WORKER_NAME?.toString()?.endsWith('0')) await SaveCmds()
     require('./cmdQue')
   }catch(e){
     console.error(e);
     setTimeout(StartServices, 5000)
   }
 }
-InitRedis()
+CheckRedis()

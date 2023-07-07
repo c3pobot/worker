@@ -1,5 +1,6 @@
 'use strict'
-const { mongo, RemoveJob, WebHookMsg } = require('helpers')
+const { mongo, RemoveJob } = require('helpers')
+const { WebHookMsg } = require('discordapiclient')
 module.exports = async(obj = {})=>{
   try{
     let msg2send = {content: 'Error'}, resp, sendResp = 0, poll, usrname = obj.member.user.username, sendMethod = 'POST'

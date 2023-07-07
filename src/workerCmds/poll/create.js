@@ -1,5 +1,5 @@
 'use strict'
-const { mongo, CheckServerAdmin, GetChannel, GetOptValue, ReplyMsg, SendMsg } = require('helpers')
+const { mongo, CheckServerAdmin, DiscordQuery, GetOptValue, ReplyMsg, SendMsg } = require('helpers')
 const { v4: uuidv4 } = require('uuid')
 module.exports = async(obj = {}, opt = [])=>{
   try{
@@ -19,7 +19,7 @@ module.exports = async(obj = {}, opt = [])=>{
       }
     }
     if(responses.length > 0){
-      const channel = await GetChannel(chId)
+      const channel = await DiscordQuery('channels/'+chId)
       let usrname = obj.member.user.username
       if(obj.member.nick) usrname = obj.member.nick
       msg2send.content = 'Unable to send messages to <#'+chId+'>'

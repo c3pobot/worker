@@ -17,7 +17,7 @@ module.exports = async(obj = {}, opt = [])=>{
           if(localCr && localCr.cr && localCr.cr.length > 0) lCR = localCr.cr
           if(remoteCr && remoteCr.cr && remoteCr.cr.length > 0) rCR = remoteCr.cr
           if(lCR && lCR.length > 0){
-            await HP.ReplyButton(obj, 'Copying Custom reactions please wait...')
+            await ReplyButton(obj, 'Copying Custom reactions please wait...')
             let count = 0
             for(let i in lCR){
               if(rCR.filter(x=>x.trigger == lCR[i].trigger).length > 0){

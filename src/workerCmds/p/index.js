@@ -2,6 +2,7 @@
 const { ReplyError, ReplyMsg } = require('helpers')
 const Cmds = {}
 Cmds.report = require('./report')
+Cmds.unit = require('./unit')
 module.exports = async(obj)=>{
   try{
     let tempCmd, opt = []

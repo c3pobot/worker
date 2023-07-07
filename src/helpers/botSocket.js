@@ -1,5 +1,5 @@
 'use strict'
-const POD_NAME = process.env.POD_NAME || 'datasync'
+const POD_NAME = process.env.WORKER_NAME || 'botworker'
 const BOT_BRIDGE_URI = process.env.BOT_BRIDGE_URI
 const SOCKET_EMIT_TIMEOUT = process.env.SOCKET_EMIT_TIMEOUT || 10000
 const io = require('socket.io-client')

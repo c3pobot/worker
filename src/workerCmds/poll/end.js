@@ -1,5 +1,5 @@
 'use strict'
-const { mongo, ButtonPick, CheckServerAdmin, GetChannel, GetOptValue, ReplyButton, ReplyMsg, TruncateString } = require('helpers')
+const { mongo, ButtonPick, CheckServerAdmin, DiscordQuery, GetOptValue, ReplyButton, ReplyMsg, TruncateString } = require('helpers')
 const GetPollStats = require('./getPollStats')
 module.exports = async(obj = {}, opt = [] )=>{
     try{
@@ -49,7 +49,7 @@ module.exports = async(obj = {}, opt = [] )=>{
       }
       if(poll){
         await ReplyButton(obj, 'Getting poll stats')
-        const channel = await GetChannel(poll.chId)
+        const channel = await DiscordQuery('channels/'+poll.chId)
         msg2send.content = 'Error getting poll stats'
         if(poll?.votes && poll?.answers?.length > 0){
           await mongo.set('poll', {_id: poll._id}, {status: 0})

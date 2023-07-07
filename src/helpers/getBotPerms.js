@@ -6,7 +6,7 @@ module.exports = async(sId, dId)=>{
     if(!sId) return
     let obj = {sId: sId, dId: dId}
     if(!obj.dId) obj.dId = BOT_DISCORD_ID
-    const res = await BotSocket('getGuildMember', obj)
+    const res = await BotSocket.call('getGuildMember', obj)
     return res?.perms
   }catch(e){
     console.error(e);

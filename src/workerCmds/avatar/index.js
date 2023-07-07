@@ -1,5 +1,6 @@
 'use strict'
-const { GetGuild, GetGuildMember, GetOptValue, getDiscordAvatarUrl, ReplyError, ReplyMsg } = require('helpers')
+const { GetOptValue, getDiscordAvatarUrl, ReplyError, ReplyMsg } = require('helpers')
+const { GetGuild, GetGuildMember } = require('discordapiclient')
 module.exports = async(obj = {})=>{
   try{
     let msgName, footerText, msg2Send = {content: 'Error getting avatar'}, username = (obj.member.nick ? obj.member.nick:obj.member.user.username), iconId, iconName, iconType, embedColor = 15844367

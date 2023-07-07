@@ -1,6 +1,6 @@
 'use strict'
 const JobCache = require('./jobCache')
-const { WebHookMsg } = require('discordapiwrapper')
+const { WebHookMsg } = require('discordapiclient')
 module.exports = async(obj = {}, content)=>{
   try{
     await JobCache.removeJob(obj.jobId)

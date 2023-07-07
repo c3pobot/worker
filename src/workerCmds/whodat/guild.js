@@ -1,5 +1,6 @@
 'use strict'
-const { GetGuild, GetGuildMember, GetOptValue, ReplyMsg } = require('helpers')
+const { GetOptValue, ReplyMsg } = require('helpers')
+const { GetGuild, GetGuildMember } = require('discordapiclient')
 module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'You did not provide the correct information'}, usr

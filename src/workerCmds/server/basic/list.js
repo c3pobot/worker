@@ -1,5 +1,6 @@
 'use strict'
-const { mongo, GetGuild, GetOptValue, ReplyMsg } = require('helpers')
+const { mongo, GetOptValue, ReplyMsg } = require('helpers')
+const { GetGuild } = require('discordapiclient')
 module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'There are not servers with basic commands enabled'}

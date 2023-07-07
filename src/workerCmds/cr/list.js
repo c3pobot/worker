@@ -1,5 +1,6 @@
 'use strict'
-const { mongo, GetGuild, GetOptValue, ReplyMsg } = require('helpers')
+const { mongo, GetOptValue, ReplyMsg } = require('helpers')
+const { GetGuild } = require('discordapiclient')
 const sorter = require('json-array-sorter')
 module.exports = async(obj = {}, opt = [])=>{
   try{

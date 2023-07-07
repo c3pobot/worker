@@ -1,5 +1,5 @@
 'use strict'
-const { WebHookMsg } = require('discordapiwrapper')
+const { WebHookMsg } = require('discordapiclient')
 module.exports = async(obj = {}, msg)=>{
   try{
     await WebHookMsg(obj.token, {content: msg || 'Here we go again....', components:[]}, 'PATCH')

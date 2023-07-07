@@ -1,5 +1,5 @@
 'use strict'
-const { apiRequest } = require('discordapiwrapper')
+const { apiRequest } = require('discordapiclient')
 module.exports = async(uri, method = 'GET', body, headers)=>{
   try{
     const res = await apiRequest(uri, method, body, headers)

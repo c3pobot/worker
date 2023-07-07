@@ -1,5 +1,5 @@
 'use strict'
-const POD_NAME = process.env.POD_NAME
+const POD_NAME = process.env.WORKER_NAME
 const MongoWrapper = require('mongowrapper')
 const mongo = new MongoWrapper({
   url: 'mongodb://'+process.env.MONGO_USER+':'+process.env.MONGO_PASS+'@'+process.env.MONGO_HOST+'/',

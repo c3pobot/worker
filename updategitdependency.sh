@@ -1,6 +1,6 @@
 #!/bin/bash
-echo updating discordapiwrapper
-npm i --package-lock-only github:/c3pobot/discordapiwrapper
+echo updating discordapiclient
+npm i --package-lock-only github:/c3pobot/discordapiclient
 echo updating mongowrapper
 npm i --package-lock-only github:/c3pobot/mongowrapper
 echo updating quewrapper

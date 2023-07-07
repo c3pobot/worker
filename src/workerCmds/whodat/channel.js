@@ -1,12 +1,13 @@
 'use strict'
-const { GetChannel, GetGuild, GetGuildMember, GetOptValue, ReplyMsg } = require('helpers')
+const { DiscordQuery, GetOptValue, ReplyMsg } = require('helpers')
+const { GetGuild, GetGuildMember } = require('discordapiclient')
 module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'You did not provide the correct information'}, guild, usr
     let id = GetOptValue(opt, 'id')
     if(id){
       msg2send.content = 'Error finding channel **'+id+'**'
-      const channel = await GetChannel(id)
+      const channel = await DiscordQuery('channels/'+id)
       if(channel){
         if(channel.guild_id){
           guild = await GetGuild(channel.guild_id)

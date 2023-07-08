@@ -21,9 +21,6 @@ Cmds.FindUnit = require('./findUnit')
 Cmds.GetAllyCodeObj = require('./getAllyCodeObj')
 Cmds.GetAllyCodeFromDiscordId = require('./getAllyCodeFromDiscordId')
 Cmds.GetBotPerms = require('./getBotPerms')
-Cmds.GetChannel = DiscordMsg.GetChannel
-Cmds.GetGuild = DiscordMsg.GetGuild
-Cmds.GetGuildMember = DiscordMsg.GetGuildMember
 Cmds.GetScreenShot = require('./getScreenShot')
 Cmds.getDiscordAvatarUrl = require('./getDiscordAvatarUrl')
 Cmds.GetOptValue = require('./getOptValue')
@@ -40,7 +37,7 @@ Cmds.RemoveJob = JobCache.removeJob
 Cmds.ReplyButton = require('./replyButton')
 Cmds.ReplyError = require('./replyError')
 Cmds.ReplyMsg = require('./replyMsg')
-
+Cmds.ReportError = require('./reportError')
 Cmds.SendMsg = require('./sendMsg')
 Cmds.StatCalc = require('statcalc')
 

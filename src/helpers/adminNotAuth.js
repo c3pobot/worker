@@ -1,6 +1,6 @@
 'use strict'
 const ReplyMsg = require('./replyMsg')
-const { GetGuild, GetGuildMember } = require('discordapiwrapper')
+const { GetGuild, GetGuildMember } = require('discordapiclient')
 module.exports =  async(obj = {})=>{
   try{
     let guildOwner, username

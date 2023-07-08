@@ -1,5 +1,5 @@
 'use strict'
-const { mongo, mongoStatus, AddJob, ReplyError, RemoveJob, ReplyMsg } = require('helpers')
+const { mongo, mongoStatus, AddJob, ReplyError, RemoveJob, ReplyMsg, ReportError } = require('helpers')
 const { CmdMap } = require('helpers/cmdMap')
 module.exports.process = async(obj ={})=>{
   try{
@@ -13,7 +13,7 @@ module.exports.process = async(obj ={})=>{
     }
     await RemoveJob(obj.jobId)
   }catch(e){
-    console.error(e);
+    ReportError(e);
     ReplyError(obj, {content: 'Oh dear! Critical command Error occured...'})
   }
 }

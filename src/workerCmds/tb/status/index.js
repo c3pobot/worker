@@ -81,7 +81,6 @@ module.exports = async(obj = {}, opts = [])=>{
     if(tbData){
       msg2send.content = 'error getting html'
       webHTML = getHTML(tbData)
-      mongo.set('webTemp', {_id: 'tbStatus'}, {html: imgHTML})
     }
     if(webHTML){
       msg2send.content = 'error getting screen shot'

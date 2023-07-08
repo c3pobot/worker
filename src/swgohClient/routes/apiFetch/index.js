@@ -1,69 +1,36 @@
 'use strict'
-const fetch = require('node-fetch')
-const path = require('path')
-const GAME_CLIENT_URL = process.env.GAME_CLIENT_URL || 'http://localhost:3000'
-const ACCESS_KEY = process.env.ACCESS_KEY
-const SECRET_KEY = process.env.SECRET_KEY
-const signPostRequest = require('./signPostRequest')
-const GETRoutes = {'enums': 'enums'}
-const parseResponse = async(res)=>{
-  try{
-    if(!res) return
-    let body
-    if (res.status?.toString().startsWith('5')) throw('Bad status code '+res.status)
-    if (res.headers?.get('Content-Type')?.includes('application/json')){
-      body = await res.json()
-    }else{
-      body = await res.text()
+const POD_NAME = process.env.WORKER_NAME || 'botworker'
+let GAME_CLIENT_URL = process.env.GAME_CLIENT_URL || 'http://localhost:3000'
+GAME_CLIENT_URL = GAME_CLIENT_URL.replace('http:', 'ws:')
+const SOCKET_EMIT_TIMEOUT = process.env.SOCKET_EMIT_TIMEOUT || 10000
+const io = require('socket.io-client')
+let socket = io(GAME_CLIENT_URL, {transports: ['websocket']})
+socket.on('connect', ()=>{
+  console.log(POD_NAME+' socket.io is connected to swgoh-client...')
+})
+socket.on('disconnect', reason=>{
+  console.log('socket.io is diconnected from swgoh-client socket server...')
+})
+function socketCall(endpoint, data){
+  return new Promise((resolve, reject)=>{
+    try{
+      if(!socket || !socket?.connected) reject('swgoh-client Socket Error: connection not available')
+      socket.timeout(SOCKET_EMIT_TIMEOUT).emit('request', endpoint, data, function(err, res){
+        if(err) reject(`swgoh-client Socket Error: ${err.message || err}`)
+        resolve(res)
+      })
+    }catch(e){
+      reject(e);
     }
-    if(!body && res.status === 204) body = { status: 204 }
-    return { status: res.status, body: body }
-  }catch(e){
-    console.error(e);
-  }
+  })
 }
-const fetchRequest = async(uri, body = {})=>{
+module.exports = async(uri, payload, identity)=>{
   try{
-    let headers = {"Content-Type": "application/json"}, method = 'POST'
-    if(GETRoutes[uri]) method = 'GET'
-    if(ACCESS_KEY && SECRET_KEY) signPostRequest('/'+uri, headers, body, method)
-    let payload = { method: method, timeout: 60000, compress: true, headers: headers, body: JSON.stringify(body) }
-    let obj = await fetch(path.join(GAME_CLIENT_URL, uri), payload)
-    return await parseResponse(obj)
-  }catch(e){
-    if(e.name){
-      return {error: e.name, message: e.message, type: e.type}
-    }else{
-      if(e?.status){
-        return await parseResoponse(e)
-      }
-      console.error(e)
-    }
-  }
-}
-const apiRequest = async(uri, body, count = 0)=>{
-  try{
-    if(!uri) return
-    let res = await fetchRequest(uri, body)
-    if(!res) return
-    if((res.body?.code === 6 && count < 4) || (res.error === 'FetchError' && count < 4) || (res.status === 400 && res.body?.message && !res.body?.code && count < 4)){
-      count++
-      return await apiRequest(uri, body, count)
-    }
-    return res
-  }catch(e){
-    throw(e)
-  }
-}
-module.exports = async(uri, payload, identity = null)=>{
-  try{
-    let body = {}
-    if(payload) body.payload = payload
-    if(identity) body.identity = identity
-    let res = await apiRequest(uri, body)
-    if(res?.body?.message && res?.body?.code !== 5) console.error(uri+' : Code : '+res.body.code+' : Msg : '+res.body.message)
-    if(res?.body) return res.body
-    if(res?.error) console.error(console.log(uri+' : '+JSON.stringify(res)))
+    let req = { payload: payload, identity: identity }
+    let res = await socketCall(uri, req)
+    if(res?.data) return res.data
+    if(res?.message?.code === 5)  return res.message
+    if(res?.message) console.log(res.message)
   }catch(e){
     throw(e)
   }

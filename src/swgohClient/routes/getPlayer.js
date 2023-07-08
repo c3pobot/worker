@@ -48,6 +48,7 @@ const formatPlayer = (player = {}, stats = {})=>{
       }
       delete player.pvpProfile;
     }
+    player.updated = Date.now()
     return player
   }catch(e){
     throw(e)

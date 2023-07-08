@@ -4,7 +4,7 @@ const UpdateGameData = require('./updateGameData')
 const PRIVATE_BOT = +(process.env.PRIVATE_BOT || 0)
 const WORKER_NAME = process.env.WORKER_NAME || '0'
 const GAME_API_NEEDED = process.env.GAME_API_NEEDED
-const { mongoStatus, redisStatus, localQueStatus } = require('helpers')
+const { mongoStatus, redisStatus, localQueStatus, ReportError } = require('helpers')
 let swgohClient
 if(GAME_API_NEEDED){
   swgohClient = require('./swgohClient')
@@ -19,7 +19,7 @@ const CheckRedis = async()=>{
       setTimeout(CheckRedis, 5000)
     }
   }catch(e){
-    console.error(e);
+    ReportError(e);
     setTimeout(CheckRedis, 5000)
   }
 }
@@ -32,7 +32,7 @@ const CheckLocalQue = async()=>{
       setTimeout(CheckLocalQue, 5000)
     }
   }catch(e){
-    console.error(e);
+    ReportError(e);
     setTimeout(CheckLocalQue, 5000)
   }
 }
@@ -45,7 +45,7 @@ const CheckMongo = async()=>{
       setTimeout(CheckMongo, 5000)
     }
   }catch(e){
-    console.error(e);
+    ReportError(e);
     setTimeout(CheckMongo, 5000)
   }
 }
@@ -62,7 +62,7 @@ const CheckApiReady = async()=>{
       StartServices()
     }
   }catch(e){
-    console.error(e)
+    ReportError(e)
     setTimeout(CheckApiReady, 5000)
   }
 }
@@ -80,7 +80,7 @@ const CheckGameData = async()=>{
       setTimeout(CheckGameData, 5000)
     }
   }catch(e){
-    console.error(e);
+    ReportError(e);
     setTimeout(CheckApiReady, 5000)
   }
 }
@@ -89,7 +89,7 @@ const StartServices = async()=>{
     if(!PRIVATE_BOT && WORKER_NAME?.toString()?.endsWith('0')) await SaveCmds()
     require('./cmdQue')
   }catch(e){
-    console.error(e);
+    ReportError(e);
     setTimeout(StartServices, 5000)
   }
 }

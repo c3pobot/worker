@@ -1,4 +1,4 @@
-const { mongoStatus, localQue } = require('helpers')
+const { mongoStatus, localQue, ReportError } = require('helpers')
 const GAME_API_NEEDED = process.env.GAME_API_NEEDED
 
 const QueWrapper = require('quewrapper')
@@ -26,7 +26,7 @@ if(GAME_API_NEEDED){
       }
       setTimeout(CheckApiReady, 5000)
     }catch(e){
-      console.error(e)
+      ReportError(e)
       setTimeout(CheckApiReady, 5000)
     }
   }
@@ -49,7 +49,7 @@ const CreateQues = async()=>{
     }
     StartQues()
   }catch(e){
-    console.error(e);
+    ReportError(e);
     setTimeout(CreateQues, 5000)
   }
 }
@@ -63,7 +63,7 @@ const StartQues = async()=>{
       setTimeout(StartQues, 5000)
     }
   }catch(e){
-    console.error(e);
+    ReportError(e);
     setTimeout(StartQues, 5000)
   }
 }

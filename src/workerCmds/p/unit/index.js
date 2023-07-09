@@ -1,7 +1,8 @@
 'use strict'
+const { ReplyMsg } = require('helpers')
 const Cmds = {}
 Cmds.basic = require('./basic')
-//Cmds.compare = require('./compare')
+Cmds.compare = require('./compare')
 module.exports = async(obj, opt = [])=>{
   try{
     let tempCmd = 'basic'

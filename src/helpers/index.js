@@ -14,6 +14,8 @@ Cmds.CheckBotOwner = require('./checkBotOwner')
 Cmds.CheckServerAdmin = require('./checkServerAdmin')
 Cmds.ConfirmButton = require('./confirmButton')
 
+Cmds.DeepCopy = require('./deepCopy')
+
 Cmds.EnumPerms = require('./enumPerms')
 
 Cmds.FindUnit = require('./findUnit')
@@ -30,6 +32,7 @@ Cmds.localQueStatus = LocalQueCmd.localQueStatus
 
 Cmds.mongo = MongoCmd.mongo
 Cmds.mongoStatus = MongoCmd.mongoStatus
+Cmds.ModifyUnit = require('./modifyUnit')
 
 Cmds.redis = RedisCmd.redis
 Cmds.redisStatus = RedisCmd.redisStatus

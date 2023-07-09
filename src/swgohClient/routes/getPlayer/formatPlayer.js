@@ -1,6 +1,4 @@
 'use strict'
-const queryPlayer = require('./queryPlayer')
-const statCalc = require('./statCalc')
 const getDataCronCount = (list = [])=>{
   try{
     let data = { total: 0 }
@@ -16,7 +14,7 @@ const getDataCronCount = (list = [])=>{
     throw(e)
   }
 }
-const formatPlayer = (player = {}, stats = {})=>{
+module.exports = (player = {}, stats = {})=>{
   try{
     player = {...player,...stats}
     player.allyCode = +player.allyCode
@@ -48,19 +46,7 @@ const formatPlayer = (player = {}, stats = {})=>{
       }
       delete player.pvpProfile;
     }
-    player.updated = Date.now()
     return player
-  }catch(e){
-    throw(e)
-  }
-}
-module.exports = async(opts = {})=>{
-  try{
-    let res = await queryPlayer(opts)
-    if(!res?.rosterUnit) return
-    let stats = await statCalc.calcRosterStats(res.rosterUnit)
-    if(!stats || !stats?.roster[res.rosterUnit[0].definitionId.split(':')[0]]) return
-    return await formatPlayer(res, stats)
   }catch(e){
     throw(e)
   }

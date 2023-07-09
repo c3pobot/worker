@@ -16,7 +16,7 @@ module.exports = async(obj = {}, opts = [])=>{
       let tempGuild = await swgohClient('guild', {}, dObj, obj)
       if(tempGuild?.data?.guild){
         msg2send.content = 'there is not a TB in progress'
-        gObj = tempGuild?.data?.guild
+        gObj = tempGuild.data.guild
       }
     }
     if(gObj?.territoryBattleStatus.length > 0){

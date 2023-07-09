@@ -5,6 +5,7 @@ const PRIVATE_BOT = +(process.env.PRIVATE_BOT || 0)
 const WORKER_NAME = process.env.WORKER_NAME || '0'
 const GAME_API_NEEDED = process.env.GAME_API_NEEDED
 const { mongoStatus, redisStatus, localQueStatus, ReportError } = require('helpers')
+require('./helpers/botSettings')
 let swgohClient
 if(GAME_API_NEEDED){
   swgohClient = require('./swgohClient')

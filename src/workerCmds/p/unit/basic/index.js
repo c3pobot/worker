@@ -5,8 +5,11 @@ const getHTML = require('helpers/getHTML/unitStats')
 const swgohClient = require('swgohClient')
 module.exports = async(obj = {}, opt = [])=>{
   try{
-    let dObj, allyCode, pObj, webHTML, webImg, msg2send = {content: 'error finding the requested unit'}
-    let baseId = obj.confirm?.baseId
+    let baseId, dObj, allyCode, pObj, webHTML, webImg, msg2send = {content: 'error finding the requested unit'}
+    if(obj.confirm){
+      await ReplyButton(obj)
+      baseId = obj.confirm.baseId
+    }
     if(!baseId) baseId = await FindUnit(obj, opt, 'unit')
     if(baseId){
       msg2send.content = 'You do not have allycode linked to discordId'

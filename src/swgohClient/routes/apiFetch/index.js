@@ -2,7 +2,8 @@
 const POD_NAME = process.env.WORKER_NAME || 'botworker'
 let GAME_CLIENT_URL = process.env.GAME_CLIENT_URL || 'http://localhost:3000'
 GAME_CLIENT_URL = GAME_CLIENT_URL.replace('http:', 'ws:')
-const SOCKET_EMIT_TIMEOUT = process.env.SOCKET_EMIT_TIMEOUT || 10000
+
+const SOCKET_EMIT_TIMEOUT = process.env.SOCKET_EMIT_TIMEOUT || 30000
 const io = require('socket.io-client')
 let socket = io(GAME_CLIENT_URL, {transports: ['websocket']})
 socket.on('connect', ()=>{
@@ -16,7 +17,10 @@ function socketCall(endpoint, data){
     try{
       if(!socket || !socket?.connected) reject('swgoh-client Socket Error: connection not available')
       socket.timeout(SOCKET_EMIT_TIMEOUT).emit('request', endpoint, data, function(err, res){
-        if(err) reject(`swgoh-client Socket Error: ${err.message || err}`)
+        if(err){
+          console.error(err?.type)
+          resolve({status: 400, message: {code: 999, message: `swgoh-client Socket Error: ${err.message || err}`}})
+        }
         resolve(res)
       })
     }catch(e){
@@ -24,13 +28,25 @@ function socketCall(endpoint, data){
     }
   })
 }
-module.exports = async(uri, payload, identity)=>{
+const handleRequest = async(uri, payload, identity, retryCount = 0)=>{
   try{
     let req = { payload: payload, identity: identity }
     let res = await socketCall(uri, req)
     if(res?.data) return res.data
     if(res?.message?.code === 5)  return res.message
-    if(res?.message) console.log(res.message)
+    /*
+    if(res?.message?.code === 999 && retryCount < 10){
+      return await handleRequest(uri, payload, identity, retryCount++)
+    }
+    */
+    if(res?.message) console.error(res.message)
+  }catch(e){
+    throw(e)
+  }
+}
+module.exports = async(uri, payload, identity)=>{
+  try{
+    return await handleRequest(uri, payload, identity)
   }catch(e){
     throw(e)
   }

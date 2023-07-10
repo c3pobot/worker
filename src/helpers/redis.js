@@ -1,9 +1,11 @@
 'use strict'
+const log = require('logger')
 const RedisWrapper = require('rediswrapper')
 const redis = new RedisWrapper({
   host: process.env.REDIS_SERVER,
   port: process.env.REDIS_PORT,
-  passwd: process.env.REDIS_PASS
+  passwd: process.env.REDIS_PASS,
+  logger: log
 })
 let redisReady = false
 const initRedis = async()=>{
@@ -12,13 +14,13 @@ const initRedis = async()=>{
     let status = await redis.ping()
     if(status === 'PONG'){
       redisReady = true
-      console.log('redis connection successful...')
+      log.info('redis connection successful...')
     }else{
-      console.error('redis connection error. Will try again in 5 seconds...')
+      log.error('redis connection error. Will try again in 5 seconds...')
       setTimeout(initRedis, 5000)
     }
   }catch(e){
-    console.error(e);
+    log.error(e);
     setTimeout(initRedis, 5000)
   }
 }

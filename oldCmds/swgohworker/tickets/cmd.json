@@ -1,0 +1,286 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "tickets",
+    "description": "guild raid ticket commands",
+    "options": [
+      {
+        "type": 1,
+        "name": "check",
+        "description": "Check guild current day raid ticket count",
+        "options": [
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "missed",
+        "description": "checks who missed daily 600 (Only works for 4 hours after reset)",
+        "options": [
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "sendmessages",
+        "description": "send messages to user low on raid tickets (only works 2 hours before guild reset)",
+        "options": [
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "name": "auto",
+        "description": "manage guild auto ticket check",
+        "options": [
+          {
+            "type": 1,
+            "name": "show",
+            "description": "Show guild auto ticket check set up",
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "settings",
+            "description": "change settings for guild auto ticket check",
+            "options":[
+              {
+                "type": 4,
+                "name": "status",
+                "description": "enable or disable auto ticket check",
+                "choices": [
+                  {
+                    "name": "enabled",
+                    "value": 1
+                  },
+                  {
+                    "name": "disabled",
+                    "value": 0
+                  }
+                ]
+              },
+              {
+                "type": 7,
+                "name": "channel",
+                "description": "channel for the posting messages from auto check"
+              },
+              {
+                "type": 4,
+                "name": "count",
+                "description": "required ticket count to not get auto message"
+              },
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "name": "mom",
+        "description": "manage mom watch for ticket check",
+        "options": [
+          {
+            "type": 1,
+            "name": "add",
+            "description": "add allyCode to mom list",
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode",
+                "description": "allycode of player to add",
+                "required": true
+              },
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "remove",
+            "description": "remove allyCode to mom list",
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode",
+                "description": "allycode of player to remove",
+                "required": true
+              },
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "set",
+            "description": "set the @user for mom notificatoins",
+            "options": [
+              {
+                "type": 6,
+                "name": "user",
+                "description": "@user to set as mom",
+                "required": true
+              },
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "unset",
+            "description": "unset the @user for mom notificatoins",
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "show",
+            "description": "show mom watch list setup",
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

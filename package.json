@@ -22,6 +22,7 @@
     "join-images": "^1.1.3",
     "json-array-sorter": "^0.0.5",
     "json2xls": "^0.1.2",
+    "logger": "github:c3pobot/logger",
     "mongowrapper": "github:c3pobot/mongowrapper",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.7",

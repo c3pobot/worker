@@ -1,0 +1,8 @@
+{
+  "type": "public",
+  "cmd": {
+    "name":"g",
+    "description": "Bot guild commands",
+    "options": []
+  }
+}

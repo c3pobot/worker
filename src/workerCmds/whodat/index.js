@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { CheckBotOwner, GetOptValue, ReplyError, ReplyMsg } = require('helpers')
 const Cmds = {}
 Cmds.channel = require('./channel')
@@ -22,7 +23,7 @@ module.exports = async(obj)=>{
       }
     }
   }catch(e){
-    console.log(e)
+    log.error(e)
     ReplyError(obj)
   }
 }

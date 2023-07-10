@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { CheckVIP, ReplyError, ReplyMsg } = require('helpers')
 const Cmds = {}
 Cmds.cr = require('./cr')
@@ -25,7 +26,7 @@ module.exports = async(obj = {})=>{
       ReplyMsg(obj, {content: 'This command is only for VIP members'})
     }
   }catch(e){
-    console.error(e)
+    log.error(e)
     ReplyError(obj)
   }
 }

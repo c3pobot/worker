@@ -9,6 +9,6 @@ module.exports = async(sId, dId)=>{
     const res = await BotSocket.call('getGuildMember', obj)
     return res?.perms
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }

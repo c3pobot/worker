@@ -1,4 +1,5 @@
 'use stict'
+const log = require('logger')
 const { ReplyError, ReplyMsg } = require('helpers')
 module.exports = (obj = {})=>{
   try{
@@ -10,7 +11,7 @@ module.exports = (obj = {})=>{
     msg2Send.content += '\n```\n'
     ReplyMsg(obj, msg2Send)
   }catch(e){
-    console.error(e)
+    log.error(e)
     ReplyError(obj)
   }
 }

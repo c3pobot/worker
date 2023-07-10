@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { ReplyError, ReplyMsg } = require('helpers')
 const Cmds = {}
 Cmds.report = require('./report')
@@ -19,7 +20,7 @@ module.exports = async(obj)=>{
       ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
     }
   }catch(e){
-    console.log(e)
+    log.log(e)
     ReplyError(obj)
   }
 }

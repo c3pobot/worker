@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { AdminNotAuth, CheckServerAdmin, ReplyError, ReplyMsg } = require('helpers')
 const Cmds = {}
 Cmds.add = require('./add')
@@ -30,7 +31,7 @@ module.exports = async(obj = {})=>{
       ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
     }
   }catch(e){
-    console.error(e)
+    log.error(e)
     ReplyError(obj)
   }
 }

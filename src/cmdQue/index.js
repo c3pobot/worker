@@ -1,3 +1,4 @@
+const log = require('logger')
 const { mongoStatus, localQue, ReportError } = require('helpers')
 const GAME_API_NEEDED = process.env.GAME_API_NEEDED
 
@@ -38,13 +39,13 @@ if(GAME_API_NEEDED){
 const CreateQues = async()=>{
   try{
     for(let i in workerTypes){
-      const opts = { queOptions: {redis: redisConnection}, queName: workerTypes[i], cmdProcessor: CmdProcessor.process, numJobs: NUM_QUE_JOBS }
+      const opts = { queOptions: {redis: redisConnection}, queName: workerTypes[i], cmdProcessor: CmdProcessor.process, numJobs: NUM_QUE_JOBS, logger: log }
       if(PRIVATE_WORKER) opts.queName += 'Private'
       if(localQue && localQueKey){
         opts.localQue = localQue
         opts.localQueKey = localQueKey
       }
-      console.log('Creating '+opts.queName+' worker que...')
+      log.debug('Creating '+opts.queName+' worker que...')
       CmdQue[opts.queName] = new QueWrapper(opts)
     }
     StartQues()

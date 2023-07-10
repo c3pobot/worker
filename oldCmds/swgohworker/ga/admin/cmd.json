@@ -1,0 +1,71 @@
+{
+  "type": 2,
+  "name": "admin",
+  "description": "(Bot owner only) set current season for ga",
+  "options": [
+    {
+      "type": 1,
+      "name": "counter",
+      "description": "(Bot owner onlt) set latest season for ga",
+      "options": [
+        {
+          "type": 3,
+          "name": "mode",
+          "description": "3v3 or 5v5",
+          "required": true,
+          "choices": [
+            {
+              "name": "5v5",
+              "value": "5v5"
+            },
+            {
+              "name": "3v3",
+              "value": "3v3"
+            }
+          ]
+        },
+        {
+          "type": 4,
+          "name": "season",
+          "description": "season number",
+          "required": true
+        }
+      ]
+    },
+    {
+      "type": 1,
+      "name": "history",
+      "description": "(Bot owner onlt) set history map ga",
+      "options": [
+        {
+          "type": 3,
+          "name": "mode",
+          "description": "3v3 or 5v5",
+          "required": true,
+          "choices": [
+            {
+              "name": "5v5",
+              "value": "5v5"
+            },
+            {
+              "name": "3v3",
+              "value": "3v3"
+            }
+          ]
+        },
+        {
+          "type": 4,
+          "name": "histid",
+          "description": "history id",
+          "required": true
+        },
+        {
+          "type": 3,
+          "name": "date",
+          "description": "history date",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

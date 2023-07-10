@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { AdminNotAuth, CheckServerAdmin, GetOptValue, ReplyError, ReplyMsg, SendMsg } = require('helpers')
 module.exports = async(obj = {})=>{
   try{
@@ -23,7 +24,7 @@ module.exports = async(obj = {})=>{
       AdminNotAuth(obj)
     }
   }catch(e){
-    console.error(e)
+    log.error(e)
     ReplyError(obj)
   }
 }

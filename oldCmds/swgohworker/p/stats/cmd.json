@@ -1,0 +1,90 @@
+{
+  "type": 1,
+  "name": "stats",
+  "description": "query and display player units based on requested overall stat",
+  "options": [
+    {
+      "type": 3,
+      "name": "stat",
+      "description": "stat to query",
+      "required": true,
+      "choices":[
+        {
+          "name": "speed",
+          "value": "speed"
+        },
+        {
+          "name": "offense",
+          "value": "offense"
+        },
+        {
+          "name": "defense",
+          "value": "defense"
+        },
+        {
+          "name": "potency",
+          "value": "potency"
+        },
+        {
+          "name": "tenacity",
+          "value": "tenacity"
+        },
+        {
+          "name": "health",
+          "value": "health"
+        },
+        {
+          "name": "protection",
+          "value": "protection"
+        }
+      ]
+    },
+    {
+      "type": 3,
+      "name": "sort",
+      "description": "sort but total stat or mod stat",
+      "choices": [
+        {
+          "name": "Total Stat",
+          "value": "stat"
+        },
+        {
+          "name": "Mod Stat",
+          "value": "mod"
+        }
+      ]
+    },
+    {
+      "type": 4,
+      "name": "limit",
+      "description": "number of units to limit results to (defaults to 20)"
+    },
+    {
+      "type": 6,
+      "name": "user",
+      "description": "@user to lookup",
+      "required": false
+    },
+    {
+      "type": 3,
+      "name": "allycode",
+      "description": "allyCode to lookup",
+      "required": false
+    },
+    {
+      "type": 3,
+      "name": "allycode_option",
+      "description": "primary or alt allycode",
+      "choices": [
+        {
+          "name": "Primary",
+          "value": "primary"
+        },
+        {
+          "name": "Alt",
+          "value": "alt"
+        }
+      ]
+    }
+  ]
+}

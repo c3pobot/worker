@@ -15,7 +15,7 @@ Cmds.CheckServerAdmin = require('./checkServerAdmin')
 Cmds.ConfirmButton = require('./confirmButton')
 
 Cmds.DeepCopy = require('./deepCopy')
-
+Cmds.DiscordQuery = require('./discordQuery')
 Cmds.EnumPerms = require('./enumPerms')
 
 Cmds.FindUnit = require('./findUnit')
@@ -23,16 +23,20 @@ Cmds.FindUnit = require('./findUnit')
 Cmds.GetAllyCodeObj = require('./getAllyCodeObj')
 Cmds.GetAllyCodeFromDiscordId = require('./getAllyCodeFromDiscordId')
 Cmds.GetBotPerms = require('./getBotPerms')
-Cmds.GetScreenShot = require('./getScreenShot')
 Cmds.getDiscordAvatarUrl = require('./getDiscordAvatarUrl')
+Cmds.GetFakeUnit = require('./getFakeUnit')
+Cmds.GetGuildId = require('./getGuildId')
+Cmds.GetGuildName = require('./getGuildName')
 Cmds.GetOptValue = require('./getOptValue')
+Cmds.GetScreenShot = require('./getScreenShot')
 
 Cmds.localQue = LocalQueCmd.localQue
 Cmds.localQueStatus = LocalQueCmd.localQueStatus
+Cmds.log = require('logger')
 
+Cmds.ModifyUnit = require('./modifyUnit')
 Cmds.mongo = MongoCmd.mongo
 Cmds.mongoStatus = MongoCmd.mongoStatus
-Cmds.ModifyUnit = require('./modifyUnit')
 
 Cmds.redis = RedisCmd.redis
 Cmds.redisStatus = RedisCmd.redisStatus
@@ -40,7 +44,7 @@ Cmds.RemoveJob = JobCache.removeJob
 Cmds.ReplyButton = require('./replyButton')
 Cmds.ReplyError = require('./replyError')
 Cmds.ReplyMsg = require('./replyMsg')
-Cmds.ReportError = require('./reportError')
+
 Cmds.SendMsg = require('./sendMsg')
 Cmds.StatCalc = require('statcalc')
 

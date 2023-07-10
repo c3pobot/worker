@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { mongo, DiscordQuery, GetBotPerms, GetOptValue, ReplyButton, ReplyError, ReplyMsg } = require('helpers')
 const ShowListOfRoles = require('./showListOfRoles')
 module.exports = async(obj = {})=>{
@@ -42,7 +43,7 @@ module.exports = async(obj = {})=>{
     }
     ReplyMsg(obj, msg2send)
   }catch(e){
-    console.error(e);
+    log.error(e);
     ReplyError(obj)
   }
 }

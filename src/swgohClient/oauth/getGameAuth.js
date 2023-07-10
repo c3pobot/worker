@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const swgohClient = require('swgohClient/routes/apiFetch')
 const fetch = require('node-fetch')
 const { mongo } = require('helpers/mongo')
@@ -16,7 +17,7 @@ const checkCookie = (cookie)=>{
     }
     return res
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }
 const apiFetch = async(headers = {})=>{
@@ -39,7 +40,7 @@ const apiFetch = async(headers = {})=>{
       return res
     }
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }
 
@@ -74,6 +75,6 @@ module.exports.getCodeAuth = async(uid)=>{
     }
     return newAuth
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }

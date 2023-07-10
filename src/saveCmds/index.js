@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const path = require('path')
 const { mongo } = require('helpers/mongo')
 const ReadFiles = require('./readFiles')
@@ -9,14 +10,14 @@ const GetCmdArray = async()=>{
       for(let i in cmdArray){
         if(!cmdArray[i]) continue;
         //await mongo.rep('slashCmds', {_id: i}, cmdArray[i])
-        console.log('saved '+i+' cmds to mongo')
+        log.info('saved '+i+' cmds to mongo')
       }
     }else{
-      console.log('Did not find any commands. Will try again in 5 seconds')
+      log.info('Did not find any commands. Will try again in 5 seconds')
       setTimeout(()=>GetCmdArray(), 5000)
     }
   }catch(e){
-    console.error(e)
+    log.error(e)
     setTimeout(()=>GetCmdArray(), 5000)
   }
 }

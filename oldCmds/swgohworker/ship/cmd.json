@@ -1,0 +1,25 @@
+{
+  "type": "public",
+  "que": "swgoh",
+  "cmd": {
+    "name": "ship",
+    "description": "get info about base ships",
+    "options": [
+      {
+        "type": 1,
+        "name": "speed",
+        "description": "show base ship speed based on developtment",
+        "options": [
+          {
+            "type": 3,
+            "name": "ship",
+            "description": "Ship name",
+            "required": true,
+            "autocomplete": true,
+            "focused": true
+          }
+        ]
+      }
+    ]
+  }
+}

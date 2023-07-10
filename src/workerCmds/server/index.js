@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { CheckBotOwner, GetOptValue, ReplyError, ReplyMsg } = require('helpers')
 const Cmds = {}
 Cmds.basic = require('./basic')
@@ -19,7 +20,7 @@ module.exports = async(obj = {})=>{
       ReplyMsg(obj, {content: 'This command is only available to the bot owner'})
     }
   }catch(e){
-    console.log(e)
+    log.error(e)
     ReplyError(obj)
   }
 }

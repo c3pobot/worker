@@ -1,11 +1,15 @@
 'use strict'
+const log = require('logger')
+let logLevel = process.env.LOG_LEVEL || log.Level.INFO;
+log.setLevel(logLevel);
 const SaveCmds = require('./saveCmds')
 const UpdateGameData = require('./updateGameData')
 const PRIVATE_BOT = +(process.env.PRIVATE_BOT || 0)
 const WORKER_NAME = process.env.WORKER_NAME || '0'
 const GAME_API_NEEDED = process.env.GAME_API_NEEDED
-const { mongoStatus, redisStatus, localQueStatus, ReportError } = require('helpers')
+const { mongoStatus, redisStatus, localQueStatus } = require('helpers')
 require('./helpers/botSettings')
+require('./helpers/commandUpdates')
 let swgohClient
 if(GAME_API_NEEDED){
   swgohClient = require('./swgohClient')
@@ -88,6 +92,7 @@ const CheckGameData = async()=>{
 const StartServices = async()=>{
   try{
     if(!PRIVATE_BOT && WORKER_NAME?.toString()?.endsWith('0')) await SaveCmds()
+    if(WORKER_NAME?.toString()?.endsWith('0')) await require('./checkCmds')
     require('./cmdQue')
   }catch(e){
     ReportError(e);

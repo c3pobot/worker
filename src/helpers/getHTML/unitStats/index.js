@@ -1,27 +1,10 @@
 'use strict'
+const getImage = require('./getImage')
 const getUnitStats = require('./getUnitStats')
+const getMultipleUnitStats = require('./getMultipleUnitStats')
 const getUnitMods = require('./getUnitMods')
-const uInfo = require('./uInfo')
-const getSkillHTML = (skill = {})=>{
-  try{
-    let html
-    for(let i in skill){
-      let img
-      if(!skill[i]) continue
-      if(!skill[i].isZeta && !skill[i].isOmi) continue;
-      if(skill[i].tier < skill[i].zetaTier && skill[i].tier < skill[i].omiTier) continue;
-      if(skill[i].tier >= skill[i].zetaTier) img = 'zeta'
-      if(skill[i].tier >= skill[i].omiTier) img = 'omi'
-      if(img){
-        if(!html) html = ''
-        html += '<tr><td colspan="3" class="unit-zeta"><img src="/asset/'+img+'.png"> '+skill[i].type+' : '+skill[i].nameKey+'</td></tr>'
-      }
-    }
-    return html
-  }catch(e){
-    throw(e)
-  }
-}
+
+
 const getDate = (timestamp)=>{
   let dateOptions = {month: 'numeric', day: 'numeric', year: 'numeric'}
   let dateTime = new Date(+timestamp)
@@ -31,62 +14,44 @@ module.exports = (data = {})=>{
   try{
     //header
     let unit = data.unit, colSpan = 1
-    if(unit.combatType === 1 && unit.mods) colSpan = 2
-    //let html = '<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css?family=Antic" rel="stylesheet"><link rel="stylesheet" type="text/css" href="static/css/unit.css"></head>'
+    if(!data.unit2) colSpan = 2
     let html = '<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0">'
     html += '<link href="https://fonts.googleapis.com/css?family=Antic" rel="stylesheet">'
     html += '<link href="/css/unitStat.css" rel="stylesheet">'
     html += '</head>'
     html += '<body>'
     html += '<table class="unit-image">'
-    html += '<tr>'
-    html += '<td valign="top">'
-    //unit start
-      html += '<table class="unit-image-inner">'
-      html += '<tr><td colspan="2"><table class="unit-portrait" background="/portrait/'+unit.icon+'.png">'
-      html += '<tr><td class="unit-name">'+unit.nameKey+'</td></tr>'
-      html += '<tr><td colspan="3">&nbsp;</td></tr>'
-        //unitextra start
-        html += '<tr><td valign="bottom"><table class="unit-extra" id="unit-extra">'
-
-        if(unit.combatType === 1){
-          if(unit.ultimate){
-            for(let i in unit.ultimate) html += '<tr><td colspan="3" class="unit-zeta"><img src="/asset/ultimate.png"> ULT : '+unit.ultimate[i].nameKey+'</td></tr>'
-          }
-
-          let skillHtml = getSkillHTML(unit.skill)
-          if(skillHtml) html += skillHtml
+      html += '<tr>'
+        html += '<td class="unit-name">'+unit.nameKey+'</td>'
+        /*
+        if(!data.unit2 && unit.combatType === 1 && unit.mods){
+          html += '<td rowSpan="3" valign="top" class="mods-td">'
+          html += getUnitMods(unit.mods)
+          html += '</td>'
         }
-        html += '<tr>'
-        html += '<td class="unit-level">L'+unit.level+'</td>'
-        html += '<td class="unit-rarity">'
-        for(let i=0;i<7;i++) html += '<img src="/asset/'+(i < unit.rarity ? 'star-yellow':'star-grey')+'.png">';
+        */
+        if(!data.unit2){
+          html +='<td valign="top" class="td-stats" rowSpan="2">'
+          if(!data.unit2) html += getUnitStats(unit)
+          html += '</td>'
+        }
+
+        //if(data.unit2) html += getMultipleUnitStats(data)
+
+      html += '</tr>'
+      html += '<tr>'
+        html += '<td valign="top">'
+        html += getImage(data)
         html += '</td>'
-
-        if(unit.combatType === 1){
-          let gearColor = uInfo.gearColors[unit.gearTier], gearValue = 'G'+unit.gearTier
-          if(unit.relicTier) gearValue = 'R'+unit.relicTier
-          html += '<td class="unit-gear"><div style="color: '+gearColor+'">'+gearValue+'</div></td>'
-        }else{
-          html += '<td>&nbsp;</td>'
-        }
-        html += '</tr>'
-        html += '</table></td></tr>'
-        //unitextra end
-
-      html += '</table></td></tr>'
-
-      html += getUnitStats(unit)
-      html += '</table>'
-    //unit end
-    html += '</td>'
-    //mods start
-    if(unit.combatType === 1 && unit.mods){
-      html += getUnitMods(unit.mods)
-    }
-    html += '</tr>'
-    if(data.player && data.updated) html += '<tr><td colspan="'+colSpan+'" class="footer-text">'+data.player+'\'s '+unit.nameKey+' | '+(getDate(data.updated))+'</td></tr>'
+      html += '</tr>'
+      if(!data.unit2 && unit.combatType === 1 && unit.mods){
+        html += '<tr><td valign="top" class="mods-td" colSpan="2">'
+        html += getUnitMods(unit.mods)
+        html += '</td></tr>'
+      }
+      if(data.player && data.updated) html += '<tr><td colSpan = "'+colSpan+'" class="footer-text">'+data.player+'\'s '+unit.nameKey+' | '+(getDate(data.updated))+'</td></tr>'
     html += '</table>'
+    //mods start
     html += '</body>'
     html += '</html>'
 

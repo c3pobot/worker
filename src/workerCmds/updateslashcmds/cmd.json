@@ -12,10 +12,6 @@
         "description" : "Which slash commands to update",
         "choices" : [
           {
-            "name" : "all",
-            "value" : "all"
-          },
-          {
             "name" : "global",
             "value" : "global"
           },

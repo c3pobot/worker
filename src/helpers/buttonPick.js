@@ -8,6 +8,6 @@ module.exports = async(obj = {}, msg, method = 'PATCH')=>{
     const job = await JobCache.getJob(obj)
     if(job) await WebHookMsg(obj?.token, msg, method)
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }

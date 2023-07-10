@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const BotSocket = require('helpers/botSocket')
 const { ReplyError, ReplyMsg } = require('helpers')
 const getDate = (timestamp)=>{
@@ -76,7 +77,7 @@ module.exports = async(obj)=>{
     }
     ReplyMsg(obj, msg2Send)
   }catch(e){
-    console.log(e)
+    log.error(e)
     ReplyError(obj)
   }
 }

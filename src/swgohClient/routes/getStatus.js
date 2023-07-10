@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const apiFetch = require('./apiFetch')
 let apiStatus = false
 const checkStatus = async()=>{
@@ -6,13 +7,13 @@ const checkStatus = async()=>{
     let obj = await apiFetch('metadata')
     if(obj?.latestLocalizationBundleVersion){
       apiStatus = true
-      console.log('game api is ready...')
+      log.info('game api is ready...')
     }else{
-      console.log('game api is not ready...')
+      log.info('game api is not ready...')
       setTimeout(checkStatus, 5000)
     }
   }catch(e){
-    console.error(e);
+    log.info('game api is not ready...')
     setTimeout(checkStatus, 5000)
   }
 }

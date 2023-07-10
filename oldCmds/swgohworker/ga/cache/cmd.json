@@ -1,0 +1,38 @@
+{
+  "type": 1,
+  "name": "cache",
+  "description": "clear cached ga history images",
+  "options": [
+    {
+      "type": 4,
+      "name": "confirm",
+      "description": "confirm you want to clear ga image cache",
+      "required": true,
+      "choices": [
+        {
+          "name": "just kidding",
+          "value": 0
+        },
+        {
+          "name": "Yes",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": 3,
+      "name": "allycode_option",
+      "description": "primary or alt allycode",
+      "choices": [
+        {
+          "name": "Primary",
+          "value": "primary"
+        },
+        {
+          "name": "Alt",
+          "value": "alt"
+        }
+      ]
+    }
+  ]
+}

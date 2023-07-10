@@ -29,6 +29,6 @@ module.exports = async(obj = {}, msg)=>{
       }]
     }, 'PATCH')
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }

@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const BotSocket = require('./helpers/botSocket')
 const swgohClient = require('./swgohClient')
 const DATASYNC_POD_NAME = process.env.DATASYNC_POD_NAME || 'datasync'
@@ -9,7 +10,7 @@ const updateData = async()=>{
     if(obj?.version && obj?.data){
       let status = await swgohClient('setGameData', obj.data)
       if(status){
-        console.log('gameData set to version '+obj.version)
+        log.info('gameData set to version '+obj.version)
         gameVersion = obj.version
         return true
       }
@@ -28,7 +29,7 @@ const SyncData = async()=>{
       setTimeout(SyncData, 5 * 60 * 1000)
     }
   }catch(e){
-    console.error(e);
+    log.error(e);
     setTimeout(SyncData, 5000)
   }
 }

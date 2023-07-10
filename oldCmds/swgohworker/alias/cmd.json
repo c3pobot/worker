@@ -1,0 +1,48 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "alias",
+    "description": "Modify Server Alias",
+    "options": [
+      {
+        "type": 1,
+        "name": "list",
+        "description": "list unit alias for this server"
+      },
+      {
+        "type": 1,
+        "name": "add",
+        "description": "(requires bot admin) Add unit alias",
+        "options": [
+          {
+            "type": 3,
+            "name": "alias",
+            "description": "alias for the unit",
+            "required": true
+          },
+          {
+            "type": 3,
+            "name": "unit",
+            "description": "unit for the alias",
+            "required": true,
+            "autocomplete": true,
+            "focused": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "remove",
+        "description": "(requires bot admin) remove unit alias",
+        "options": [
+          {
+            "type": 3,
+            "name": "alias",
+            "description": "alias for the unit",
+            "required": true
+          }
+        ]
+      }
+    ]
+  }
+}

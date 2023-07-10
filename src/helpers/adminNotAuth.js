@@ -15,6 +15,6 @@ module.exports =  async(obj = {})=>{
     msg2send += 'You can use the `/admin show` command to see which @roles have been added'
     ReplyMsg(obj, {content: msg2send})
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }

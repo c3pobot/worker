@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { mongo } = require('helpers')
 const Cmds = {}
 const CryptoJS = require('crypto-js')
@@ -7,7 +8,8 @@ const client = new OauthClientWrapper({
   client_id: process.env.GOOG_CLIENT_ID,
   client_secrect: process.env.GOOG_CLIENT_SECRET,
   redirect_uri: process.env.GOOG_REDIRECT_URI,
-  cache_client: process.env.OAUTH_CLIENT_CACHE || false
+  cache_client: process.env.OAUTH_CLIENT_CACHE || false,
+  logger: log
 })
 const GetRefreshToken = async(uid)=>{
   try{
@@ -16,21 +18,21 @@ const GetRefreshToken = async(uid)=>{
     if(obj && obj.refreshToken) refreshToken = await Decrypt(obj.refreshToken)
     return refreshToken
   }catch(e){
-    console.error(e)
+    log.error(e)
   }
 }
 const Decrypt = async(token)=>{
   try{
     return await (CryptoJS.AES.decrypt(token, process.env.GOOG_CLIENT_SECRET)).toString(CryptoJS.enc.Utf8)
   }catch(e){
-    console.error(e)
+    log.error(e)
   }
 }
 const Encrypt = async(token)=>{
   try{
     return await (CryptoJS.AES.encrypt(token, process.env.GOOG_CLIENT_SECRET)).toString()
   }catch(e){
-    console.error(e)
+    log.error(e)
   }
 }
 Cmds.GetAutUrl = async()=>{
@@ -54,7 +56,7 @@ Cmds.SaveRefreshToken = async(uid, refreshToken)=>{
     }
     return tempObj
   }catch(e){
-    console.error(e)
+    log.error(e)
   }
 }
 

@@ -1,0 +1,119 @@
+{
+  "type": "bo-home",
+  "cmd": {
+    "name": "botadmin",
+    "description": "(Bot Owner only)",
+    "options": [
+      {
+        "type": 1,
+        "name": "synctime",
+        "description": "(Bot Owner only) Get arena sync times"
+      },
+      {
+        "type": 2,
+        "name": "admin",
+        "description": "(Bot Owner only) bot admin",
+        "options": [
+          {
+            "type": 1,
+            "name": "add",
+            "description": "(Bot Owner Only) add super admin user",
+            "options": [
+              {
+                "type": 6,
+                "name": "user",
+                "description": "user to add as super admin",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "remove",
+            "description": "(Bot Owner Only) remove super admin user",
+            "options": [
+              {
+                "type": 6,
+                "name": "user",
+                "description": "user to remove as super admin",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "updatedata",
+        "description": "(Bot owner only)",
+        "options": [
+          {
+            "type": 5,
+            "name": "newfiles",
+            "description": "Pull new data files"
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "debug",
+        "description": "(Bot Owner only)",
+        "options": [
+          {
+            "type": 4,
+            "name": "status",
+            "description": "Status for debug",
+            "required": true,
+            "choices": [
+              {
+                "name": "enable",
+                "value": 1
+              },
+              {
+                "name": "disable",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "syncguild",
+        "description": "(Bot Owner only) manage synced guilds",
+        "options": [
+          {
+            "type": 3,
+            "name": "action",
+            "description": "sync guild action",
+            "required": true,
+            "choices": [
+              {
+                "name": "add",
+                "value": "add"
+              },
+              {
+                "name": "remove",
+                "value": "remove"
+              },
+              {
+                "name": "list",
+                "value": "list"
+              }
+            ]
+          },
+          {
+            "type": 6,
+            "name": "user",
+            "description": "user to look up guild"
+          },
+          {
+            "type": 3,
+            "name": "allycode",
+            "description": "allycode to look up guild"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "type": 2,
+  "name": "settings",
+  "description": "manage ga settings",
+  "options": [
+    {
+      "type": 1,
+      "name": "add-unit",
+      "description": "add unit to ga comparison",
+      "options": [
+        {
+          "type": 3,
+          "name": "unit",
+          "description": "Unit to query",
+          "required": true,
+          "autocomplete": true,
+          "focused": true
+        },
+        {
+          "type": 3,
+          "name": "allycode_option",
+          "description": "primary or alt allycode",
+          "choices": [
+            {
+              "name": "Primary",
+              "value": "primary"
+            },
+            {
+              "name": "Alt",
+              "value": "alt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": 1,
+      "name": "remove-unit",
+      "description": "remove unit from ga comparison",
+      "options": [
+        {
+          "type": 3,
+          "name": "unit",
+          "description": "Unit to query",
+          "required": true,
+          "autocomplete": true,
+          "focused": true
+        },
+        {
+          "type": 3,
+          "name": "allycode_option",
+          "description": "primary or alt allycode",
+          "choices": [
+            {
+              "name": "Primary",
+              "value": "primary"
+            },
+            {
+              "name": "Alt",
+              "value": "alt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": 1,
+      "name": "show",
+      "description": "show ga comparison settings",
+      "options": [
+        {
+          "type": 3,
+          "name": "allycode_option",
+          "description": "primary or alt allycode",
+          "choices": [
+            {
+              "name": "Primary",
+              "value": "primary"
+            },
+            {
+              "name": "Alt",
+              "value": "alt"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

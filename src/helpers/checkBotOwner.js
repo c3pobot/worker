@@ -6,6 +6,6 @@ module.exports = async(obj = {})=>{
     if(BOT_OWNER_ID && obj.member?.user?.id === BOT_OWNER_ID) auth++
     return auth
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }

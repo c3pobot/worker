@@ -7,6 +7,6 @@ module.exports = (opt = [], optName, defaultValue)=>{
     if(res && typeof res === 'string') res = res.trim()
     return res
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }

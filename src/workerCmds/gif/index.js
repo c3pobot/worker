@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { mongo, apiFetch, GetOptValue, ReplyError, ReplyMsg } = require('helpers')
 const GIPHY_API_KEY = process.env.GIPHY_API_KEY
 module.exports = async(obj = {})=>{
@@ -17,7 +18,7 @@ module.exports = async(obj = {})=>{
     }
     ReplyMsg(obj, msg2Send)
   }catch(e){
-    console.error(e)
+    log.error(e)
     ReplyError(obj)
   }
 }

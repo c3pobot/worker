@@ -24,6 +24,6 @@ module.exports = async(html, pKey, width = 80, resizeImg = false)=>{
     const res = await fetch(path.join(WEBRENDER_URI, 'web'), payload)
     if(res) return await parseResponse(res)
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }

@@ -1,0 +1,8 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "ga",
+    "description": "ga matchup info",
+    "options": []
+  }
+}

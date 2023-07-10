@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { apiFetch, GetOptValue, ReplyError, ReplyMsg } = require('helpers')
 module.exports = async(obj = {})=>{
   try{
@@ -25,7 +26,7 @@ module.exports = async(obj = {})=>{
     }
     ReplyMsg(obj, msg2Send)
   }catch(e){
-    console.log(e)
+    log.error(e)
     ReplyError(obj)
   }
 }

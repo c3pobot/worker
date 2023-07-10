@@ -7,7 +7,7 @@ Cmds.addJob = async(obj = {})=>{
   try{
     if(obj?.jobId) await JobCache.set(obj.jobId, obj)
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }
 Cmds.getJob = async(obj = {})=>{
@@ -18,14 +18,14 @@ Cmds.getJob = async(obj = {})=>{
       return job
     }
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }
 Cmds.checkJob = async(obj = {})=>{
   try{
     if(obj?.jobId) return await JobCache.get(obj.jobId)
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }
 Cmds.removeJob = async(jobId)=>{
@@ -35,7 +35,7 @@ Cmds.removeJob = async(jobId)=>{
       let job = await JobCache.take(jobId)
     }
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }
 module.exports = Cmds

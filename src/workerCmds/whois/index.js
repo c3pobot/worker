@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { EnumPerms, GetOptValue, ReplyError, ReplyMsg } = require('helpers')
 const BotSocket = require('helpers/botSocket')
 //const { Permissions } = require('discord.js');
@@ -91,7 +92,7 @@ module.exports = async(obj = {})=>{
     }
     ReplyMsg(obj, msg2Send)
   }catch(e){
-    console.log(e)
+    log.error(e)
     ReplyError(obj)
   }
 }

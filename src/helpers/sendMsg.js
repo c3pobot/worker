@@ -7,6 +7,6 @@ module.exports = async(obj = {}, content)=>{
     return await BotSocket.call('sendMsg', obj)
     //return await SendMsg(obj.chId, content)
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }

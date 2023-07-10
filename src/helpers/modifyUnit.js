@@ -1,9 +1,7 @@
 'use strict'
-const swgohClient = require('../swgohClient')
+const statCalc = require('../swgohClient/routes/statCalc')
 const { configMaps } = require('./configMaps')
 const deepCopy = require('./deepCopy')
-console.log("LOOOK AT AME")
-console.log(swgohClient)
 const enum_stars = {
   1: 'ONE_STAR',
   2: 'TWO_STAR',
@@ -13,7 +11,7 @@ const enum_stars = {
   6: 'SIX_STAR',
   7: 'SEVEN_STAR'
 }
-module.exports = async(baseId, roster = [], gLevel, rLevel, rarity, calcStats = true)=>{
+const modifyUnit = async(baseId, roster = [], gLevel, rLevel, rarity, calcStats = true)=>{
   try{
     let units = [], uInfo = configMaps.UnitMap[baseId]
     let tempUnit = roster.find(x=>x.definitionId.startsWith(baseId+':'))
@@ -43,13 +41,13 @@ module.exports = async(baseId, roster = [], gLevel, rLevel, rarity, calcStats = 
     units.push(tempUnit)
     if(uInfo.combatType ===2 && uInfo.crew){
       for(let i in uInfo.crew){
-        let tempCrew = await modifyUnit(uInfo[i].baseId, roster, gLevel, rLevel, rarity, false)
+        let tempCrew = await modifyUnit(uInfo.crew[i], roster, gLevel, rLevel, rarity, false)
         if(tempCrew) units.push(tempCrew)
       }
     }
     if(units.length > 0){
 
-      let res = await swgohClient('calcRosterStats', {})
+      let res = await statCalc.calcRosterStats(units)
       if(res?.roster[baseId]) return res?.roster[baseId]
 
     }
@@ -57,3 +55,4 @@ module.exports = async(baseId, roster = [], gLevel, rLevel, rarity, calcStats = 
     throw(e)
   }
 }
+module.exports = modifyUnit

@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { GetAccessToken, Decrypt } = require('./googleToken')
 const { mongo } = require('helpers/mongo')
 const { getGoogleAuth, getGuestAuth, getCodeAuth } = require('./getGameAuth')
@@ -38,7 +39,7 @@ module.exports = async (uid, type, newIdentity = false) => {
       if(ssaid){
         auth = await getGuestAuth(ssaid)
       }else{
-        console.log('FB credenitals lost for '+uid)
+        log.info('FB credenitals lost for '+uid)
       }
     }
     if(type == 'codeAuth'){

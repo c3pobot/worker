@@ -1,0 +1,59 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "panic",
+    "description": "Check basic requirements for squads (does not look at stats)",
+    "options": [
+      {
+        "type": 3,
+        "name": "journey",
+        "description": "journey guide unit",
+        "required": true,
+        "autocomplete": true,
+        "focused": true
+      },
+      {
+        "type": 3,
+        "name": "option",
+        "description": "Show units or materials needed (defualt is units)",
+        "choices": [
+          {
+            "name": "units",
+            "value": "units"
+          },
+          {
+            "name": "material",
+            "value": "material"
+          }
+        ]
+      },
+      {
+        "type": 6,
+        "name": "user",
+        "description": "@user to check",
+        "required": false
+      },
+      {
+        "type": 3,
+        "name": "allycode",
+        "description": "allyCode to lookup",
+        "required": false
+      },
+      {
+        "type": 3,
+        "name": "allycode_option",
+        "description": "primary or alt allycode",
+        "choices": [
+          {
+            "name": "Primary",
+            "value": "primary"
+          },
+          {
+            "name": "Alt",
+            "value": "alt"
+          }
+        ]
+      }
+    ]
+  }
+}

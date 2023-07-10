@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const Cmds = {}
 Cmds.alt = require('./alt')
 Cmds.main = require('./main')
@@ -18,7 +19,7 @@ module.exports = async(obj = {})=>{
       HP.AdminNotAuth(obj)
     }
   }catch(e){
-    console.error(e)
+    log.error(e)
     HP.ReplyError(obj)
   }
 }

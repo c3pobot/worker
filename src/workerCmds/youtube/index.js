@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { GetOptValue, ReplyError, ReplyMsg } = require('helpers')
 const { google } = require('googleapis')
 const youtube = google.youtube({
@@ -14,7 +15,7 @@ const GetVideo = (searchTerm)=>{
           q: searchTerm
         }, (err, res)=>{
           if(err){
-            console.log(e)
+            log.log(e)
           }else{
             if(res && res.data.items && res.data.items.length > 0){
               if(res.data.items[0].id.videoId) vid = 'https://youtube.com/watch?v='+res.data.items[0].id.videoId
@@ -23,7 +24,7 @@ const GetVideo = (searchTerm)=>{
           resolve(vid)
         })
     }catch(e){
-      console.log(e)
+      log.error(e)
       resolve()
     }
   })
@@ -42,7 +43,7 @@ module.exports = async(obj ={})=>{
     }
     ReplyMsg(obj, msg2Send)
   }catch(e){
-    console.log(e)
+    log.error(e)
     ReplyError(obj)
   }
 }

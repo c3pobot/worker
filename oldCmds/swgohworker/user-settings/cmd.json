@@ -1,0 +1,51 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "user-settings",
+    "description": "manage bot settings for user",
+    "options": [
+      {
+        "type": 1,
+        "name": "set",
+        "description": "set user settings",
+        "options": [
+          {
+            "type": 4,
+            "name": "limit",
+            "description": "max number of results to show for GA queries"
+          },
+          {
+            "type": 4,
+            "name": "battles",
+            "description": "minimum number of battles for a result to be included in GA queries"
+          },
+          {
+            "type": 3,
+            "name": "sort",
+            "description": "sort results GA queries",
+            "choices": [
+              {
+                "name": "Win Rate",
+                "value": "rate"
+              },
+              {
+                "name": "Seen",
+                "value": "seen"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "show",
+        "description": "show user settings"
+      },
+      {
+        "type": 1,
+        "name": "clear",
+        "description": "clear user settings"
+      }
+    ]
+  }
+}

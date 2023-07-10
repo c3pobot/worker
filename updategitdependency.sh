@@ -11,3 +11,5 @@ echo updating statcalc
 npm i --package-lock-only github:/c3pobot/statcalc
 echo updating googletokenwrapper
 npm i --package-lock-only github:c3pobot/googletokenwrapper
+echo updating logger
+npm i --package-lock-only github:c3pobot/logger

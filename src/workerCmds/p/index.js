@@ -1,8 +1,10 @@
 'use stric'
+const log = require('logger')
 const { ReplyError, ReplyMsg } = require('helpers')
 const Cmds = {}
 Cmds.report = require('./report')
 Cmds.unit = require('./unit')
+Cmds['unit-compare'] = require('./unit-compare')
 module.exports = async(obj)=>{
   try{
     let tempCmd, opt = []
@@ -20,7 +22,7 @@ module.exports = async(obj)=>{
       ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
     }
   }catch(e){
-    console.log(e)
+    log.error(e)
     ReplyError(obj)
   }
 }

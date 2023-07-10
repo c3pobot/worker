@@ -15,6 +15,6 @@ module.exports = async(opts = {})=>{
     }
     return guildId
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }

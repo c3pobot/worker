@@ -16,7 +16,7 @@ const parseResponse = async(res)=>{
 
     return body
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }
 module.exports = async(url, method = 'GET', body, headers = {})=>{
@@ -27,6 +27,6 @@ module.exports = async(url, method = 'GET', body, headers = {})=>{
     const obj = await fetch(url, req)
     return await parseResponse(obj)
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }

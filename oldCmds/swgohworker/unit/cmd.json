@@ -1,0 +1,185 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "unit",
+    "description": "Get Un-modded Units base stats",
+    "options": [
+        {
+          "type": 1,
+          "name": "stats",
+          "description": "Get un-modded units base stats",
+          "options": [
+            {
+                "type": 3,
+                "name": "unit",
+                "description": "Units Name",
+                "required": true,
+                "autocomplete": true,
+                "focused": true
+            },
+            {
+                "type": 3,
+                "name": "gear1",
+                "description": "Gear or Relic",
+                "required": false,
+                "choices": [
+                    {
+                        "name": "Relic",
+                        "value": "r"
+                    },
+                    {
+                        "name": "Gear",
+                        "value": "g"
+                    }
+                ]
+            },
+            {
+                "type": 4,
+                "name": "value1",
+                "description": "gear or relic value",
+                "require": false,
+                "min_value": 1
+            },
+            {
+                "type": 3,
+                "name": "gear2",
+                "description": "Gear or Relic for comparison",
+                "required": false,
+                "choices": [
+                    {
+                        "name": "Relic",
+                        "value": "r"
+                    },
+                    {
+                        "name": "Gear",
+                        "value": "g"
+                    }
+                ]
+            },
+            {
+                "type": 4,
+                "name": "value2",
+                "description": "gear or relic value",
+                "required": false,
+                "min_value": 1
+            },
+            {
+              "type": 4,
+              "name": "rarity",
+              "description": "rarity for the character or ship",
+              "required": false,
+              "min_value": 1,
+              "max_value": 7
+            }
+          ]
+        },
+        {
+          "type": 1,
+          "name": "ability",
+          "description": "Get unit ability description",
+          "options":[
+            {
+                "type": 3,
+                "name": "unit",
+                "description": "unit to query",
+                "required": true,
+                "autocomplete": true,
+                "focused": true
+            },
+            {
+              "type": 3,
+              "name": "type",
+              "description": "ability type",
+              "choices": [
+                {
+                  "name": "Basic",
+                  "value": "basic"
+                },
+                {
+                  "name": "Special",
+                  "value": "special"
+                },
+                {
+                  "name": "Leader",
+                  "value": "lead"
+                },
+                {
+                  "name": "Unique",
+                  "value": "unique"
+                },
+                {
+                  "name": "Ultimate",
+                  "value": "ultimate"
+                },
+                {
+                  "name": "Reinforcement",
+                  "value": "hardware"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": 1,
+          "name": "omicron",
+          "description": "Get list of Omicron abilities",
+          "options": [
+            {
+              "type": 3,
+              "name": "type",
+              "description": "ga/tw/tb",
+              "required": true,
+              "choices": [
+                {
+                  "name": "ga",
+                  "value": "ga"
+                },
+                {
+                  "name": "tb",
+                  "value": "tb"
+                },
+                {
+                  "name": "tw",
+                  "value": "tw"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": 1,
+          "name": "effects",
+          "description": "show units for the given buff/debuff",
+          "options": [
+            {
+              "type": 3,
+              "name": "effect",
+              "description": "effect Name",
+              "required": true,
+              "autocomplete": true,
+              "focused": true
+            },
+            {
+              "type": 3,
+              "name": "show",
+              "description": "show chars/ships/both (defaults to chars)",
+              "choices": [
+                {
+                  "name": "Characters",
+                  "value": "chars"
+                },
+                {
+                  "name": "Ships",
+                  "value": "ships"
+                },
+                {
+                  "name": "Both",
+                  "value": "both"
+                }
+              ]
+            }
+          ]
+        }
+    ]
+  }
+}

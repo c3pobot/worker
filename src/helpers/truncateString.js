@@ -7,6 +7,6 @@ module.exports = (str, num)=>{
     }
     return str
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }

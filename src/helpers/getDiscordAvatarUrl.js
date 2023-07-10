@@ -13,6 +13,6 @@ module.exports = (id, icon, type = 'avatars')=>{
     res += '?size=256'
     return res
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }

@@ -5,7 +5,7 @@ const CalcAverage = (score = 0, completed = 0)=>{
     if(+completed > 0) res = Math.floor(+score / +completed)
     return res.toLocaleString()
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }
 module.exports = ( data = {} )=>{

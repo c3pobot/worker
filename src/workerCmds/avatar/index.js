@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { GetOptValue, getDiscordAvatarUrl, ReplyError, ReplyMsg } = require('helpers')
 const { GetGuild, GetGuildMember } = require('discordapiclient')
 module.exports = async(obj = {})=>{
@@ -53,7 +54,7 @@ module.exports = async(obj = {})=>{
     }
     ReplyMsg(obj, msg2Send)
   }catch(e){
-    console.error(e)
+    log.error(e)
     ReplyError(e)
   }
 }

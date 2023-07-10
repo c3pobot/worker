@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const BotSocket = require('helpers/botSocket')
 const { ReplyError, ReplyMsg } = require('helpers')
 module.exports = async(obj = {})=>{
@@ -54,7 +55,7 @@ module.exports = async(obj = {})=>{
     }
     ReplyMsg(obj, msg2Send)
   }catch(e){
-    console.error(e)
+    log.error(e)
     ReplyError(obj)
   }
 }

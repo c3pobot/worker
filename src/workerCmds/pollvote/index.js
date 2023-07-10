@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { mongo, RemoveJob } = require('helpers')
 const { WebHookMsg } = require('discordapiclient')
 module.exports = async(obj = {})=>{
@@ -27,6 +28,6 @@ module.exports = async(obj = {})=>{
     if(sendResp) WebHookMsg(obj.token, msg2send, sendMethod)
     RemoveJob(obj.id)
   }catch(e){
-    console.error(e)
+    log.error(e)
   }
 }

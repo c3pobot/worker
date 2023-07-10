@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const fs = require('fs')
 const GetSubCommands = async(dir)=>{
   try{
@@ -6,7 +7,7 @@ const GetSubCommands = async(dir)=>{
       fs.readdir(dir, async(err, filenames)=>{
         let res
         if(err) {
-          console.error(err)
+          log.error(err)
         }else{
           res = []
           for(let i in filenames){
@@ -20,7 +21,7 @@ const GetSubCommands = async(dir)=>{
       })
     })
   }catch(e){
-    console.error(e)
+    log.error(e)
   }
 }
 const ReadFile = async(file)=>{
@@ -28,7 +29,7 @@ const ReadFile = async(file)=>{
     const obj = await fs.readFileSync(file)
     if(obj) return JSON.parse(obj)
   }catch(e){
-    console.error('Error reading file '+file)
+    log.error('Error reading file '+file)
   }
 }
 module.exports = (dir)=>{
@@ -37,7 +38,7 @@ module.exports = (dir)=>{
       fs.readdir(dir, async(err, filenames)=>{
         const data = {}
         if(err) {
-          console.error(err)
+          log.error(err)
         }else{
           for(let i in filenames){
             if(filenames[i].split('.').length == 1){
@@ -57,7 +58,7 @@ module.exports = (dir)=>{
         resolve(data)
       })
     }catch(e){
-      console.error(e)
+      log.error(e)
       resolve()
     }
   })

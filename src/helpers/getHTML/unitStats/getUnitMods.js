@@ -2,7 +2,7 @@
 const numeral = require('numeral')
 const getShapeId = (mod)=>{
   let rarity = '5'
-  if(mod.rarity > 4) rarity = mod.rarity.toString()
+  if(mod.rarity === 6) rarity = "6"
   return 'shape-'+rarity+'-'+(mod.slot - 1)+'-'+mod.tier
 }
 const getPosId = (mod)=>{
@@ -20,32 +20,28 @@ const getStat = (stat)=>{
 }
 module.exports = (mods)=>{
   try{
-    let html = '<td id="unitMods" valign="top" class="modsPanel">'
-    html += '<table width="358">'
-    html += '<tbody id="unit-mods">'
-    /*
+    let html = '<table class="modsPanel">', count = 0, modArray = [2, 3, 4, 5, 6, 7], i = 0
+    html += '<tbody>'
+    html += '<tr><td>&nbsp;</td></tr>'
     html += '<tr>'
-    html += '<td class="stat-title">Mods</td>'
-    html += '</tr>'
-    */
-    for(let i in mods){
-      html += '<tr><td class="mod-image">'
-      html += '<div class="mod-shape '+(getShapeId(mods[i]))+'"><div class="mod-icon icon-'+mods[i].setId+'-'+mods[i].tier+' '+(getPosId(mods[i]))+'"></div></div>'
-      html += '<div class="modsPrimary"><b>'+(getStat(mods[i]))+'</b></div>'
-      if(mods[i].secondaryStat?.length > 0){
-        html += '<div class="modsSecondary">'
-        html += '('+mods[i].secondaryStat[0].rolls+') '+(getStat(mods[i].secondaryStat[0]))
-        let s = 1, len = mods[i].secondaryStat.length
+    while(i < 6){
+      if(!mods[modArray[i]]) ++i
+      html += '<td class="mod-image" valign="top">'
+      html += '<div class="mod-shape '+(getShapeId(mods[modArray[i]]))+'"><div class="mod-icon icon-'+mods[modArray[i]].setId+'-'+mods[modArray[i]].tier+' '+(getPosId(mods[modArray[i]]))+'"></div></div>'
+      html += '<div class="mod-stat mod-primaryStat">'+(getStat(mods[modArray[i]]))+'</div>'
+      if(mods[modArray[i]].secondaryStat?.length > 0){
+        let s = 0, len = mods[modArray[i]].secondaryStat.length
         while(s < len){
-          html += '<br>('+mods[i].secondaryStat[s].rolls+') '+(getStat(mods[i].secondaryStat[s]))
+          html += '<div class="mod-stat mod-secondaryStat">('+mods[modArray[i]].secondaryStat[s].rolls+') '+(getStat(mods[modArray[i]].secondaryStat[s]))+'</div>'
           ++s
         }
-        html += '</div></td></tr>'
       }
+      html += '</td>'
+      ++i
     }
+    html += '</tr>'
     html += '</tbody>'
     html += '</table>'
-    html += '</td>'
     return html
   }catch(e){
     console.error(e)

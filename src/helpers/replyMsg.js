@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const JobCache = require('./jobCache')
 const { WebHookMsg } = require('discordapiclient')
 module.exports = async(obj = {}, content, method = 'PATCH')=>{
@@ -7,6 +8,6 @@ module.exports = async(obj = {}, content, method = 'PATCH')=>{
     if(!job) return
     WebHookMsg(obj?.token, content, method)
   }catch(e){
-    console.error(e)
+    log.error(e)
   }
 }

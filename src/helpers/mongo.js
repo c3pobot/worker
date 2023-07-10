@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const POD_NAME = process.env.WORKER_NAME
 const MongoWrapper = require('mongowrapper')
 const mongo = new MongoWrapper({
@@ -12,14 +13,14 @@ const CheckMongo = async()=>{
   try{
     const status = await mongo.init();
     if(status > 0){
-      console.log(POD_NAME+' mongo connection successful...')
+      log.info(POD_NAME+' mongo connection successful...')
       mongoReady = true
     }else{
-      console.error(POD_NAME+' mongo connection error...')
+      log.error(POD_NAME+' mongo connection error...')
       setTimeout(CheckMongo, 5000)
     }
   }catch(e){
-    console.error(e);
+    log.error(e);
     setTimeout(CheckMongo, 5000);
   }
 }

@@ -5,7 +5,7 @@ const Cmds = {}
 Cmds.channel = require('./channel')
 Cmds.guild = require('./guild')
 Cmds.user = require('./user')
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     const auth = await CheckBotOwner(obj)
     let tempCmd, opt

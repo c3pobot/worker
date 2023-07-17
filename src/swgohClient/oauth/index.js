@@ -25,7 +25,7 @@ module.exports = async(uri, payload = {}, opts = {}, job = {})=>{
     if(identity?.auth?.authId && identity?.auth?.authToken) data = await apiFetch(uri, payload, identity)
     if((!data || (data?.code && reAuthCodes[data?.code])) && loginConfirmed !== 'no'){
       await ConfirmButton(job, msg2send)
-      return
+      return 'GETTING_CONFIRMATION'
     }
     if(data){
       if(data.code){

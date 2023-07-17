@@ -1,5 +1,5 @@
 const log = require('logger')
-const { mongoStatus, localQue, ReportError } = require('helpers')
+const { mongoStatus, redis, ReportError } = require('helpers')
 const GAME_API_NEEDED = process.env.GAME_API_NEEDED
 
 const QueWrapper = require('quewrapper')
@@ -7,9 +7,9 @@ const CmdProcessor = require('./cmdProcessor')
 const localQueKey = process.env.LOCAL_QUE_KEY
 const CmdQue = {}
 const redisConnection = {
-  host: process.env.QUE_SERVER,
-	port: +process.env.QUE_PORT,
-	password: process.env.QUE_PASS
+  host: process.env.REDIS_SERVER,
+	port: +process.env.REDIS_PORT,
+	password: process.env.REDIS_PASS
 }
 let workerTypes = ['discord', 'oauth', 'swgoh']
 if(process.env.WORKER_TYPES) workerTypes = JSON.parse(process.env.WORKER_TYPES)
@@ -42,7 +42,7 @@ const CreateQues = async()=>{
       const opts = { queOptions: {redis: redisConnection}, queName: workerTypes[i], cmdProcessor: CmdProcessor.process, numJobs: NUM_QUE_JOBS, logger: log }
       if(PRIVATE_WORKER) opts.queName += 'Private'
       if(localQue && localQueKey){
-        opts.localQue = localQue
+        opts.localQue = redis
         opts.localQueKey = localQueKey
       }
       log.debug('Creating '+opts.queName+' worker que...')

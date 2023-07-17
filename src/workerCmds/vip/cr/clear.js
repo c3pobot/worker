@@ -1,6 +1,6 @@
 'use strict'
 const { mongo, GetOptValue, ReplyMsg } = require('helpers')
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'Nothing was changed'}
     let confirm = GetOptValue(opt, 'confirm')

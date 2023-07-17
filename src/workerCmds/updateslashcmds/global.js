@@ -2,18 +2,18 @@
 const path = require('path')
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID
 const IS_TEST_BOT = process.env.IS_TEST_BOT
-const { mongo, ReplyMsg, DiscordQuery } = require('helpers')
+const { log, mongo, ReplyMsg, DiscordQuery } = require('helpers')
 module.exports = async(obj = {})=>{
   try{
     let msg2send = {content: "Error getting SlashCmds from DB"}, globalCmds = [], payload = {}
-    /*
-    if(process.env.IS_TEST_BOT){
-      ReplyMsg(obj, { content: 'No global commands for the test bot'})
-      return
-    }
-    */
     if(!CLIENT_ID){
       ReplyMsg(obj, { content: 'Discord client id is not provided.'})
+      return
+    }
+    if(process.env.IS_TEST_BOT){
+      let status = await DiscordQuery(path.join('applications', CLIENT_ID, 'commands'), 'PUT', JSON.stringify([]))
+      if(status) log.debug(JSON.stringify(status))
+      ReplyMsg(obj, { content: 'No global commands for the test bot'})
       return
     }
     let slashCmds = await mongo.find('slashCmds', payload)

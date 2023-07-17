@@ -9,7 +9,7 @@ const WORKER_NAME = process.env.WORKER_NAME || '0'
 const GAME_API_NEEDED = process.env.GAME_API_NEEDED
 const { mongoStatus, redisStatus, localQueStatus } = require('helpers')
 require('./helpers/botSettings')
-require('./helpers/commandUpdates')
+require('./helpers/botUpdates')
 let swgohClient
 if(GAME_API_NEEDED){
   swgohClient = require('./swgohClient')
@@ -19,26 +19,13 @@ const CheckRedis = async()=>{
   try{
     let status = redisStatus()
     if(status){
-      CheckLocalQue()
+      CheckMongo()
     }else{
       setTimeout(CheckRedis, 5000)
     }
   }catch(e){
     ReportError(e);
     setTimeout(CheckRedis, 5000)
-  }
-}
-const CheckLocalQue = async()=>{
-  try{
-    let status = localQueStatus()
-    if(status){
-      CheckMongo()
-    }else{
-      setTimeout(CheckLocalQue, 5000)
-    }
-  }catch(e){
-    ReportError(e);
-    setTimeout(CheckLocalQue, 5000)
   }
 }
 const CheckMongo = async()=>{

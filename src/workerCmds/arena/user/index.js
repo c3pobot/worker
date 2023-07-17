@@ -2,7 +2,7 @@
 const Cmds = {}
 Cmds.add = require('./add')
 Cmds.remove = require('./remove')
-module.exports = async(obj, patreon, opt)=>{
+module.exports = async(obj = {}, patreon = {}, opt = [])=>{
   try{
     let tempCmd
     if(opt && opt.find(x=>x.name == 'option')) tempCmd = opt.find(x=>x.name == 'option').value

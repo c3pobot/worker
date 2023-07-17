@@ -8,6 +8,7 @@ module.exports = async(obj = {}, opt = [])=>{
     let baseId, dObj, allyCode, pObj, msg2send = {content: 'error finding the requested unit'}
     if(obj.confirm) baseId = obj.confirm.baseId
     if(!baseId) baseId = await FindUnit(obj, opt, 'unit')
+    if(baseId === 'GETTING_CONFIRMATION') return
     if(baseId){
       await ReplyButton(obj, 'Getting info for **'+configMaps.UnitMap[baseId].nameKey+'** ...')
       msg2send.content = 'You do not have allycode linked to discordId'

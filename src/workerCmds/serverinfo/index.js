@@ -7,7 +7,7 @@ const getDate = (timestamp)=>{
   let dateTime = new Date(+timestamp)
   return dateTime.toLocaleDateString('en-US', dateOptions)+' '+dateTime.toLocaleTimeString('en-US')
 }
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     let msg2Send = {content: 'Error getting guild info'}
     const tempObj = {

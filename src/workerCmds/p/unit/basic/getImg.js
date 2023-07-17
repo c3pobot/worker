@@ -2,7 +2,7 @@
 const { configMaps } = require('helpers/configMaps')
 const getHTML = require('helpers/getHTML/unitStats')
 const { mongo, GetScreenShot } = require('helpers')
-module.exports = async(obj, pObj = {}, baseId)=>{
+module.exports = async(obj = {}, pObj = {}, baseId)=>{
   try{
     let msg2send = { content: +configMaps.UnitMap[baseId].nameKey+' is not activated'}, webHTML, webImg
     if(pObj.roster[baseId]){

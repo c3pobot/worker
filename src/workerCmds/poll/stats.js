@@ -1,7 +1,7 @@
 'use strict'
 const { mongo, ButtonPick, CheckServerAdmin, DiscordQuery, GetOptValue, ReplyButton, ReplyMsg, TruncateString } = require('helpers')
 const GetPollStats = require('./getPollStats')
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'This command is only avaliable to server Admins'}, chId, auth = 0, polls, poll, pollId
     if(await CheckServerAdmin(obj)){

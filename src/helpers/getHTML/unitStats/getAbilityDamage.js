@@ -12,8 +12,6 @@ module.exports = (skill = {}, unit1 = {}, unit2, counts = {})=>{
       let skillTier = skill[i].tier || 1
       let skillTier2 = 0
       if(unit2 && unit2.skill[skill[i].id]) skillTier2 = unit2.skill[skill[i].id].tier || 1
-      console.log(counts.oddCount)
-      console.log(isOdd(counts.oddCount))
       if(isOdd(counts.oddCount)) bkImg = 'stat-odd'
       if(!counts.abilityDamageHeader){
         html += '<tr class="'+titleClass+'"><td colspan="3">Ability Damage</td></tr>'

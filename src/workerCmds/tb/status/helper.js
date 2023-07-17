@@ -36,6 +36,7 @@ const getStarData = (victoryPointRewards = [], score)=>{
 module.exports.getMapStats = async(obj = {}, dObj = {}, statDef = {}, instanceId)=>{
   try{
     let getMapStats = await swgohClient('getMapStats', { territoryMapId: instanceId }, dObj, obj)
+    if(getMapStats === 'GETTING_CONFIRMATION') return 'GETTING_CONFIRMATION'
     let currentStat = getMapStats?.data?.currentStat
     if(!currentStat) return
     let res = {}, i = currentStat.length

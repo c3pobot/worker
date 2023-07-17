@@ -1,6 +1,7 @@
 'use strict'
 const path = require('path')
 const log = require('logger')
+const { v4: uuidv4 } = require('uuid')
 const { mongo, mongoStatus } = require('./mongo')
 const sendMsg = require('./sendMsg')
 const discordQuery = require('./discordQuery')
@@ -22,12 +23,8 @@ const checkCmds = async()=>{
     }
     if(count === +obj.length && obj[0].sId && obj[0].chId && obj[0].dId){
       let msg2send = '<@'+obj[0].dId+'> added '+guild+' guild commands and '+shard+' shard commands...'
-      let status = await sendMsg({sId: obj[0].sId, chId: obj[0].chId, content: {content: msg2send}})
-      log.debug(JSON.stringify(status))
-      if(!status?.id) mongo.set('commandUpdates', {_id: obj[0]._id}, obj[0])
-      log.debug('updated '+count+' commands...')
+      await mongo.set('adminMessages', {_id: uuidv4()}, {sId: obj[0].sId, chId: obj[0].chId, content: {content: msg2send} })
     }
-
   }catch(e){
     throw(e)
   }
@@ -46,19 +43,33 @@ const addCommands = async(obj = {})=>{
     throw(e)
   }
 }
-const syncCommands = async()=>{
+const syncUpdates = async()=>{
   try{
     if(!CLIENT_ID) throw('discord client id not provided...')
     let status = mongoStatus()
     if(!status){
-      setTimeout(syncCommands, 5000)
+      setTimeout(syncUpdates, 5000)
       return
     }
     await checkCmds()
-    setTimeout(syncCommands, 30000)
+    await syncMessages()
+    setTimeout(syncUpdates, 30000)
   }catch(e){
     log.error(e)
-    setTimeout(syncCommands, 5000)
+    setTimeout(syncUpdates, 5000)
   }
 }
-syncCommands()
+const syncMessages = async()=>{
+  try{
+    let obj = await mongo.find('adminMessages', {})
+    if(!obj || obj?.length === 0) return
+    log.debug('found '+obj.length+' messages to send...')
+    for(let i in obj){
+      let status = await sendMsg(obj[i])
+      if(status?.id) await mongo.del('adminMessages', {_id: obj[i]._id})
+    }
+  }catch(e){
+    throw(e)
+  }
+}
+syncUpdates()

@@ -1,11 +1,10 @@
 'use strict'
 //let DataCronDefMap = {}
 const { configMaps } = require('helpers/configMaps')
-
-const { GetAllyCodeObj, GetOptValue, ReplyMsg } = require('helpers')
 const numeral = require('numeral')
 const swgohClient = require('swgohClient')
-module.exports = async(obj, opt = [])=>{
+const { GetAllyCodeObj, GetOptValue, ReplyMsg } = require('helpers')
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let allyCode, pObj, msg2send = {content: 'You do not have allycode linked to discordId'}
     let dObj = await GetAllyCodeObj(obj, opt)

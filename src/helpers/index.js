@@ -2,7 +2,6 @@
 const Cmds = {}
 const MongoCmd = require('./mongo')
 const RedisCmd = require('./redis')
-const LocalQueCmd = require('./localQue')
 const JobCache = require('./jobCache')
 Cmds.AddJob = JobCache.addJob
 Cmds.apiFetch = require('./apiFetch')
@@ -30,8 +29,6 @@ Cmds.GetGuildName = require('./getGuildName')
 Cmds.GetOptValue = require('./getOptValue')
 Cmds.GetScreenShot = require('./getScreenShot')
 
-Cmds.localQue = LocalQueCmd.localQue
-Cmds.localQueStatus = LocalQueCmd.localQueStatus
 Cmds.log = require('logger')
 
 Cmds.ModifyUnit = require('./modifyUnit')

@@ -1,5 +1,5 @@
 'use strict'
-module.exports = async(obj, patreon, opt)=>{
+module.exports = async(obj = {}, patreon = {}, opt = [])=>{
   try{
     let allyCode, msg2send = {content: 'You did not provide the correct information'}
     if(obj.confirm && obj.confirm.allyCode) allyCode = +obj.confirm.allyCode

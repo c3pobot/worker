@@ -1,5 +1,5 @@
 'use strict'
-const { localQue } = require('./localQue')
+const { redis } = require('./redis')
 const Cache = require('node-cache')
 const JobCache = new Cache({stdTTL: 1800, checkperiod: 60})
 const Cmds = {}
@@ -13,7 +13,7 @@ Cmds.addJob = async(obj = {})=>{
 Cmds.getJob = async(obj = {})=>{
   try{
     if(obj?.jobId){
-      if(localQue && process.env.LOCAL_QUE_KEY) localQue.del(process.env.LOCAL_QUE_KEY+'-'+obj.jobId)
+      if(redis && process.env.LOCAL_QUE_KEY) redis.del(process.env.LOCAL_QUE_KEY+'-'+obj.jobId)
       let job = await JobCache.take(obj.jobId)
       return job
     }
@@ -31,7 +31,7 @@ Cmds.checkJob = async(obj = {})=>{
 Cmds.removeJob = async(jobId)=>{
   try{
     if(jobId){
-      if(localQue && process.env.LOCAL_QUE_KEY) localQue.del(process.env.LOCAL_QUE_KEY+'-'+jobId)
+      if(redis && process.env.LOCAL_QUE_KEY) redis.del(process.env.LOCAL_QUE_KEY+'-'+jobId)
       let job = await JobCache.take(jobId)
     }
   }catch(e){

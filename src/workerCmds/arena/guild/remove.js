@@ -4,7 +4,7 @@ const { GetChannel } = require('discordapiclient')
 
 module.exports = async(obj = {}, patreon = {}, opt = [])=>{
   try{
-    let guildId, gObj, guilds = [], msg2send = {content: 'You do not have any guilds configured'}
+    let guildId, gObj, updatePatreon = false, guilds = [], msg2send = {content: 'You do not have any guilds configured'}
     if(obj?.confirm?.guildId) guildId = obj.confirm.guildId
     if(patreon.guilds?.length > 0){
       await ReplyButton(obj, 'Getting guild names..')
@@ -12,11 +12,15 @@ module.exports = async(obj = {}, patreon = {}, opt = [])=>{
       for(let i in patreon.guilds){
         if(!patreon.guilds[i].name){
           let guild = await GetGuildName(patreon.guilds[i].id)
-          if(guild && guild.guildName) patreon.guilds[i].name = guild.guildName
+          if(guild?.guildName){
+            updatePatreon = true
+            patreon.guilds[i].name = guild.guildName
+          }
         }
         if(patreon.guilds[i].name) guilds.push(patreon.guilds[i])
       }
     }
+    if(updatePatreon) await mongo.set('patreon', {_id: patreon._id}, patreon)
     if(!guildId && guilds.length > 0){
       let embedMsg = {
         content: 'Which guild do you want to remove?',

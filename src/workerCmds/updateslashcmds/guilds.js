@@ -41,15 +41,15 @@ module.exports = async(obj = {})=>{
     let gCount = 0, sCount = 0, gDeferedCount = 0, sDeferedCount = 0, gErrored = 0, sErrored = 0
     for(let i in guilds){
       let guildCmds = JSON.parse(JSON.stringify(cmdObj.private.cmds))
-      if(process.env.IS_TEST_BOT && guilds[i]._id == botSettings?.map?.botSID) guildCmds = guildCmds.concat(JSON.parse(JSON.stringify(cmdObj.public.cmds)))
+      if(process.env.IS_TEST_BOT && guilds[i]._id == botSettings?.map?.botSID && cmdObj.public?.cmds?.length > 0) guildCmds = guildCmds.concat(JSON.parse(JSON.stringify(cmdObj.public.cmds)))
       if(payouts?.filter(x=>x.sId == guilds[i]._id).length > 0) guildCmds = guildCmds.concat(JSON.parse(JSON.stringify(cmdObj.shard.cmds)))
-      if(botSettings?.map?.homeSVR?.filter(x=>x == guilds[i]._id).length > 0) guildCmds = guildCmds.concat(JSON.parse(JSON.stringify(cmdObj['home-guild'].cmds)))
+      if(botSettings?.map?.homeSVR?.filter(x=>x == guilds[i]._id).length > 0 && cmdObj['home-guild']?.cmds.length > 0) guildCmds = guildCmds.concat(JSON.parse(JSON.stringify(cmdObj['home-guild'].cmds)))
       if(botSettings?.map?.boSVR?.filter(x=>x == guilds[i]._id).length > 0){
-        guildCmds = guildCmds.concat(JSON.parse(JSON.stringify(cmdObj['bo-private'].cmds)))
-        guildCmds = guildCmds.concat(JSON.parse(JSON.stringify(cmdObj['bo-home'].cmds)))
+        if(cmdObj['bo-private']?.cmds?.length > 0) guildCmds = guildCmds.concat(JSON.parse(JSON.stringify(cmdObj['bo-private'].cmds)))
+        if(cmdObj['bo-home']?.cmds?.length > 0) guildCmds = guildCmds.concat(JSON.parse(JSON.stringify(cmdObj['bo-home'].cmds)))
       }
       if(!guildCmds || guildCmds?.length === 0) continue;
-      if(guilds[i]._id === botSettings?.map?.botSI){
+      if(guilds[i]._id === botSettings?.map?.botSID){
         let status = await DiscordQuery(path.join('applications', CLIENT_ID, 'guilds', guilds[i]._id, 'commands'), 'PUT', JSON.stringify(guildCmds))
         if(status?.length === guildCmds.length && status[0]?.guild_id === guilds[i]._id){
           ++gCount

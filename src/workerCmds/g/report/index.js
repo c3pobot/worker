@@ -3,7 +3,7 @@ const swgohClient = require('swgohClient')
 const { GetAllyCodeObj, GetOptValue, ReplyMsg } = require('helpers')
 const guildProject = { id:1, name: 1, summary: 1, member: 1, profile: 1 }
 const playerProject = { allyCode: 1, playerId: 1, name: 1, memberContribution: 1, gp: 1, gpChar:1, gpShip: 1, summary: 1 }
-module.exports = async(obj = {}, opt)=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let allyCode, pObj, msg2send = {content: 'You do not have allycode linked to discordId'}, guild
     let dObj = await GetAllyCodeObj(obj, opt)

@@ -10,6 +10,7 @@ module.exports = async(obj = {}, opt = [])=>{
     let gLevel = 13, rLevel = botSettings?.map?.maxRelic || 11
     if(obj.confirm) baseId = obj.confirm.baseId
     if(!baseId) baseId = await FindUnit(obj, opt, 'unit')
+    if(baseId === 'GETTING_CONFIRMATION') return
     let rarity = GetOptValue(opt, 'rarity', 7)
     let gType = GetOptValue(opt, 'gear')
     let gValue = GetOptValue(opt, 'value')

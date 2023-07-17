@@ -4,7 +4,7 @@ const { ReplyError, ReplyMsg } = require('helpers')
 const Cmds = {}
 Cmds.gp = require('./gp')
 Cmds.status = require('./status')
-
+Cmds['platoons-missing'] = require('./platoons-missing')
 //Cmds.info = require('./info')
 //Cmds.platoons = require('./platoons')
 //Cmds['platoons-cache'] = require('./platoons-cache')

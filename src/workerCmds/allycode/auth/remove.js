@@ -1,6 +1,6 @@
 'use strict'
 const { mongo, GetAllyCodeFromDiscordId, GetOptValue, ReplyMsg } = require('helpers')
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'Your allyCode is not linked to your discord id'}
     let dObj = await GetAllyCodeFromDiscordId(obj.member.user.id, opt)

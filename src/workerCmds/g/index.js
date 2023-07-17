@@ -3,7 +3,7 @@ const log = require('logger')
 const { ReplyError, ReplyMsg } = require('helpers')
 const Cmds = {}
 Cmds.report = require('./report')
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     let tempCmd, opt = []
     if(obj.data.options){

@@ -9,7 +9,7 @@ const GetCmdArray = async()=>{
     if(cmdArray){
       for(let i in cmdArray){
         if(!cmdArray[i]) continue;
-        //await mongo.rep('slashCmds', {_id: i}, cmdArray[i])
+        await mongo.rep('slashCmds', {_id: i}, cmdArray[i])
         log.info('saved '+i+' cmds to mongo')
       }
     }else{

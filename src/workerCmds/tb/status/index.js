@@ -4,16 +4,17 @@ const { getGp, getMapStats, getZoneStatus, getStarCount } = require('./helper')
 const swgohClient = require('swgohClient')
 const sorter = require('json-array-sorter')
 const getTimeTillEnd = require('./getTimeTillEnd')
-const getHTML = require('./getHTML')
-module.exports = async(obj = {}, opts = [])=>{
+const getHTML = require('helpers/getHTML/tbStatus')
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let gObj, loginConfirm = obj.confirm?.response, msg2send = {content: 'You do not have google/code auth linked to your discordId'}
     let mapStats, tbStatus, tbDef, tbData, webHTML, webImg, currentRound
-    let dObj = await GetAllyCodeObj(obj, opts)
+    let dObj = await GetAllyCodeObj(obj, opt)
     if(dObj?.uId && dObj?.type){
       await ReplyButton(obj, 'Pulling guild TB data ...')
       msg2send.content = 'Error getting guild data'
       let tempGuild = await swgohClient('guild', {}, dObj, obj)
+      if(tempGuild === 'GETTING_CONFIRMATION') return
       if(tempGuild?.data?.guild){
         msg2send.content = 'there is not a TB in progress'
         gObj = tempGuild.data.guild
@@ -27,6 +28,7 @@ module.exports = async(obj = {}, opts = [])=>{
     if(tbDef){
       msg2send.conent = 'error getting map stats'
       mapStats = await getMapStats(obj, dObj, tbDef.statCategory, gObj.territoryBattleStatus[0].instanceId)
+      if(mapStats === 'GETTING_CONFIRMATION') return
     }
     if(mapStats){
       msg2send.content = 'error getting zone info'

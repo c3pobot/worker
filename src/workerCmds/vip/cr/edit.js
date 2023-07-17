@@ -1,6 +1,6 @@
 'use strict'
 const { mongo, GetOptValue, ReplyMsg } = require('helpers')
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'That is not a personal custom reaction'}, tempObj
     let id = GetOptValue(opt, 'id')

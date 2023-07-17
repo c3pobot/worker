@@ -1,7 +1,7 @@
 'use strict'
 const { log, mongo } = require('helpers')
 const sorter = require('json-array-sorter')
-const UpdateCmdObj = async(cmds = [], obj)=>{
+const UpdateCmdObj = async(cmds = [], obj = {})=>{
   try{
     obj.global = obj.global.concat(cmds.filter(x=>x.type == 'public').map(x=>x.cmd))
     obj.shard = obj.shard.concat(cmds.filter(x=>x.type == 'shard').map(x=>x.cmd))

@@ -5,7 +5,7 @@ const Cmds = {}
 Cmds.report = require('./report')
 Cmds.unit = require('./unit')
 Cmds['unit-compare'] = require('./unit-compare')
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     let tempCmd, opt = []
     if(obj.data.options){

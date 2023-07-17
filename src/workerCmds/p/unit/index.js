@@ -3,7 +3,7 @@ const { ReplyMsg } = require('helpers')
 const Cmds = {}
 Cmds.basic = require('./basic')
 Cmds.compare = require('./compare')
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let tempCmd = 'basic'
     if(opt.filter(x=>x.name === 'gear' || x.name === 'rarity').length > 0) tempCmd = 'compare'

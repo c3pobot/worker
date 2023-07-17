@@ -1,0 +1,23 @@
+{
+  "type": 1,
+  "name": "my-platoons",
+  "description": "Show my tb platoons (requires web site configured mapping)",
+  "options": [
+    {
+      "type": 3,
+      "name": "allycode_option",
+      "description": "primary or alt allycode",
+      "required": false,
+      "choices": [
+        {
+          "name": "Primary",
+          "value": "primary"
+        },
+        {
+          "name": "Alt",
+          "value": "alt"
+        }
+      ]
+    }
+  ]
+}

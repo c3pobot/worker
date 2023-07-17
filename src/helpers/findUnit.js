@@ -30,6 +30,7 @@ module.exports = async(obj = {}, opt = [], unitKey)=>{
       }
       msg2send.components.push(component)
       await ButtonPick(obj, msg2send)
+      return 'GETTING_CONFIRMATION'
     }else{
       if(units?.length > 6) await ReplyMsg(obj, { content: 'There was '+units.length+' results for '+baseId+' please be more specific...'})
     }

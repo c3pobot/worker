@@ -1,6 +1,6 @@
 'use strict'
 const { mongo, ReplyMsg } = require('helpers')
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let id, msg2send = {content: 'You did not provide the correct information'}
     if(opt.find(x=>x.name == 'id')) id = opt.find(x=>x.name == 'id').value

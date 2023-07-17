@@ -3,7 +3,7 @@ const { configMaps } = require('helpers/configMaps')
 const { FindUnit, GetAllyCodeFromDiscordId, GetAllyCodeObj, ReplyMsg } = require('helpers')
 const swgohClient = require('swgohClient')
 const getImg = require('./getImg')
-module.exports = async(obj = {}, opts = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let allyCode, baseId, enemyCode, pObj, eObj, msg2send = {content: 'error finding the requested unit'}
     if(obj.confirm) baseId = obj.confirm.baseId
@@ -14,10 +14,10 @@ module.exports = async(obj = {}, opts = [])=>{
       return
     }
     msg2send.content = 'You do not have allyCode linked to discordId'
-    let dObj = await GetAllyCodeFromDiscordId(obj.member.user.id, opts)
+    let dObj = await GetAllyCodeFromDiscordId(obj.member.user.id, opt)
     if(dObj?.allyCode){
       msg2send.content = 'You must provide @user or allyCode to compare with'
-      edObj = await GetAllyCodeObj({}, opts)
+      edObj = await GetAllyCodeObj({}, opt)
       if(edObj?.mentionError) msg2send.content = 'That user does not have allyCode linked to discordId'
       enemyCode = edObj.allyCode
     }

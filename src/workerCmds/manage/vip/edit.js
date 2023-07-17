@@ -1,6 +1,6 @@
 'use strict'
 const { mongo, GetOptValue, ReplyMsg } = require('helpers')
-module.exports = async(obj, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'You must specify a @user'}, usr
     let dId = await GetOptValue(opt, 'user')

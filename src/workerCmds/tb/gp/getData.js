@@ -2,10 +2,10 @@
 const { mongo, GetAllyCodeObj, ReplyButton, ReplyMsg } = require('helpers')
 const swgohClient = require('swgohClient')
 const { getGp, getMapStats, getMissingGp, getTimeTillEnd } = require('./helper')
-module.exports = async(obj = {}, opts = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   try{
     let gObj, tbDef, mapStats, currentRound, msg2send = {content: 'You do not have google/code auth linked to your discordId'}
-    let dObj = await GetAllyCodeObj(obj, opts)
+    let dObj = await GetAllyCodeObj(obj, opt)
     if(dObj?.uId && dObj?.type){
       await ReplyButton(obj, 'Pulling guild TB data ...')
       msg2send.content = 'Error getting guild data'

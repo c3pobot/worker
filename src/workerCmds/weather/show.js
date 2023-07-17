@@ -49,6 +49,7 @@ module.exports = async(obj = {}, opt = [])=>{
               if(pickMsg.components[x].components.length == 5) x++;
             }
             await ButtonPick(obj, pickMsg)
+            return
           }
         }
       }

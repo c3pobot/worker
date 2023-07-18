@@ -1,33 +1,33 @@
 'use strict'
-const GetHTML = require('webimg').conquest
+const { GetScreenShot, ReplyMsg } = require('helpers')
 const GetUnitStamina = require('./getUnitStamina')
+const getHTML = require('helpers/getHTML/conquest/stamina')
 module.exports = async(obj, opt = [], pObj = {})=>{
   try{
-    let staminaHtml, staminaImg, msg2send = {content: 'Error getting stamina info'}
-    const res = {
+    let webHTML, webImg, msg2send = {content: 'Error getting stamina info'}
+    const webData = {
       name: pObj.name,
       allyCode: pObj.allyCode,
       guild: pObj.guild,
       updated: pObj?.updated,
       units: []
     }
-    res.units = await GetUnitStamina(pObj)
-    if(res?.units){
+    webData.units = GetUnitStamina(pObj)
+    if(webData?.units){
       msg2send.content = 'error getting stamina HTML'
-      staminaHtml = await GetHTML.stamina(res)
+      webHTML = getHTML(webData)
     }
-    if(staminaHtml){
+    if(webHTML){
       msg2send.content = 'error getting stamina image'
-      staminaImg = await HP.GetImg(staminaHtml, 400, false)
+      webImg = await GetScreenShot(webHTML, obj.id)
     }
-    if(staminaImg){
+    if(webImg){
       msg2send.content = null,
-      msg2send.file = staminaImg
+      msg2send.file = webImg
       msg2send.fileName = 'conquest-stamina.png'
     }
-    await HP.ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
-    console.error(e);
-    HP.ReplyError(obj)
+    throw(e)
   }
 }

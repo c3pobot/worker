@@ -1,7 +1,7 @@
 {
   "type": 1,
   "name": "status",
-  "description": "(requires google/fb link) Pulls current Territory Battle stats",
+  "description": "(requires google link) Pulls current Territory Battle stats",
   "options": [
     {
       "type": 3,

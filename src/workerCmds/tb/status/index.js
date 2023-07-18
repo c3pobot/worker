@@ -1,5 +1,5 @@
 'use strict'
-const { mongo, GetAllyCodeObj, GetScreenShot, ReplyButton, ReplyMsg } = require('helpers')
+const { mongo, GetAllyCodeObj, GetScreenShot, ReplyButton, ReplyMsg, ReplyTokenError } = require('helpers')
 const { getGp, getMapStats, getZoneStatus, getStarCount } = require('./helper')
 const swgohClient = require('swgohClient')
 const sorter = require('json-array-sorter')
@@ -14,6 +14,10 @@ module.exports = async(obj = {}, opt = [])=>{
       await ReplyButton(obj, 'Pulling guild TB data ...')
       msg2send.content = 'Error getting guild data'
       let tempGuild = await swgohClient('guild', {}, dObj, obj)
+      if(tempGuild?.error == 'invalid_grant'){
+        await ReplyTokenError(obj, dObj.allyCode)
+        return;
+      }
       if(tempGuild === 'GETTING_CONFIRMATION') return
       if(tempGuild?.data?.guild){
         msg2send.content = 'there is not a TB in progress'

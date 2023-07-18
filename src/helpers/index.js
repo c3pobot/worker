@@ -41,7 +41,7 @@ Cmds.RemoveJob = JobCache.removeJob
 Cmds.ReplyButton = require('./replyButton')
 Cmds.ReplyError = require('./replyError')
 Cmds.ReplyMsg = require('./replyMsg')
-
+Cmds.ReplyTokenError = require('./replyTokenError')
 Cmds.SendMsg = require('./sendMsg')
 Cmds.StatCalc = require('statcalc')
 

@@ -1,7 +1,7 @@
 {
   "type": 1,
   "name": "stamina",
-  "description": "Show conquest stamina (requires google/fb link)",
+  "description": "Show conquest stamina (requires google link)",
   "options": [
     {
       "type": 5,

@@ -24,7 +24,7 @@ const CheckRedis = async()=>{
       setTimeout(CheckRedis, 5000)
     }
   }catch(e){
-    ReportError(e);
+    log.error(e);
     setTimeout(CheckRedis, 5000)
   }
 }
@@ -37,7 +37,7 @@ const CheckMongo = async()=>{
       setTimeout(CheckMongo, 5000)
     }
   }catch(e){
-    ReportError(e);
+    log.error(e);
     setTimeout(CheckMongo, 5000)
   }
 }
@@ -54,7 +54,7 @@ const CheckApiReady = async()=>{
       StartServices()
     }
   }catch(e){
-    ReportError(e)
+    log.error(e)
     setTimeout(CheckApiReady, 5000)
   }
 }
@@ -72,7 +72,7 @@ const CheckGameData = async()=>{
       setTimeout(CheckGameData, 5000)
     }
   }catch(e){
-    ReportError(e);
+    log.error(e);
     setTimeout(CheckApiReady, 5000)
   }
 }
@@ -82,7 +82,7 @@ const StartServices = async()=>{
     if(WORKER_NAME?.toString()?.endsWith('0')) await require('./checkCmds')
     require('./cmdQue')
   }catch(e){
-    ReportError(e);
+    log.error(e);
     setTimeout(StartServices, 5000)
   }
 }

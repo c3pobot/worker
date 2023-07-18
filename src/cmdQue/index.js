@@ -1,5 +1,4 @@
-const log = require('logger')
-const { mongoStatus, redis, ReportError } = require('helpers')
+const { mongoStatus, redis, log } = require('helpers')
 const GAME_API_NEEDED = process.env.GAME_API_NEEDED
 
 const QueWrapper = require('quewrapper')
@@ -27,7 +26,7 @@ if(GAME_API_NEEDED){
       }
       setTimeout(CheckApiReady, 5000)
     }catch(e){
-      ReportError(e)
+      log.error(e)
       setTimeout(CheckApiReady, 5000)
     }
   }
@@ -41,7 +40,7 @@ const CreateQues = async()=>{
     for(let i in workerTypes){
       const opts = { queOptions: {redis: redisConnection}, queName: workerTypes[i], cmdProcessor: CmdProcessor.process, numJobs: NUM_QUE_JOBS, logger: log }
       if(PRIVATE_WORKER) opts.queName += 'Private'
-      if(localQue && localQueKey){
+      if(redis && localQueKey){
         opts.localQue = redis
         opts.localQueKey = localQueKey
       }
@@ -50,7 +49,7 @@ const CreateQues = async()=>{
     }
     StartQues()
   }catch(e){
-    ReportError(e);
+    log.error(e);
     setTimeout(CreateQues, 5000)
   }
 }
@@ -64,7 +63,7 @@ const StartQues = async()=>{
       setTimeout(StartQues, 5000)
     }
   }catch(e){
-    ReportError(e);
+    log.error(e);
     setTimeout(StartQues, 5000)
   }
 }

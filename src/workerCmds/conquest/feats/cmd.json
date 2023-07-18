@@ -1,7 +1,7 @@
 {
   "type": 1,
   "name": "feats",
-  "description": "Show conquest feats (requires google/fb link)",
+  "description": "Show conquest feats (requires google link)",
   "options": [
     {
       "type": 5,

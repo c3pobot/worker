@@ -1,7 +1,7 @@
 {
   "type": 1,
   "name": "discs",
-  "description": "Show conquest discs (requires google/fb link)",
+  "description": "Show conquest discs (requires google link)",
   "options": [
     {
       "type": 4,

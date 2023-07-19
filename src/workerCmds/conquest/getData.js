@@ -4,7 +4,7 @@ const swgohClient = require('swgohClient')
 module.exports = async(obj = {}, opt = [])=>{
   try{
     let cqData, pObj, msg2send = 'You do not have google/code auth linked to your discordId'
-    let getCache = GetOptValue(opt, 'cache', true)
+    let getCache = GetOptValue(opt, 'cache', false)
     let dObj = await GetAllyCodeObj(obj, opt)
     if(dObj?.allyCode && getCache){
       msg2send = 'There was no cached data in the db'

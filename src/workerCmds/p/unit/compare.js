@@ -3,7 +3,7 @@ const { configMaps } = require('helpers/configMaps')
 const { botSettings } = require('helpers/botSettings')
 const { mongo, FindUnit, GetAllyCodeObj, GetOptValue, GetScreenShot, ModifyUnit, ReplyButton, ReplyMsg } = require('helpers')
 const swgohClient = require('swgohClient')
-const getHTML = require('helpers/getHTML/unitStats')
+const getHTML = require('getHTML/unitStats')
 module.exports = async(obj = {}, opt = [])=>{
   try{
     let allyCode, baseId, dObj, pObj, webHTML, webImg, msg2send = {content: 'error finding the requested unit'}

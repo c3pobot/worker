@@ -3,7 +3,7 @@ const { GetScreenShot, ReplyMsg } = require('helpers')
 const CheckFeats = require('./checkFeats')
 const CheckBattles = require('./checkBattles')
 const GetRewards = require('./getRewards')
-const getHTML = require('helpers/getHTML/conquest/feat')
+const getHTML = require('getHTML/conquest/feat')
 const enumDiff = {
   8: 'I_DIFF',
   9: 'II_DIFF',

@@ -2,7 +2,7 @@
 const { configMaps } = require('helpers/configMaps')
 const { botSettings } = require('helpers/botSettings')
 const { mongo, GetOptValue, FindUnit, GetNeededGear, GetNeededRelicMats, GetScreenShot, ReplyButton, ReplyMsg } = require('helpers')
-const getHTML = require('helpers/getHTML/inventory/unit')
+const getHTML = require('getHTML/inventory/unit')
 module.exports = async(obj = {}, opts = [], pObj = {})=>{
   try{
     let msg2send = { content: 'error finding the requested unit' }, type, pUnit, unitGear, relicLevel, gearLevel, neededGear, neededRelicMats, relicRecipe, webHTML, webImg

@@ -4,7 +4,7 @@ const { getGp, getMapStats, getZoneStatus, getStarCount } = require('./helper')
 const swgohClient = require('swgohClient')
 const sorter = require('json-array-sorter')
 const getTimeTillEnd = require('./getTimeTillEnd')
-const getHTML = require('helpers/getHTML/tbStatus')
+const getHTML = require('getHTML/tb/status')
 module.exports = async(obj = {}, opt = [])=>{
   try{
     let gObj, loginConfirm = obj.confirm?.response, msg2send = {content: 'You do not have google/code auth linked to your discordId'}

@@ -1,5 +1,5 @@
 'use strict'
-const getHTML = require('helpers/getHTML/tbgp')
+const getHTML = require('getHTML/tb/gp')
 const swgohClient = require('swgohClient')
 const sorter = require('json-array-sorter')
 const { mongo, GetAllyCodeObj, GetScreenShot, ReplyButton, ReplyMsg } = require('helpers')

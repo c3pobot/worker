@@ -1,7 +1,7 @@
 'use strict'
 const { GetScreenShot, ReplyMsg } = require('helpers')
 const GetUnitStamina = require('./getUnitStamina')
-const getHTML = require('helpers/getHTML/conquest/stamina')
+const getHTML = require('getHTML/conquest/stamina')
 module.exports = async(obj, opt = [], pObj = {})=>{
   try{
     let webHTML, webImg, msg2send = {content: 'Error getting stamina info'}

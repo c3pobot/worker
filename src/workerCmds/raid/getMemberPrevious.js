@@ -1,11 +1,11 @@
 'use strict'
-module.exports = async(raidResult = [], raidId)=>{
+module.exports = (raidResult = [], raidId)=>{
   try{
     if(raidResult.length === 0) return
-    let res = {}
-    for(let i in raidResult){
+    let res = {}, i = raidResult.length
+    while(i--){
       if(raidResult[i].raidId !== raidId) continue;
-      if(!res.guild) res.guildTotal = {playerId: 'guildTotal', playerName: 'Guild Total', high: 0, low: 0, scores: [], dates: []}
+      if(!res.guildTotal) res.guildTotal = { playerId: 'guildTotal', playerName: 'Guild Total', high: 0, low: 0, scores: [], dates: [] }
       res.guildTotal.scores.push(+raidResult[i].guildRewardScore)
       if(+raidResult[i].guildRewardScore > res.guildTotal.high) res.guildTotal.high = +raidResult[i].guildRewardScore
       if(+raidResult[i].guildRewardScore < res.guildTotal.low || res.guildTotal.low == 0) res.guildTotal.low = +raidResult[i].guildRewardScore

@@ -2,7 +2,7 @@
 const swgohClient = require('swgohClient')
 const { mongo, GetOptValue, GetScreenShot, CheckGuide, ReplyMsg } = require('helpers')
 const getUnitMats = require('./getUnitMats')
-const getHTML = require('helpers/getHTML/inventory/journey')
+const getHTML = require('getHTML/inventory/journey')
 module.exports = async(obj = {}, opts = [], pObj = {})=>{
   try{
     let msg2send = { content: 'You did not provide a journey guide to look up'}, rosterUnit, guideTemplate, squadData, guideUnits, webData, webHTML, webImg

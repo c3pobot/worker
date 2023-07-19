@@ -1,7 +1,7 @@
 'use strict'
 const { GetOptValue, GetScreenShot, ReplyMsg } = require('helpers')
 const getDiscsDef = require('./getDiscDef')
-const getHTML = require('helpers/getHTML/conquest/disc')
+const getHTML = require('getHTML/conquest/disc')
 module.exports = async(obj, opt = [], pObj = {})=>{
   try{
     let webHTML, webImg, msg2send = {content: 'Error getting disc info'}

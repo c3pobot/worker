@@ -2,7 +2,7 @@
 const { botSettings } = require('helpers/botSettings')
 const { configMaps } = require('helpers/configMaps')
 const { mongo, ButtonPick, DeepCopy, GetOptValue, GetScreenShot, ReplyButton, ReplyMsg } = require('helpers')
-const GetHTML = require('helpers/getHTML/counter')
+const GetHTML = require('getHTML/counter')
 module.exports = async(obj = {}, opt = [], mode = '5v5')=>{
   try{
     let msg2send = {content: 'you did not specify a valid unit'}, webImg, webHTML, tempSquads, countSquads, squads = [], defaultSettings, skip = 0, method = 'PATCH'

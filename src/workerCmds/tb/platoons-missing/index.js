@@ -3,7 +3,7 @@ const { log, mongo, ButtonPick, GetAllyCodeObj, GetScreenShot, ReplyButton, Repl
 const swgohClient = require('swgohClient')
 const { getGuild, getGuildMembers, getTimeTillEnd, getUnitMap, getMissingUnitMap } = require('./helper')
 const sorter = require('json-array-sorter')
-const getHTML = require('helpers/getHTML/tbMissingPlatoons')
+const getHTML = require('getHTML/tb/missingPlatoons')
 module.exports = async(obj = {}, opt = [])=>{
   try{
     let gObj, tbDef, missingUnitMap, unitMap, replyMethod = 'PATCH', showPlayers = true, guildMembers, webHTML, webImg, msg2send = {content: 'You do not have google/code auth linked to your discordId'}

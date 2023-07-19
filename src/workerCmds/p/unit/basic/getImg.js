@@ -1,6 +1,6 @@
 'use strict'
 const { configMaps } = require('helpers/configMaps')
-const getHTML = require('helpers/getHTML/unitStats')
+const getHTML = require('getHTML/unitStats')
 const { mongo, GetScreenShot } = require('helpers')
 module.exports = async(obj = {}, pObj = {}, baseId)=>{
   try{

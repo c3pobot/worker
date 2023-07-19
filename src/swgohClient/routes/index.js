@@ -8,6 +8,7 @@ Cmds.getGuildId = require('./getGuildId')
 Cmds.getPlayer = require('./getPlayer')
 Cmds.getStatus = require('./getStatus')
 Cmds.queryPlayer = require('./queryPlayer')
+Cmds.queryGuild = require('./queryGuild')
 Cmds.queryPlayerArena = require('./queryPlayerArena')
 Cmds.setGameData = setGameData
 Cmds.calcRosterStats = calcRosterStats

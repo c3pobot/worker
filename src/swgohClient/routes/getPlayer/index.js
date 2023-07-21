@@ -1,7 +1,7 @@
 'use strict'
 const { mongo } = require('helpers/mongo')
 const queryPlayer = require('../queryPlayer')
-const statCalc = require('../statCalc')
+const statCalc = require('statcalc')
 const formatPlayer = require('./formatPlayer')
 module.exports = async(opts = {})=>{
   try{

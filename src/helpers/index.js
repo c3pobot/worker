@@ -11,6 +11,7 @@ Cmds.ButtonPick = require('./buttonPick')
 
 Cmds.CheckBotOwner = require('./checkBotOwner')
 Cmds.CheckGuide = require('./checkGuide')
+Cmds.CheckGuildAdmin = require('./checkGuildAdmin')
 Cmds.CheckServerAdmin = require('./checkServerAdmin')
 Cmds.ConfirmButton = require('./confirmButton')
 

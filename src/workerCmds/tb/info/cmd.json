@@ -1,0 +1,14 @@
+{
+  "type": 1,
+  "name": "info",
+  "description": "Basic info about Territory battle",
+  "options": [
+    {
+      "type": 3,
+      "name": "tb-name",
+      "description": "tb to look up (Default is Rise of the Empire)",
+      "autocomplete": true,
+      "focused": true
+    }
+  ]
+}

@@ -8,8 +8,8 @@ Cmds['platoons-missing'] = require('./platoons-missing')
 Cmds.info = require('./info')
 Cmds.platoons = require('./platoons')
 Cmds['platoons-cache'] = require('./platoons-cache')
-//Cmds['platoons-export'] = require('./platoons-export')
-//Cmds['my-platoons'] = require('./my-platoons')
+Cmds['platoons-export'] = require('./platoons-export')
+Cmds['my-platoons'] = require('./my-platoons')
 module.exports = async(obj)=>{
   try{
     let tempCmd, opt = []

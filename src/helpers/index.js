@@ -33,7 +33,7 @@ Cmds.GetNeededGear = require('./getNeededGear')
 Cmds.GetNeededRelicMats = require('./getNeededRelicMats')
 Cmds.GetOptValue = require('./getOptValue')
 Cmds.GetScreenShot = require('./getScreenShot')
-
+Cmds.Json2xls = require('./json2xls')
 Cmds.log = require('logger')
 
 Cmds.ModifyUnit = require('./modifyUnit')

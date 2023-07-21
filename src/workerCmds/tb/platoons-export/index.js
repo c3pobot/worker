@@ -1,7 +1,10 @@
 'use strict'
-const json2xls = require('json2xlsx-ws');
+const json2xls = require('json2xls');
 const fs = require('fs')
-const CACHE_DIR = '/home/node/app/cache'
+const swgohClient = require('swgohClient')
+const sorter = require('json-array-sorter')
+const { mongo, GetAllyCodeObj, GetGuildId, GetOptValue, Json2xls, ReplyMsg} = require('helpers')
+
 const MapPlatoons = async(data = {}, platoons = {}, maxRelic = 9)=>{
   try{
     if(data?.squads?.length > 0){
@@ -27,20 +30,22 @@ const MapUnits = async(units = [], platoons = {}, pId, phase, type)=>{
     console.error(e);
   }
 }
+const playerProjection = { name: 1, playerId: 1, allyCode: 1, guildName: 1, guildId: 1, rosterUnit:1, summary: 1 }
 module.exports = async(obj = {}, opt = [])=>{
   try{
-    let msg2send = {content: 'Error getting data'}, platoonDef, platoons, excelPlats, excelUnits, platObj = [], guildId, clearContent = true, gObj, rosterUnits = []
-    let tbId = await HP.GetOptValue(opt, 'tb-name', 't05D')
-    let maxRelic = await HP.GetOptValue(opt, 'relic', 9)
+    let msg2send = {content: 'Error getting data'}, platoonDef, platoons, excelData, excelFile, platObj = [], guildId, clearContent = true, gObj, rosterUnits = []
+    let tbId = GetOptValue(opt, 'tb-name', 't05D')
+    let maxRelic = GetOptValue(opt, 'relic', 9)
     if(+maxRelic > 9) maxRelic = 9
     maxRelic = +maxRelic + 2
-    let includeRoster = await HP.GetOptValue(opt, 'roster', true)
+    let includeRoster = GetOptValue(opt, 'roster', true)
+
     if(includeRoster){
       clearContent = false
       msg2send.content = 'your discord Id is not linked to allyCode'
-      const allyObj = await HP.GetPlayerAC(obj, opt)
-      if(allyObj?.mentionError) msg2send.content = 'that user does not have allyCode linked to discordId'
-      const pObj = await HP.GetGuildId({}, {allyCode: allyObj?.allyCode}, [])
+      let dObj = await GetAllyCodeObj(obj, opt)
+      if(dObj?.mentionError) msg2send.content = 'that user does not have allyCode linked to discordId'
+      let pObj = await GetGuildId({}, {allyCode: dObj?.allyCode}, [])
       if(pObj?.guildId){
         clearContent = true
         guildId = pObj.guildId
@@ -49,7 +54,7 @@ module.exports = async(obj = {}, opt = [])=>{
     if(guildId){
       clearContent = false
       msg2send.content = 'error getting guild data'
-      gObj = await Client.post('fetchGuild', {token: obj.token, id: guildId, projection: { playerId: 1, name: 1, rosterUnit: { definitionId: 1, currentRarity: 1, relic: 1, gp: 1} }}, null)
+      gObj = await swgohClient('fetchGuild', { id: guildId,  playerProject: playerProjection})
     }
     if(gObj?.member?.length > 0){
       clearContent = true
@@ -59,7 +64,7 @@ module.exports = async(obj = {}, opt = [])=>{
             player: gObj.member[i].name,
             baseId: x.definitionId?.split(':')[0],
             rarity: +(x.currentRarity || 0),
-            relic: +(x.relic?.currentTier ? +x.relic.currentTier - 2:0),
+            relic: +(x.relic?.currentTier > 1 ? +x.relic.currentTier - 2:0),
             gp: +(x.gp || 0)
           })
         })
@@ -81,20 +86,13 @@ module.exports = async(obj = {}, opt = [])=>{
         }
       }
     }
-    if(rosterUnits?.length > 0){
-      let tempObj = await json2xls(rosterUnits, {fields: {
-        player: 'string',
-        baseId: 'string',
-        rarity: 'number',
-        relic: 'number',
-        gp: 'number'
-      }})
-      if(tempObj) excelUnits = Buffer.from(tempObj, 'binary')
-    }
     if(platObj?.length > 0){
-      platObj = await sorter([{column: 'phase', order: 'descending'}], platObj)
       msg2send.content = 'Error mapping excel data'
-      let tempObj = await json2xls(platObj, {fields: {
+      platObj = sorter([{column: 'phase', order: 'descending'}], platObj)
+      if(!excelData) excelData = {}
+      excelData.platoons = platObj
+      /*
+      let tempObj = json2xls(platObj, {fields: {
         phase: 'string',
         type: 'string',
         combatType: 'string',
@@ -104,18 +102,35 @@ module.exports = async(obj = {}, opt = [])=>{
         count: 'number'
       }})
       if(tempObj) excelPlats = Buffer.from(tempObj, 'binary')
-
+      */
     }
-    if(excelPlats){
+    if(rosterUnits?.length > 0 && excelData){
+      excelData.units = rosterUnits
+      /*
+      let tempObj = json2xls(rosterUnits, {fields: {
+        player: 'string',
+        baseId: 'string',
+        rarity: 'number',
+        relic: 'number',
+        gp: 'number'
+      }})
+      if(tempObj) excelUnits = Buffer.from(tempObj, 'binary')
+      */
+    }
+    if(excelData?.platoons){
+      msg2send.content = 'Error mapping excel data'
+      excelFile = Json2xls(excelData)
+      console.log(excelFile)
+      //if(excelFile) excelFile = Buffer.from(excelFile, 'binary')
+    }
+    if(excelFile){
       if(clearContent) msg2send.content = null
-      if(clearContent && includeRoster && !excelUnits) msg2send.content = 'Error getting guild roster'
-      msg2send.files = []
-      msg2send.files.push({file: excelPlats, fileName: tbId+'-platoons.xlsx'})
-      if(excelUnits) msg2send.files.push({file: excelUnits, fileName: 'rosterUnits.xlsx'})
+      if(clearContent && includeRoster && !excelData.units) msg2send.content = 'Error getting guild roster'
+      msg2send.file = excelFile
+      msg2send.fileName = tbId+'-platoons.xlsx'
     }
-    await HP.ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
-    console.error(e);
-    HP.ReplyError(obj)
+    throw(e)
   }
 }

@@ -12,7 +12,7 @@ const GetPlatoonConfig = async(guildId, tbId)=>{
     throw(e);
   }
 }
-const playerProjection = { name: 1, playerId: 1, allyCode: 1, guildName: 1, guildId: 1, rosterUnit: 1, roster:1, summary: 1 }
+const playerProjection = { name: 1, playerId: 1, allyCode: 1, guildName: 1, guildId: 1, roster:1, summary: 1 }
 module.exports = async(obj ={}, opt = [])=>{
   try{
     let msg2send = { content: 'You must specify a phase or select a configured day' }, skipConfig, guildId, guild, guildName, dObj, units = {}, platoons = [], webData, webHTML, webImg, pConfig

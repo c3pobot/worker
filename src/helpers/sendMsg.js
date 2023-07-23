@@ -1,10 +1,10 @@
 'use strict'
 const JobCache = require('./jobCache')
-const BotSocket = require('helpers/botSocket')
+const botRequest = require('./botRequest')
 module.exports = async(obj = {}, content)=>{
   try{
     //await JobCache.removeJob(obj.jobId)
-    return await BotSocket.call('sendMsg', obj)
+    return await botRequest('sendMsg', obj)
     //return await SendMsg(obj.chId, content)
   }catch(e){
     throw(e);

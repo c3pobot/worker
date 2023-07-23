@@ -1,12 +1,13 @@
 'use strict'
+const path = require('path')
+const apiFetch = require('./helpers/apiFetch')
 const log = require('logger')
-const BotSocket = require('./helpers/botSocket')
 const swgohClient = require('./swgohClient')
-const DATASYNC_POD_NAME = process.env.DATASYNC_POD_NAME || 'datasync'
+const DATASYNC_URI = process.env.DATASYNC_URI || 'http://data-sync:3000'
 let gameVersion
 const updateData = async()=>{
   try{
-    let obj = await BotSocket.call('getGameData', {podName: DATASYNC_POD_NAME})
+    let obj = await apiFetch(path.join(DATASYNC_URI, 'gameData'))
     if(obj?.version && obj?.data){
       let status = await swgohClient('setGameData', obj.data)
       if(status){
@@ -21,7 +22,7 @@ const updateData = async()=>{
 }
 const SyncData = async()=>{
   try{
-    let obj = await BotSocket.call('getVersion', {podName: DATASYNC_POD_NAME})
+    let obj = await apiFetch(path.join(DATASYNC_URI, 'version'))
     if(obj?.version && obj.version !== gameVersion) await updateData()
     if(!gameVersion){
       setTimeout(SyncData, 5000)

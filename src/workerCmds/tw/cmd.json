@@ -1,0 +1,9 @@
+{
+  "type": "public",
+  "que": "oauth",
+  "cmd": {
+    "name": "tw",
+    "description": "tw info",
+    "options": []
+  }
+}

@@ -1,7 +1,6 @@
 'use strict'
 const log = require('logger')
-const BotSocket = require('helpers/botSocket')
-const { ReplyError, ReplyMsg } = require('helpers')
+const { BotRequest, ReplyError, ReplyMsg } = require('helpers')
 const getDate = (timestamp)=>{
   let dateOptions = {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'}
   let dateTime = new Date(+timestamp)
@@ -13,7 +12,7 @@ module.exports = async(obj = {})=>{
     const tempObj = {
       sId: obj.guild_id
     }
-    const guild = await BotSocket.call('getGuild', {sId: obj.guild_id})
+    const guild = await BotRequest('getGuild', {sId: obj.guild_id})
     if(guild){
       const embedMsg = {
         color: 15844367,

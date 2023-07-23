@@ -1,6 +1,6 @@
 const deepCopyFunction = (inObject) => {
   let outObject, value, key
-
+  
   if (typeof inObject !== "object" || inObject === null) {
     return inObject // Return the value if inObject is not an object
   }

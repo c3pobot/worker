@@ -13,7 +13,7 @@ module.exports = async(opts = {})=>{
     if(!guild || !guild?.member ) return
     guild.member = guild.member.filter(x=>x.memberLevel !== 1)
     if(opts.excludePlayers && guild.summary) return guild
-    let dataCount = { relic: { total: 0 }, omi: { total: 0 },  mod: { r6: 0, 10: 0, 15: 0, 20: 0, 25: 0 }, gear: {}, rarity: { }, dataCron: { total: 0 }, gl: {}, zeta: 0, gp: 0, gpChar: 0, gpShip: 0 }
+    let dataCount = { relic: { total: 0 }, omi: { total: 0 },  mod: { r6: 0, 10: 0, 15: 0, 20: 0, 25: 0 }, gear: {}, rarity: { 1: {total: 0 }, 2: {total: 0 } }, dataCron: { total: 0 }, gl: { total: 0 }, zeta: 0, gp: 0, gpChar: 0, gpShip: 0 }
     let players = await getGuildMembers(guildId, guild.member, dataCount, playerCollection, opts.playerProject)
     if(!players) return
     mongo.set(collection, {_id: guildId}, { summary: dataCount })

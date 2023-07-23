@@ -1,10 +1,9 @@
 'use strict'
-const { mongo, ReplyMsg } = require('helpers')
-const BotSocket = require('helpers/botSocket')
+const { mongo, BotRequest, ReplyMsg } = require('helpers')
 module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'Error getting bot guilds'}, guildCount = 0, userCount = 0
-    const botsArray = await BotSocket.call('getServerStats', {podName: 'all'})
+    const botsArray = await BotRequest('getServerStats', {podName: 'all'})
     if(botsArray?.length > 0){
       let i = botsArray.length
       while(i--){

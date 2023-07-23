@@ -7,6 +7,7 @@ Cmds.AddJob = JobCache.addJob
 Cmds.apiFetch = require('./apiFetch')
 Cmds.AdminNotAuth = require('./adminNotAuth')
 
+Cmds.BotRequest = require('./botRequest')
 Cmds.ButtonPick = require('./buttonPick')
 
 Cmds.CheckBotOwner = require('./checkBotOwner')

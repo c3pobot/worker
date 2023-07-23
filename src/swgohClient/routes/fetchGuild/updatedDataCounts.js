@@ -4,6 +4,7 @@ module.exports = (player = {}, data = {})=>{
     data.gp += player.gp
     data.gpChar += player.gpChar
     data.gpShip += player.gpShip
+    if(!player.summary) return
     data.zeta += player.summary.zeta
     for(let i in player.summary.relic){
       if(!data.relic[i]) data.relic[i] = 0
@@ -20,6 +21,14 @@ module.exports = (player = {}, data = {})=>{
     for(let i in player.summary.gl){
       if(!data.gl[i]) data.gl[i] = 0
       data.gl[i] += player.summary.gl[i]
+    }
+    for(let i in player.summary.rarity[1]){
+      if(!data.rarity[1][i]) data.rarity[1][i] = 0
+      data.rarity[1][i] += player.summary.rarity[1][i]
+    }
+    for(let i in player.summary.rarity[2]){
+      if(!data.rarity[2][i]) data.rarity[2][i] = 0
+      data.rarity[2][i] += player.summary.rarity[2][i]
     }
     data.dataCron.total = player.summary.dataCron.total
     for(let i in player.summary.dataCron){

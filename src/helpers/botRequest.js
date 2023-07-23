@@ -1,5 +1,8 @@
 'use strict'
+const log = require('logger')
 const fetch = require('node-fetch')
+const path = require('path')
+const BOT_BRIDGE_URI = process.env.BOT_BRIDGE_URI
 const parseResponse = async(res)=>{
   try{
     if(!res) return
@@ -19,14 +22,15 @@ const parseResponse = async(res)=>{
     throw(e);
   }
 }
-module.exports = async(url, method = 'GET', body, headers = {})=>{
+
+module.exports = async(cmd, obj = {})=>{
   try{
-    const req = { method: method, timeout: 60000, compress: true, headers: {'Content-Type': 'application/json'}}
-    req.headers = {...req.headers,...headers}
-    if(body) req.body = body
-    const obj = await fetch(url, req)
-    return await parseResponse(obj)
+    if(!BOT_BRIDGE_URI) throw('BOT_BRIDGE_URI not definied')
+    let payload = {method: 'POST', timeout: 30000, compress: true, headers: {'Content-Type': 'application/json'}}
+    payload.body = JSON.stringify({...obj,...{cmd: cmd}})
+    let res = await fetch(path.join(BOT_BRIDGE_URI, 'cmd'), payload)
+    return await parseResponse(res)
   }catch(e){
-    throw(e);
+    throw(e)
   }
 }

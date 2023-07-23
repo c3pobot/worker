@@ -1,7 +1,7 @@
 'use strict'
 const log = require('logger')
-const { EnumPerms, GetOptValue, ReplyError, ReplyMsg } = require('helpers')
-const BotSocket = require('helpers/botSocket')
+const { BotRequest, EnumPerms, GetOptValue, ReplyError, ReplyMsg } = require('helpers')
+
 //const { Permissions } = require('discord.js');
 
 const getDate = (timestamp)=>{
@@ -23,7 +23,7 @@ module.exports = async(obj = {})=>{
       dId: dId,
       sId: obj.guild_id
     }
-    const usr = await BotSocket.call('getGuildMember', tempObj)
+    const usr = await BotRequest('getGuildMember', tempObj)
     if(usr && usr.user){
       const embedMsg = {
         color: 15844367,

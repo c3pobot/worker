@@ -1,11 +1,10 @@
 'use strict'
 const log = require('logger')
-const BotSocket = require('helpers/botSocket')
-const { ReplyError, ReplyMsg } = require('helpers')
+const { BotRequest, ReplyError, ReplyMsg } = require('helpers')
 module.exports = async(obj = {})=>{
   try{
     let msg2Send = {content: 'Error getting guild info'}
-    const guild = await BotSocket.call('getGuild', {sId: obj.guild_id})
+    const guild = await BotRequest('getGuild', {sId: obj.guild_id})
     if(guild){
       const adminRoles = guild.gRoles.filter(x=>x.perms.some(p=>p == 'ADMINISTRATOR' || p == 'Administrator'))
       const tempAdmin = adminRoles.map(x=>x.id)

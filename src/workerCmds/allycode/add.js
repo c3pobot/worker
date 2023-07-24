@@ -55,7 +55,7 @@ module.exports = async(obj = {}, opt = [])=>{
       msg2send.content += ' and then running  this command again.\n'
       msg2send.content +='**Note: This verification expires in ~5 minutes**'
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

@@ -29,8 +29,8 @@ module.exports = async(obj = {})=>{
       let status = await DiscordQuery(path.join('applications', CLIENT_ID, 'commands'), 'PUT', JSON.stringify(globalCmds))
       msg2send.content = '**'+(status?.length >= 0 ? status.length:0)+'** of **'+globalCmds.length+'** global commands where updated'
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
-    ReplyError(obj)
+    throw(e)
   }
 }

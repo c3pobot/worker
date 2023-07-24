@@ -6,30 +6,16 @@ module.exports = (player = {}, data = {})=>{
     data.gpShip += player.gpShip
     if(!player.summary) return
     data.zeta += player.summary.zeta
-    for(let i in player.summary.relic){
-      if(!data.relic[i]) data.relic[i] = 0
-      data.relic[i] += player.summary.relic[i]
-    }
-    for(let i in player.summary.omi){
-      if(!data.omi[i]) data.omi[i] = 0
-      data.omi[i] += player.summary.omi[i]
-    }
-    for(let i in player.summary.mod){
-      if(!data.mod[i]) data.mod[i] = 0
-      data.mod[i] += player.summary.mod[i]
-    }
+    for(let i in player.summary.relic) data.relic[i] += player.summary.relic[i];
+    for(let i in player.summary.omi) data.omi[i] += player.summary.omi[i];
+    for(let i in player.summary.mod) data.mod[i] += player.summary.mod[i];
+    for(let i in player.summary.gear) data.gear[i] += player.summary.gear[i];
     for(let i in player.summary.gl){
       if(!data.gl[i]) data.gl[i] = 0
       data.gl[i] += player.summary.gl[i]
     }
-    for(let i in player.summary.rarity[1]){
-      if(!data.rarity[1][i]) data.rarity[1][i] = 0
-      data.rarity[1][i] += player.summary.rarity[1][i]
-    }
-    for(let i in player.summary.rarity[2]){
-      if(!data.rarity[2][i]) data.rarity[2][i] = 0
-      data.rarity[2][i] += player.summary.rarity[2][i]
-    }
+    for(let i in player.summary.rarity[1]) data.rarity[1][i] += player.summary.rarity[1][i]
+    for(let i in player.summary.rarity[2]) data.rarity[2][i] += player.summary.rarity[2][i];
     data.dataCron.total = player.summary.dataCron.total
     for(let i in player.summary.dataCron){
       if(i === 'total') continue
@@ -39,6 +25,7 @@ module.exports = (player = {}, data = {})=>{
         data.dataCron[i][s] += player.summary.dataCron[i][s]
       }
     }
+    for(let i in player.summary.quality) data.quality[i] += player.summary.quality[i]
   }catch(e){
     throw(e)
   }

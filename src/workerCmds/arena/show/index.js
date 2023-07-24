@@ -52,7 +52,7 @@ module.exports = async(obj = {}, patreon = {}, opt = [])=>{
     }
     if(updatePatreon) await mongo.set('patreon', {_id: patreon._id}, patreon)
     if(msg2send.flags) await ReplyButton(obj, 'Sending Private message')
-    ReplyMsg(obj, msg2send, sendMethod)
+    await ReplyMsg(obj, msg2send, sendMethod)
   }catch(e){
     throw(e)
   }

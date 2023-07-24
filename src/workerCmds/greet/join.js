@@ -19,7 +19,7 @@ module.exports = async(obj = {}, opt = [])=>{
         //msg2send.content += 'Ensure you have enabled to "send a random welcome message when someone joins this server" or else the bot will not see when someone joins'
       }
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

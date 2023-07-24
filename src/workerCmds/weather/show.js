@@ -107,7 +107,7 @@ module.exports = async(obj = {}, opt = [])=>{
         if(setDefault) msg2Send.content = '**Saved as default**'
       }
     }
-    ReplyMsg(obj, msg2Send)
+    await ReplyMsg(obj, msg2Send)
   }catch(e){
     throw(e)
   }

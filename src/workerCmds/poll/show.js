@@ -71,7 +71,7 @@ module.exports = async(obj = {}, opt = [] )=>{
           if(msg2send.components[x].components.length == 5) x++;
         }
       }
-      ReplyMsg(obj, msg2send)
+      await ReplyMsg(obj, msg2send)
     }catch(e){
       throw(e)
     }

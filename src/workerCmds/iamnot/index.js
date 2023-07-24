@@ -38,10 +38,10 @@ module.exports = async(obj = {})=>{
     }
     if(hasRolePerm){
       msg2send.content = 'Error removing the **@'+roleName+'** role'
-      const status = await DiscordQuery('guilds/'+obj.guild_id+'/members/'+dId+'/roles/'+roleId, 'DELETE')
+      let status = await DiscordQuery('guilds/'+obj.guild_id+'/members/'+dId+'/roles/'+roleId, 'DELETE')
       if(status === 204) msg2send.content = '**@'+roleName+'** has been removed as a role'
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     log.error(e);
     ReplyError(obj)

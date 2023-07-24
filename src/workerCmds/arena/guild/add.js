@@ -65,7 +65,7 @@ module.exports = async(obj = {}, patreon = {}, opt = [])=>{
         await mongo.push('patreon', {_id: patreon._id}, {guilds: tempGuild})
       }
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

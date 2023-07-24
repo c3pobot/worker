@@ -17,7 +17,7 @@ module.exports = async(obj, opts = [])=>{
     if(tempCmd && Cmds[tempCmd]){
       await Cmds[tempCmd](obj, opt)
     }else{
-      ReplyMsg(obj, {content: 'command not recongnized'})
+      await ReplyMsg(obj, {content: 'command not recongnized'})
     }
   }catch(e){
     throw(e)

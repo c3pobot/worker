@@ -83,7 +83,7 @@ module.exports = async(obj = {})=>{
     msg2send.content = 'Updated '+gCount+' guild commands and '+sCount+' shard commands. Deferred '+gDeferedCount+' guild commands and '+sDeferedCount+' shard commands...'
     if(gErrored) msg2send.content += '\n error adding commands to '+gErrored+' guilds...'
     if(sErrored) msg2send.content += '\n error adding commands to '+sErrored+' shards...'
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

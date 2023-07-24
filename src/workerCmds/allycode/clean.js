@@ -12,7 +12,7 @@ module.exports = async(obj = {}, opt = [])=>{
       if(allyCodes.length > 0) await mongo.set('discordId', {_id: dObj._id}, {allyCodes: allyCodes})
       msg2send.content = 'Duplicate allyCodes have been removed'
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

@@ -32,7 +32,13 @@ module.exports = async(obj = {}, opt = [], unitKey)=>{
       await ButtonPick(obj, msg2send)
       return 'GETTING_CONFIRMATION'
     }else{
-      if(units?.length > 6) await ReplyMsg(obj, { content: 'There was '+units.length+' results for '+baseId+' please be more specific...'})
+      if(units?.length > 6){
+        await ReplyMsg(obj, { content: 'There was '+units.length+' results for '+baseId+' please be more specific...'})
+        return 'GETTING_CONFIRMATION'
+      }else{
+        await ReplyMsg(obj, { content: 'Error finding unit **'+baseId+'**...'})
+        return 'GETTING_CONFIRMATION'
+      }
     }
   }catch(e){
     throw(e)

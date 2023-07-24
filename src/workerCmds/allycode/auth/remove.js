@@ -17,7 +17,7 @@ module.exports = async(obj = {}, opt = [])=>{
         msg2send.content = 'allyCode **'+dObj.allyCode+'** does not have bot login auth set up.'
       }
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

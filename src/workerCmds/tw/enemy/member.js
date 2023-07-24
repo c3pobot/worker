@@ -1,19 +1,22 @@
 'use strict'
+const { mongo, DeepCopy, GetGuildId, ReplyMsg } = require('helpers')
+const swgohClient = require('swgohClient')
+const sorter = require('json-array-sorter')
 module.exports = async(obj, opt)=>{
   try{
     let msg2send = {content: 'You do not have discordId linked to allyCode'}, enemyId, guild, eObj
-    const pObj = await HP.GetGuildId({dId: obj.member.user.id}, {}, opt)
-    if(pObj && pObj.guildId){
+    let pObj = await GetGuildId({dId: obj.member.user.id}, {}, opt)
+    if(pObj?.guildId){
       msg2send.content = 'You do not have an opponent guild registered'
-      const guild = (await mongo.find('twStatus', {_id: pObj.guildId}))[0]
+      let guild = (await mongo.find('twStatus', {_id: pObj.guildId}))[0]
       if(guild && guild.enemy) enemyId = guild.enemy
     }
     if(enemyId){
       msg2send.content = 'error getting opponent guild info'
-      eObj = await Client.post('fetchTWGuild', {token: obj.token, id: enemyId, projection: {name: 1, allyCode: 1}})
+      eObj = await swgohClient('fetchTwGuild', { id: enemyId, joined: [], playerProject: {name: 1, playerId:1, allyCode: 1}})
     }
-    if(eObj && eObj.member && eObj.member.length > 0){
-      const memberSorted = sorter([{column: 'name', order: 'ascending'}], eObj.member)
+    if(eObj?.member.length > 0){
+      let memberSorted = sorter([{column: 'name', order: 'ascending'}], eObj.member)
       if(memberSorted.length > 0){
         msg2send.content = null
         msg2send.embeds = []
@@ -34,16 +37,15 @@ module.exports = async(obj, opt)=>{
             x++;
             count = 0
             embedMsg.description += '```'
-            msg2send.embeds.push(JSON.parse(JSON.stringify(embedMsg)))
+            msg2send.embeds.push(DeepCopy(embedMsg))
             embedMsg.title = null
             embedMsg.description = '```autohotkey\n'
           }
         }
       }
     }
-    HP.ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
-    console.log(e)
-    HP.ReplyError(obj)
+    throw(e)
   }
 }

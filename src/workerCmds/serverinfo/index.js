@@ -74,7 +74,7 @@ module.exports = async(obj = {})=>{
       msg2Send.content = null
       msg2Send.embeds = [embedMsg]
     }
-    ReplyMsg(obj, msg2Send)
+    await ReplyMsg(obj, msg2Send)
   }catch(e){
     log.error(e)
     ReplyError(obj)

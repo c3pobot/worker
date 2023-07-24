@@ -20,10 +20,10 @@ module.exports = async(obj = {})=>{
       if(tempCmd){
         await Cmds[tempCmd](obj, opt)
       }else{
-        ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
+        await ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
       }
     }else{
-      ReplyMsg(obj, {content: 'This command is only for VIP members'})
+      await ReplyMsg(obj, {content: 'This command is only for VIP members'})
     }
   }catch(e){
     log.error(e)

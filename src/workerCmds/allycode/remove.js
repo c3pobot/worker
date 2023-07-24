@@ -38,7 +38,7 @@ module.exports = async(obj = {}, opt = [])=>{
       await HP.ButtonPick(obj, embedMsg)
       return
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

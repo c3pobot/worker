@@ -19,7 +19,7 @@ module.exports = async(obj = {}, opt = [])=>{
       for(let i in dObj.allyCodes) msg2send.content += dObj.allyCodes[i].allyCode+(dObj.allyCodes[i].opt ? ' : '+dObj.allyCodes[i].opt:'')+'\n'
       msg2send.content += '```'
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

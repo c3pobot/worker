@@ -50,7 +50,7 @@ module.exports = async(obj, opt = [])=>{
         msg2send.embeds = [embedMsg]
       }
     }
-    HP.ReplyMsg(obj, msg2send)
+    await HP.ReplyMsg(obj, msg2send)
   }catch(e){
     console.error(e)
     HP.ReplyError(obj)

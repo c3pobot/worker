@@ -22,7 +22,7 @@ module.exports = async(obj = {}, opt = [])=>{
       if(pObj?.name && !pObj.roster[baseId]) msg2send.content = pObj.name+' does not have '+configMaps.UnitMap[baseId].nameKey+' activated'
     }
     if(pObj?.name) msg2send = await getImg(obj, pObj, baseId)
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

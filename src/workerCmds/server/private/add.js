@@ -18,7 +18,7 @@ module.exports = async(obj = {}, opt = [])=>{
         msg2send.content = guild.name+' was added to the private server list'
       }
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

@@ -12,7 +12,6 @@ module.exports.process = async(obj ={})=>{
     }else{
       await ReplyMsg(obj, {content: 'Oh dear! **'+obj.data.name+'** command not recognized...'})
     }
-    await RemoveJob(obj.jobId)
   }catch(e){
     log.error(e);
     ReplyError(obj, {content: 'Oh dear! Critical command Error occured...'})

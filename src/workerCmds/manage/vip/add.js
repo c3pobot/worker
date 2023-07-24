@@ -22,7 +22,7 @@ module.exports = async(obj = {}, opt = [])=>{
         msg2send.content = (usr ? '**@'+usr+'**':'User')+' was added as level **'+vipLevel+'** vip with cr limit of **'+crLimit+'**'
       }
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

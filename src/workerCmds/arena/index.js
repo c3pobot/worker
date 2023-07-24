@@ -39,7 +39,7 @@ module.exports = async(obj = {})=>{
       if(auth){
         await Cmds.notify(obj, opt)
       }else{
-        ReplyMsg(obj, 'This is only available to patreons or those sponsored by a patreon')
+        await ReplyMsg(obj, 'This is only available to patreons or those sponsored by a patreon')
       }
     }else{
       if(tempCmd && Cmds[tempCmd]){
@@ -47,10 +47,10 @@ module.exports = async(obj = {})=>{
         if(patreon){
           await Cmds[tempCmd](obj, patreon, opt)
         }else{
-          ReplyMsg(obj, 'This is only avaliable to patreons')
+          await ReplyMsg(obj, 'This is only avaliable to patreons')
         }
       }else{
-        ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
+        await ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
       }
     }
   }catch(e){

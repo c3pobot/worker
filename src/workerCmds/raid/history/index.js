@@ -1,6 +1,5 @@
 'use strict'
 const { mongo, GetAllyCodeObj, GetGuildId, GetOptValue, GetScreenShot, ReplyMsg } = require('helpers')
-const GetMemberPrevious = require('../getMemberPrevious')
 const getHTML = require('getHTML/raid/status')
 const swgohClient = require('swgohClient')
 const sorter = require('json-array-sorter')

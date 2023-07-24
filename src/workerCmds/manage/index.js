@@ -20,10 +20,10 @@ module.exports = async(obj = {})=>{
       if(auth || tempCmd === 'list'){
         await Cmds[tempCmd](obj, opt)
       }else{
-        ReplyMsg(obj, {content: 'This command is only available to the bot owner'})
+        await ReplyMsg(obj, {content: 'This command is only available to the bot owner'})
       }
     }else{
-      ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
+      await ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
     }
   }catch(e){
     log.error(e)

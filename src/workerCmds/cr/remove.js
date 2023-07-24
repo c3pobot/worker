@@ -13,7 +13,7 @@ module.exports = async(obj = {}, opt = [])=>{
         msg2send.content = 'Custom reaction with ID **'+id+'** and trigger **'+lCR.cr.find(x=>x.id == id).trigger+'** has been deleted for this server'
       }
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

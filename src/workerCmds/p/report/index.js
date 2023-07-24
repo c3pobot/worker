@@ -91,7 +91,7 @@ module.exports = async(obj = {}, opt = [])=>{
       }
       msg2send.embeds.push(baseMsg)
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

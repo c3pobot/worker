@@ -19,9 +19,9 @@ module.exports = async(obj = {})=>{
           if(status?.msg) msg2send.content = status.msg
         }
       }
-      ReplyMsg(obj, msg2send)
+      await ReplyMsg(obj, msg2send)
     }else{
-      AdminNotAuth(obj)
+      await AdminNotAuth(obj)
     }
   }catch(e){
     log.error(e)

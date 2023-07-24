@@ -3,9 +3,11 @@ const Cmds = {}
 const MongoCmd = require('./mongo')
 const RedisCmd = require('./redis')
 const JobCache = require('./jobCache')
+
 Cmds.AddJob = JobCache.addJob
-Cmds.apiFetch = require('./apiFetch')
 Cmds.AdminNotAuth = require('./adminNotAuth')
+Cmds.apiFetch = require('./apiFetch')
+
 
 Cmds.BotRequest = require('./botRequest')
 Cmds.ButtonPick = require('./buttonPick')
@@ -18,9 +20,11 @@ Cmds.ConfirmButton = require('./confirmButton')
 
 Cmds.DeepCopy = require('./deepCopy')
 Cmds.DiscordQuery = require('./discordQuery')
+
 Cmds.EnumPerms = require('./enumPerms')
 
 Cmds.FindUnit = require('./findUnit')
+
 
 Cmds.GetAllyCodeObj = require('./getAllyCodeObj')
 Cmds.GetAllyCodeFromDiscordId = require('./getAllyCodeFromDiscordId')
@@ -30,11 +34,14 @@ Cmds.GetFakeUnit = require('./getFakeUnit')
 Cmds.GetGearParts = require('./getGearParts')
 Cmds.GetGuildId = require('./getGuildId')
 Cmds.GetGuildName = require('./getGuildName')
+Cmds.GetMentionUserName = require('./getMentionUserName')
 Cmds.GetNeededGear = require('./getNeededGear')
 Cmds.GetNeededRelicMats = require('./getNeededRelicMats')
 Cmds.GetOptValue = require('./getOptValue')
 Cmds.GetScreenShot = require('./getScreenShot')
+
 Cmds.Json2xls = require('./json2xls')
+
 Cmds.log = require('logger')
 
 Cmds.ModifyUnit = require('./modifyUnit')
@@ -48,6 +55,7 @@ Cmds.ReplyButton = require('./replyButton')
 Cmds.ReplyError = require('./replyError')
 Cmds.ReplyMsg = require('./replyMsg')
 Cmds.ReplyTokenError = require('./replyTokenError')
+
 Cmds.SendMsg = require('./sendMsg')
 Cmds.StatCalc = require('statcalc')
 

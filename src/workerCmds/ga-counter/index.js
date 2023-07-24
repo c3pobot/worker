@@ -19,7 +19,7 @@ module.exports = async(obj = {})=>{
     if(mode){
       await counter(obj, opt, mode)
     }else{
-      ReplyMsg(obj, {content: 'command not recongnized'})
+      await ReplyMsg(obj, {content: 'command not recongnized'})
     }
   }catch(e){
     log.error(e);

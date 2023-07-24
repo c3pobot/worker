@@ -16,7 +16,7 @@ module.exports = async(obj = {}, opt = [])=>{
     if(guild){
       msg2send.content = guild.name
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

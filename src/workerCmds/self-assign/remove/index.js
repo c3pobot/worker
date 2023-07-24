@@ -30,7 +30,7 @@ module.exports = async(obj = {}, opt = [])=>{
       await mongo.set('discordServer', {_id: obj.guild_id}, {selfassignroles: roles.filter(x=>x.id != roleId)})
       msg2send.content = '**@'+role.name+'** was removed as a self assign role'
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

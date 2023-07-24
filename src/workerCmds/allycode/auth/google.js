@@ -5,7 +5,7 @@ const authMsg = "EA TOS link: <https://tos.ea.com/legalapp/WEBTERMS/US/en/PC/>\n
 module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'Your allyCode is not linked to your discord id'}
-    let dObj = await HP.GetAllyCodeFromDiscordId(obj.member.user.id, opt)
+    let dObj = await GetAllyCodeObj(obj, opt)
     if(dObj?.allyCode){
       msg2send.content = authMsg
       msg2send.flags = 64
@@ -13,7 +13,7 @@ module.exports = async(obj = {}, opt = [])=>{
       //MSG.SendDM(dId, {content: authMsg})
     }
     await ReplyButton(obj, 'Sending Private message')
-    ReplyMsg(obj, msg2send, 'POST')
+    await ReplyMsg(obj, msg2send, 'POST')
   }catch(e){
     throw(e)
   }

@@ -49,7 +49,7 @@ module.exports = async(obj = {}, patreon = {}, opt = [])=>{
       await mongo.pull('patreon', {_id: patreon._id}, {guilds: {id: gObj.id}})
       msg2send.content = 'Guild '+(gObj.name ? '**'+gObj.name+'** ':'')+' was removed from your list.'
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

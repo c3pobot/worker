@@ -17,10 +17,10 @@ module.exports = async(obj = {}, opt = [])=>{
       if(await CheckServerAdmin(obj)){
         await Cmds[tempCmd](obj, opts)
       }else{
-        AdminNotAuth(obj)
+        await AdminNotAuth(obj)
       }
     }else{
-      ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
+      await ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
     }
   }catch(e){
     throw(e)

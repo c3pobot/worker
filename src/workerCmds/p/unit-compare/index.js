@@ -33,7 +33,7 @@ module.exports = async(obj = {}, opt = [])=>{
       }
     }
     if(pObj?.roster[baseId] && eObj?.roster[baseId]) msg2send = await getImg(obj, pObj, eObj, baseId)
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

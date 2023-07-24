@@ -15,7 +15,7 @@ module.exports = async(obj = {}, opt = [])=>{
     }else{
       msg2send.content = 'You must provide a channel and message to set main greeting'
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

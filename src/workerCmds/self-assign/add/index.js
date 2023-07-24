@@ -35,7 +35,7 @@ module.exports = async(obj = {}, opt = [])=>{
         msg2send.content = '**@'+roleName+'** was added as a self assign role'
       }
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

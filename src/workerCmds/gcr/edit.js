@@ -29,7 +29,7 @@ module.exports = async(obj = {}, opt = [])=>{
         msg2send.content = null
       }
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

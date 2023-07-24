@@ -25,10 +25,10 @@ module.exports = async(obj = {})=>{
       if(auth || tempCmd == 'list' || tempCmd == 'copy'){
         await Cmds[tempCmd](obj, opt)
       }else{
-        AdminNotAuth(obj)
+        await AdminNotAuth(obj)
       }
     }else{
-      ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
+      await ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
     }
   }catch(e){
     log.error(e)

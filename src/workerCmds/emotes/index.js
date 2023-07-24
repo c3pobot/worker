@@ -42,7 +42,7 @@ module.exports = async(obj = {})=>{
     }else{
       msg2Send.content = 'There are no custom server emojis'
     }
-    ReplyMsg(obj, msg2Send)
+    await ReplyMsg(obj, msg2Send)
   }catch(e){
     log.error(e)
     ReplyError(obj)

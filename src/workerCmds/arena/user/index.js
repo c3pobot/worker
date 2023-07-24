@@ -1,4 +1,5 @@
 'use strict'
+const { log, ReplyError, ReplyMsg } = require('helpers')
 const Cmds = {}
 Cmds.add = require('./add')
 Cmds.remove = require('./remove')
@@ -9,10 +10,10 @@ module.exports = async(obj = {}, patreon = {}, opt = [])=>{
     if(tempCmd && Cmds[tempCmd]){
       await Cmds[tempCmd](obj, patreon, opt)
     }else{
-      HP.ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
+      await ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
     }
   }catch(e){
-    console.log(e)
-    HP.ReplyMsg(obj)
+    log.error(e)
+    ReplyError(obj)
   }
 }

@@ -66,7 +66,7 @@ module.exports = async(obj = {}, opt = [])=>{
       msg2send.file = webImg
       msg2send.fileName = 'tb-gp-satus.png'
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

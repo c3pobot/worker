@@ -23,7 +23,7 @@ module.exports = async(obj = {})=>{
     }else{
       msg2Send.content = 'You did not provide a search string'
     }
-    ReplyMsg(obj, msg2Send)
+    await ReplyMsg(obj, msg2Send)
   }catch(e){
     log.error(e)
     ReplyError(obj)

@@ -30,9 +30,8 @@ module.exports = async(obj = {})=>{
       sendMsg = true
       msg2send.content = 'Command not found'
     }
-    if(sendMsg) ReplyMsg(obj, msg2send)
+    if(sendMsg) await ReplyMsg(obj, msg2send)
   }catch(e){
-    console.error(e)
     log.error(e);
     ReplyError(obj)
   }

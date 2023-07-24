@@ -76,7 +76,7 @@ module.exports = async(obj = {}, opt = [])=>{
         if(status?.msg) msg2send.content = status.msg
       }
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

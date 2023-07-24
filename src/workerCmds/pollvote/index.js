@@ -25,8 +25,8 @@ module.exports = async(obj = {})=>{
         msg2send.components = []
       }
     }
-    if(sendResp) WebHookMsg(obj.token, msg2send, sendMethod)
-    RemoveJob(obj.id)
+    if(sendResp) await WebHookMsg(obj.token, msg2send, sendMethod)
+    await RemoveJob(obj.id)
   }catch(e){
     log.error(e)
   }

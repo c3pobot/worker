@@ -9,7 +9,7 @@ module.exports = (obj = {})=>{
     const msg2Send = {content: 'Random number between **'+min+'** and **'+max+'**\n```\n'}
     msg2Send.content += Math.floor(Math.random() * (max - min + 1)) + min
     msg2Send.content += '\n```\n'
-    ReplyMsg(obj, msg2Send)
+    await ReplyMsg(obj, msg2Send)
   }catch(e){
     log.error(e)
     ReplyError(obj)

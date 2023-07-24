@@ -91,37 +91,14 @@ module.exports = async(obj = {}, opt = [])=>{
       platObj = sorter([{column: 'phase', order: 'descending'}], platObj)
       if(!excelData) excelData = {}
       excelData.platoons = platObj
-      /*
-      let tempObj = json2xls(platObj, {fields: {
-        phase: 'string',
-        type: 'string',
-        combatType: 'string',
-        relic: 'number',
-        baseId: 'baseId',
-        unit: 'string',
-        count: 'number'
-      }})
-      if(tempObj) excelPlats = Buffer.from(tempObj, 'binary')
-      */
     }
     if(rosterUnits?.length > 0 && excelData){
       excelData.units = rosterUnits
-      /*
-      let tempObj = json2xls(rosterUnits, {fields: {
-        player: 'string',
-        baseId: 'string',
-        rarity: 'number',
-        relic: 'number',
-        gp: 'number'
-      }})
-      if(tempObj) excelUnits = Buffer.from(tempObj, 'binary')
-      */
     }
     if(excelData?.platoons){
       msg2send.content = 'Error mapping excel data'
       excelFile = Json2xls(excelData)
       console.log(excelFile)
-      //if(excelFile) excelFile = Buffer.from(excelFile, 'binary')
     }
     if(excelFile){
       if(clearContent) msg2send.content = null

@@ -38,10 +38,10 @@ module.exports = async(obj = {})=>{
     }
     if(hasRolePerm){
       msg2send.content = 'Error assing you the **@'+roleName+'** role'
-      const status = await DiscordQuery('guilds/'+obj.guild_id+'/members/'+dId+'/roles/'+roleId, 'PUT')
+      let status = await DiscordQuery('guilds/'+obj.guild_id+'/members/'+dId+'/roles/'+roleId, 'PUT')
       if(status === 204) msg2send.content = 'You have been assigned the **@'+roleName+'** role'
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     log.error(e);
     ReplyError(obj)

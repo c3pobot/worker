@@ -9,14 +9,14 @@ module.exports = async(obj = {}, opt = [])=>{
     tempObj.msg = GetOptValue(opt, 'message', tempObj.msg)
     let status = GetOptValue(opt, 'status')
     if(status) tempObj.status = (status === 'enable' ? 1:0)
-    
+
     if(tempObj.chId && tempObj.msg){
       await mongo.set('discordServer', {_id: obj.guild_id}, {welcomeAlt: tempObj})
       msg2send.content = 'Alt Greeting message was updated for <#'+tempObj.chId+'> and is **'+(tempObj.status ? 'enabled':'disabled')+'**.'
     }else{
       msg2send.content = 'You must provide a channel and message to set alt greeting'
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

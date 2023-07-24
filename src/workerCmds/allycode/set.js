@@ -65,7 +65,7 @@ module.exports = async(obj = {}, opt = [])=>{
       await mongo.set('discordId', {_id: dObj._id}, {allyCodes: dObj.allyCodes})
       msg2send.content = 'Your **'+(option == 'alt' ? 'Alt':'Primary')+'** allyCode has been updated to **'+allyCode+'**'
     }
-    ReplyMsg(obj, msg2send)
+    await ReplyMsg(obj, msg2send)
   }catch(e){
     throw(e)
   }

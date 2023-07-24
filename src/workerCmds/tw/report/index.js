@@ -9,7 +9,7 @@ const getTwRecord = require('./getTwRecord')
 const getHTML = require('getHTML/tw/report')
 module.exports = async(obj, opt = [], fromUpdate = false)=>{
   try{
-    let msg2send = {content: 'You do not have your allycode linked to discord id'}, joined = [], enemyId, gObj, eObj, guild, webHTML, webImg, webData, cacheKey
+    let msg2send = {content: 'You do not have your allycode linked to discord id'}, joined = [], enemyId, gObj, eObj, guild, webHTML, webData, cacheKey
     let includeUnits = GetOptValue(opt, 'units', true)
     if(opt.find(x=>x.name == 'units')) includeUnits = opt.find(x=>x.name == 'units').value
     let pObj = await GetGuildId({dId: obj.member.user.id}, {}, opt)
@@ -70,14 +70,18 @@ module.exports = async(obj, opt = [], fromUpdate = false)=>{
       msg2send.content = 'error getting html'
       webHTML = getHTML(webData)
     }
-    if(webHTML){
-      msg2send.content = 'error getting screen shot'
-      webImg = await GetScreenShot(webHTML, obj.id)
+    if(webHTML?.basic){
+      msg2send.content = 'error getting screen shots'
+      msg2send.files = []
+      mongo.set('webTemp', {_id: 'twReport'}, { data: webData })
+      for(let i in webHTML){
+        if(!webHTML[i]) continue
+        let webImg = await GetScreenShot(webHTML[i], obj.id+'i')
+        if(webImg) msg2send.files.push({ file: webImg, fileName: i+'.png'})
+      }
     }
-    if(webImg){
+    if(msg2send.files?.length > 0){
       msg2send.content = null
-      msg2send.file = webImg
-      msg2send.fileName = 'tb-status.png'
     }
     if(msg2send.content && fromUpdate) msg2send.content += '\nNote: Your opponent guild was successfully added so you can just re-run the `/tw report` to try to get the details'
     ReplyMsg(obj, msg2send)

@@ -4,22 +4,30 @@ const isOdd = (num)=>{
 }
 const getBasicInfo = (home = {}, away = {})=>{
   try{
-    let html = ''
-    html += '<tr class="row-even"><td class="stat-name">GP</td><td class="home-guild">'+(home.gp?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.gp?.toLocaleString() || 0)+'</td></tr>'
-    html += '<tr class="row-odd"><td class="stat-name">Char GP</td><td class="home-guild">'+(home.gpChar?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.gpChar?.toLocaleString() || 0)+'</td></tr>'
-    html += '<tr class="row-even"><td class="stat-name">Ship GP</td><td class="home-guild">'+(home.gpShip?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.gpShip?.toLocaleString() || 0)+'</td></tr>'
-    html += '<tr class="row-odd"><td class="stat-name">Zeta</td><td class="home-guild">'+(home.zeta?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.zeta?.toLocaleString() || 0)+'</td></tr>'
-    html += '<tr class="row-even"><td class="stat-name">R6 Mods</td><td class="home-guild">'+(home.mod?.r6?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.mod?.r6?.toLocaleString() || 0)+'</td></tr>'
-    html += '<tr class="row-odd"><td class="stat-name">Gl\'s</td><td class="home-guild">'+(home.gl?.total?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.gl?.total?.toLocaleString() || 0)+'</td></tr>'
-    html += '<tr class="row-even"><td class="stat-name">TW Omi</td><td class="home-guild">'+(home.omi?.tw?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.omi?.tw?.toLocaleString() || 0)+'</td></tr>'
-    html += '<tr class="row-odd"><td class="stat-name">TW Record</td><td class="home-guild">'+(home.record?.w || 0)+' - '+(home.record?.l || 0)+'</td><td class="away-guild">'+(away.record?.w || 0)+' - '+(away.record?.l || 0)+'</td></tr>'
-    html += '<tr class="row-even"><td class="stat-name">TW Last</td><td class="home-guild">'+(home?.record?.last?.status === 'L' ? 'Loss':'Win')+'</td><td class="away-guild">'+(away?.record?.last?.status === 'L' ? 'Loss':'Win')+'</td></tr>'
+    let html = '<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0">'
+    html += '<link href="https://fonts.googleapis.com/css?family=Antic" rel="stylesheet">'
+    html += '<link href="/css/twreport.css" rel="stylesheet">'
+    html += '</head>'
+    html += '<body>'
+    html += '<table class="main-table">'
+      html += '<tr class="main-header"><td class="stat-name">Guilds</td><td class="home-guild">'+home.name+' ('+home.joined+')</td><td class="away-guild">'+away.name+' ('+away.joined+')</td></tr>'
+      html += '<tr class="row-even"><td class="stat-name">GP</td><td class="home-guild">'+(home.gp?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.gp?.toLocaleString() || 0)+'</td></tr>'
+      html += '<tr class="row-odd"><td class="stat-name">Char GP</td><td class="home-guild">'+(home.gpChar?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.gpChar?.toLocaleString() || 0)+'</td></tr>'
+      html += '<tr class="row-even"><td class="stat-name">Ship GP</td><td class="home-guild">'+(home.gpShip?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.gpShip?.toLocaleString() || 0)+'</td></tr>'
+      html += '<tr class="row-odd"><td class="stat-name">Zeta</td><td class="home-guild">'+(home.zeta?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.zeta?.toLocaleString() || 0)+'</td></tr>'
+      html += '<tr class="row-even"><td class="stat-name">R6 Mods</td><td class="home-guild">'+(home.mod?.r6?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.mod?.r6?.toLocaleString() || 0)+'</td></tr>'
+      html += '<tr class="row-odd"><td class="stat-name">Gl\'s</td><td class="home-guild">'+(home.gl?.total?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.gl?.total?.toLocaleString() || 0)+'</td></tr>'
+      html += '<tr class="row-even"><td class="stat-name">TW Omi</td><td class="home-guild">'+(home.omi?.tw?.toLocaleString() || 0)+'</td><td class="away-guild">'+(away.omi?.tw?.toLocaleString() || 0)+'</td></tr>'
+      html += '<tr class="row-odd"><td class="stat-name">TW Record</td><td class="home-guild">'+(home.record?.w || 0)+' - '+(home.record?.l || 0)+'</td><td class="away-guild">'+(away.record?.w || 0)+' - '+(away.record?.l || 0)+'</td></tr>'
+      html += '<tr class="row-even"><td class="stat-name">TW Last</td><td class="home-guild">'+(home?.record?.last?.status === 'L' ? 'Loss':'Win')+'</td><td class="away-guild">'+(away?.record?.last?.status === 'L' ? 'Loss':'Win')+'</td></tr>'
+    html += '</table>'
+    html += '</body>'
     return html
   }catch(e){
     throw(e)
   }
 }
-const getUnitInfo = (home = {}, away = {})=>{
+const getUnits = (home = {}, away = {})=>{
   try{
     let html = '', relicMin = 4, relicMax = 9, oddCount = 0, rarityMin = 3, rarityMax = 7
     let getBkClass = () =>{
@@ -59,32 +67,32 @@ const getUnitInfo = (home = {}, away = {})=>{
     throw(e)
   }
 }
-module.exports = ({home = {}, away = {}, gl, char, ship })=>{
+const getUnitInfo = (home = {}, away = {}, units = {}, type)=>{
   try{
-    let html = ''
-    html += '<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0">'
+    let html = '<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0">'
     html += '<link href="https://fonts.googleapis.com/css?family=Antic" rel="stylesheet">'
     html += '<link href="/css/twreport.css" rel="stylesheet">'
     html += '</head>'
     html += '<body>'
-    html += '<table class="main-table">'
-    html += '<tr class="main-header"><td class="stat-name">Guilds</td><td class="home-guild">'+home.name+' ('+home.joined+')</td><td class="away-guild">'+away.name+' ('+away.joined+')</td></tr>'
-    html += getBasicInfo(home, away)
-    if(gl){
-      html += '<tr class="section-title"><td colSpan="3">Galactic Legend Comparison</td></tr>'
-      html += getUnitInfo(gl.home, gl.away)
-    }
-    if(char){
-      html += '<tr class="section-title"><td colSpan="3">Character Comparison</td></tr>'
-      html += getUnitInfo(char.home, char.away)
-    }
-    if(ship){
-      html += '<tr class="section-title"><td colSpan="3">Ship Comparison</td></tr>'
-      html += getUnitInfo(ship.home, ship.away)
-    }
+    html += '<table class="units-table">'
+      html += '<tr class="main-header"><td class="stat-name">Guilds</td><td class="home-guild">'+home.name+' ('+home.joined+')</td><td class="away-guild">'+away.name+' ('+away.joined+')</td></tr>'
+      html += '<tr class="section-title"><td colSpan="3">'+type+' Comparison</td></tr>'
+      html += getUnits(units.home, units.away)
     html += '</table>'
     html += '</body>'
     return html
+  }catch(e){
+    throw(e)
+  }
+}
+module.exports = ({home = {}, away = {}, gl, char, ship })=>{
+  try{
+    let res = {}
+    res.basic = getBasicInfo(home, away)
+    if(gl) res.gl = getUnitInfo(home, away, gl, 'Galactic Legend')
+    if(char) res.char = getUnitInfo(home, away, char, 'Character')
+    if(ship) res.ship = getUnitInfo(home, away, ship, 'Ship')
+    return res
   }catch(e){
     throw(e)
   }

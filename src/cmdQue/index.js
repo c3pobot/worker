@@ -7,9 +7,9 @@ const localQueKey = process.env.LOCAL_QUE_KEY
 const CmdQue = {}
 const redisConnection = {
   host: process.env.REDIS_SERVER,
-	port: +process.env.REDIS_PORT,
-	password: process.env.REDIS_PASS
+	port: +process.env.REDIS_PORT
 }
+if(process.env.REDIS_PASS) redisConnection.password = process.env.REDIS_PASS
 let workerTypes = ['discord', 'oauth', 'swgoh']
 if(process.env.WORKER_TYPES) workerTypes = JSON.parse(process.env.WORKER_TYPES)
 const PRIVATE_WORKER = process.env.PRIVATE_WORKER || false

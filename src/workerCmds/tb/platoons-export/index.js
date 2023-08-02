@@ -1,5 +1,4 @@
 'use strict'
-const json2xls = require('json2xls');
 const fs = require('fs')
 const swgohClient = require('swgohClient')
 const sorter = require('json-array-sorter')

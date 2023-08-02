@@ -1,12 +1,13 @@
 'use strict'
 const log = require('logger')
 const RedisWrapper = require('rediswrapper')
-const redis = new RedisWrapper({
+const redisOpts = {
   host: process.env.REDIS_SERVER,
   port: process.env.REDIS_PORT,
-  passwd: process.env.REDIS_PASS,
   logger: log
-})
+}
+if(process.env.REDIS_PASS) redisOpts.passwd = process.env.REDIS_PASS
+const redis = new RedisWrapper(redisOpts)
 let redisReady = false
 const initRedis = async()=>{
   try{

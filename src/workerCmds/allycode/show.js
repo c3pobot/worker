@@ -1,5 +1,6 @@
 'use strict'
-const { mongo, GetOptValue, ReplyMsg } = require('helpers')
+const mongo = require('mongoclient')
+const { GetOptValue, ReplyMsg } = require('helpers')
 module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'That user does not have allyCode linked to discord id'}, username

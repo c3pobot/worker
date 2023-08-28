@@ -2,7 +2,7 @@
 const log = require('logger')
 const swgohClient = require('swgohClient/routes/apiFetch')
 const fetch = require('node-fetch')
-const { mongo } = require('helpers/mongo')
+const mongo = require('mongoclient')
 const { Decrypt, Encrypt } = require('./googleToken')
 const resCookies = ['authToken', 'refreshToken']
 const baseStoreUrl = 'https://store.galaxy-of-heroes.starwars.ea.com/auth/refresh_session'

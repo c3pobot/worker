@@ -1,6 +1,6 @@
 'use strict'
-const { mongo } = require('helpers/mongo')
-const deepCopy = require('./deepCopy')
+const mongo = require('mongoclient')
+const deepCopy = require('helpers/deepCopy')
 const queryGuild = require('./queryGuild')
 const getCacheGuild = async(opts = {})=>{
   try{
@@ -21,7 +21,7 @@ const getNewGuild = async(opts = {})=>{
       res.name = res.profile.name
       res.member = res.member.filter(x=>x.memberLevel !== 1)
       let guildCopy = deepCopy(res)
-      mongo.set(collection, {_id: res.id}, guildCopy)
+      await mongo.set(collection, {_id: res.id}, guildCopy)
       return res
     }
   }catch(e){

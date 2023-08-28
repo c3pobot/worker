@@ -1,6 +1,6 @@
 'use strict'
 const GetGuildId = require('./getGuildId')
-const { mongo } = require('./mongo')
+const mongo = require('mongoclient')
 module.exports = async(obj = {}, opt = [], guild)=>{
   try{
     let auth, server, guildId
@@ -19,6 +19,6 @@ module.exports = async(obj = {}, opt = [], guild)=>{
     }
     return { auth: auth, guildId: guildId }
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }

@@ -2,14 +2,14 @@
 const log = require('logger')
 let workerTypes = ['discord', 'oauth', 'swgoh']
 if(process.env.WORKER_TYPES) workerTypes = JSON.parse(process.env.WORKER_TYPES)
-const { mongo, mongoStatus } = require('helpers/mongo')
-let CmdMap = { map: {} }, mongoReady
+const mongo = require('mongoclient')
+let CmdMap = { map: {} }
 const update = async(notify = false)=>{
   try{
     let tempMap = {}
     for(let i in workerTypes){
       if(notify) log.debug('Add '+workerTypes[i]+' commands...')
-      const obj = (await mongo.find('slashCmds', {_id: workerTypes[i]}))[0]
+      let obj = (await mongo.find('slashCmds', {_id: workerTypes[i]}))[0]
       if(obj?.cmdMap) tempMap = {...tempMap,...obj.cmdMap}
     }
     let cmdCount = +Object.values(tempMap)?.length
@@ -25,16 +25,13 @@ const update = async(notify = false)=>{
 }
 const syncMap = async(notify = false)=>{
   try{
-    if(!mongoReady) mongoReady = await mongoStatus()
     if(notify) log.debug('Creating command map...')
     let checkTime = 5, notifyUpdate = false
     if(notify) notifyUpdate = true
-    if(mongoReady){
-      let status = await update(notify)
-      if(status){
-        checkTime = 60
-        notifyUpdate = false
-      }
+    let status = await update(notify)
+    if(status){
+      checkTime = 60
+      notifyUpdate = false
     }
     setTimeout(()=>syncMap(notifyUpdate), checkTime * 1000)
   }catch(e){
@@ -42,5 +39,18 @@ const syncMap = async(notify = false)=>{
     setTimeout(()=>syncMap(notify), 5000)
   }
 }
-syncMap(true)
+const checkMongo = ()=>{
+  try{
+    let status = mongo.status()
+    if(status){
+      syncMap(true)
+      return
+    }
+    setTimeout(checkMongo, 5000)
+  }catch(e){
+    log.error(e)
+    setTimeout(checkMongo, 5000)
+  }
+}
+checkMongo()
 module.exports = { CmdMap }

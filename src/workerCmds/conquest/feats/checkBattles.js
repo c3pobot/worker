@@ -1,5 +1,5 @@
 'use strict'
-const { mongo } = require('helpers')
+const mongo = require('mongoclient')
 module.exports = async(nodeStatus = [], nodeSelection = [], difficultyType, conquestDefinitionIdentifier)=>{
   try{
     let res = { complete: 0, total: 0, battles: []}, tempObj, nodeInfo

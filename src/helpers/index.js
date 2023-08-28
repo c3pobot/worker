@@ -1,7 +1,5 @@
 'use strict'
 const Cmds = {}
-const MongoCmd = require('./mongo')
-const RedisCmd = require('./redis')
 const JobCache = require('./jobCache')
 
 Cmds.AddJob = JobCache.addJob
@@ -9,7 +7,7 @@ Cmds.AdminNotAuth = require('./adminNotAuth')
 Cmds.apiFetch = require('./apiFetch')
 
 
-Cmds.BotRequest = require('./botRequest')
+Cmds.BotRequest = require('botrequest')
 Cmds.ButtonPick = require('./buttonPick')
 
 Cmds.CheckBotOwner = require('./checkBotOwner')
@@ -45,11 +43,9 @@ Cmds.Json2xls = require('./json2xls')
 Cmds.log = require('logger')
 
 Cmds.ModifyUnit = require('./modifyUnit')
-Cmds.mongo = MongoCmd.mongo
-Cmds.mongoStatus = MongoCmd.mongoStatus
+Cmds.mongo = require('mongoclient')
 
-Cmds.redis = RedisCmd.redis
-Cmds.redisStatus = RedisCmd.redisStatus
+Cmds.redi = require('redisclient')
 Cmds.RemoveJob = JobCache.removeJob
 Cmds.ReplyButton = require('./replyButton')
 Cmds.ReplyError = require('./replyError')
@@ -57,7 +53,6 @@ Cmds.ReplyMsg = require('./replyMsg')
 Cmds.ReplyTokenError = require('./replyTokenError')
 
 Cmds.SendMsg = require('./sendMsg')
-Cmds.StatCalc = require('statcalc')
 
 Cmds.TruncateString = require('./truncateString')
 

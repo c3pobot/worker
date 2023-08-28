@@ -1,11 +1,13 @@
 'use strict'
 const path = require('path')
 const log = require('logger')
+const mongo = require('mongoclient')
 const { v4: uuidv4 } = require('uuid')
-const { mongo, mongoStatus } = require('./mongo')
+
 const sendMsg = require('./sendMsg')
 const discordQuery = require('./discordQuery')
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID
+
 const checkCmds = async()=>{
   try{
     let count = 0, shard = 0, guild = 0
@@ -45,12 +47,6 @@ const addCommands = async(obj = {})=>{
 }
 const syncUpdates = async()=>{
   try{
-    if(!CLIENT_ID) throw('discord client id not provided...')
-    let status = mongoStatus()
-    if(!status){
-      setTimeout(syncUpdates, 5000)
-      return
-    }
     await checkCmds()
     await syncMessages()
     setTimeout(syncUpdates, 30000)
@@ -72,4 +68,18 @@ const syncMessages = async()=>{
     throw(e)
   }
 }
-syncUpdates()
+const checkMongo = ()=>{
+  try{
+    if(!CLIENT_ID) throw('discord client id not provided...')
+    let status = mongo.status()
+    if(status){
+      syncUpdates()
+      return
+    }
+    setTimeout(checkMongo, 5000)
+  }catch(e){
+    log.error(e)
+    setTimeout(checkMongo, 5000)
+  }
+}
+checkMongo()

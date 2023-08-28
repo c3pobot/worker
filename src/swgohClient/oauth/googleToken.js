@@ -1,6 +1,6 @@
 'use strict'
 const log = require('logger')
-const { mongo } = require('helpers')
+const mongo = require('mongoclient')
 const Cmds = {}
 const CryptoJS = require('crypto-js')
 const OauthClientWrapper = require('googletokenwrapper')

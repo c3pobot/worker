@@ -1,5 +1,5 @@
 'use strict'
-const { mongo } = require('helpers')
+const mongo = require('mongoclient')
 module.exports = async(disc = [], equipped = true)=>{
   try{
     let i = disc.length, discIds = disc.map(x=>x.definitionId), res = [], tempDisc = {}

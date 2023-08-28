@@ -1,6 +1,6 @@
 'use strict'
 const log = require('logger')
-const { redis } = require('helpers')
+const redis = require('redisclient')
 module.exports = async(obj = {})=>{
   try{
     const tempObj = {}

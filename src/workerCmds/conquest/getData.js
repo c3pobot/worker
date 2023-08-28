@@ -1,5 +1,6 @@
 'use strict'
-const { mongo, GetAllyCodeObj, GetOptValue, ReplyButton, ReplyTokenError} = require('helpers')
+const mongo = require('mongoclient')
+const { GetAllyCodeObj, GetOptValue, ReplyButton, ReplyTokenError} = require('helpers')
 const swgohClient = require('swgohClient')
 module.exports = async(obj = {}, opt = [])=>{
   try{

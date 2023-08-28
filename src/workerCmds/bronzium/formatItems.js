@@ -1,5 +1,5 @@
 'use strict'
-const { mongo } = require('helpers')
+const mongo = require('mongoclient')
 const Cmds = {}
 const enumTD = {
   'xp-mat-one-star': 'T1 Training Droid',

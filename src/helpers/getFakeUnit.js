@@ -1,5 +1,4 @@
 'use strict'
-const log = require('logger')
 const { configMaps } = require('helpers/configMaps')
 const deepCopy = require('./deepCopy')
 const fakeUnit = {

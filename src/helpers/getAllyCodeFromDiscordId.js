@@ -1,5 +1,5 @@
 'use strict'
-const { mongo } = require('helpers/mongo')
+const mongo = require('mongoclient')
 const getOptValue = require('./getOptValue')
 module.exports = async(dId, opt = [], useDefault = true)=>{
   try{

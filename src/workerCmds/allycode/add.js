@@ -1,6 +1,7 @@
 'use strict'
+const mongo = require('mongoclient')
 const { configMaps } = require('helpers/configMaps')
-const { mongo, GetOptValue, ReplyMsg } = require('helpers')
+const { GetOptValue, ReplyMsg } = require('helpers')
 const { GetUnitCheck, VerifyUnit } = require('./helper')
 const swgohClient = require('swgohClient')
 module.exports = async(obj = {}, opt = [])=>{

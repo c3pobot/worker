@@ -4,9 +4,9 @@ const JobCache = require('./jobCache')
 const { WebHookMsg } = require('discordapiclient')
 module.exports = async(obj = {}, content, method = 'PATCH')=>{
   try{
-    const job = await JobCache.getJob(obj)
+    let job = await JobCache.getJob(obj)
     if(!job) return
-    WebHookMsg(obj?.token, content, method)
+    await WebHookMsg(obj?.token, content, method)
   }catch(e){
     log.error(e)
   }

@@ -1,70 +1,70 @@
-const { mongoStatus, redis, log } = require('helpers')
-const GAME_API_NEEDED = process.env.GAME_API_NEEDED
+'use strict'
+const log = require('logger')
+const Queue = require('bull')
 
-const QueWrapper = require('quewrapper')
-const CmdProcessor = require('./cmdProcessor')
-const localQueKey = process.env.LOCAL_QUE_KEY
-const CmdQue = {}
-const redisConnection = {
-  host: process.env.REDIS_SERVER,
-	port: +process.env.REDIS_PORT
-}
-if(process.env.REDIS_PASS) redisConnection.password = process.env.REDIS_PASS
+const cmdProcessor = require('./cmdProcessor')
+const processLocalQue = require('./processLocalQue')
+const { CmdMap } = require('helpers/cmdMap')
+
+const PRIVATE_WORKER = process.env.PRIVATE_WORKER || false
+const NUM_JOBS = +(process.env.NUM_JOBS || 1)
 let workerTypes = ['discord', 'oauth', 'swgoh']
 if(process.env.WORKER_TYPES) workerTypes = JSON.parse(process.env.WORKER_TYPES)
-const PRIVATE_WORKER = process.env.PRIVATE_WORKER || false
-const NUM_QUE_JOBS = +(process.env.NUM_JOBS || 3)
-let gameApiReady = false, swgohClient
-if(GAME_API_NEEDED){
-  swgohClient = require('swgohClient')
-  const CheckApiReady = async()=>{
-    try{
-      let status = await swgohClient('getStatus')
-      if(status){
-        gameApiReady = true
-        return
-      }
-      setTimeout(CheckApiReady, 5000)
-    }catch(e){
-      log.error(e)
-      setTimeout(CheckApiReady, 5000)
-    }
-  }
-  CheckApiReady()
-}else{
-  gameApiReady = true
-}
 
+const CmdQue = {}
+
+const queOpts = {
+  redis: {
+    host: process.env.REDIS_SERVER,
+    port: +process.env.REDIS_PORT,
+    password: process.env.REDIS_PASS
+  },
+  settings: {
+    maxStalledCount: 0
+  }
+}
 const CreateQues = async()=>{
   try{
     for(let i in workerTypes){
-      const opts = { queOptions: {redis: redisConnection}, queName: workerTypes[i], cmdProcessor: CmdProcessor.process, numJobs: NUM_QUE_JOBS, logger: log }
-      if(PRIVATE_WORKER) opts.queName += 'Private'
-      if(redis && localQueKey){
-        opts.localQue = redis
-        opts.localQueKey = localQueKey
-      }
-      log.debug('Creating '+opts.queName+' worker que...')
-      CmdQue[opts.queName] = new QueWrapper(opts)
+      let queName = workerTypes[i]
+      if(PRIVATE_WORKER) queName += 'Private'
+      log.info(`Creating ${queName} worker que...`)
+      CmdQue[queName] = new Queue(queName, queOpts)
     }
-    StartQues()
   }catch(e){
     log.error(e);
     setTimeout(CreateQues, 5000)
   }
 }
+CreateQues()
 const StartQues = async()=>{
   try{
-    let mongoReady = mongoStatus()
-    let cmdCount = await CmdProcessor.checkCmdMap()
-    if(cmdCount > 0 && mongoReady && gameApiReady){
-      for(let i in CmdQue) CmdQue[i].start()
-    }else{
-      setTimeout(StartQues, 5000)
+    if(CmdMap?.map?.cmdCount > 0 && Object.values(CmdQue)?.length > 0){
+      await processLocalQue()
+      for(let i in CmdQue){
+        if(CmdQue[i]){
+          log.info(`starting ${i} processing with ${NUM_JOBS} workers...`)
+          CmdQue[i].process('*', +NUM_JOBS, cmdProcessor)
+        }
+      }
+      return
     }
+    setTimeout(StartQues, 5000)
   }catch(e){
-    log.error(e);
+    log.error(e)
     setTimeout(StartQues, 5000)
   }
 }
-CreateQues()
+module.exports.start = StartQues
+module.exports.removeJob = async(jobId, queName)=>{
+  try{
+    if(!CmdQue[queName]) return
+    let job = await CmdQue[queName].getJob(jobId)
+    if(job){
+      await job.moveToCompleted(null, true, true)
+      await job.remove()
+    }
+  }catch(e){
+    return
+  }
+}

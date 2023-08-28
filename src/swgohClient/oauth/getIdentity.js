@@ -1,7 +1,7 @@
 'use strict'
 const log = require('logger')
 const { GetAccessToken, Decrypt } = require('./googleToken')
-const { mongo } = require('helpers/mongo')
+const mongo = require('mongoclient')
 const { getGoogleAuth, getGuestAuth, getCodeAuth } = require('./getGameAuth')
 const GetAuthObj = async (uid, obj = {}) => {
   if(obj.authId && obj.authToken && obj.authToken !== '' && uid){

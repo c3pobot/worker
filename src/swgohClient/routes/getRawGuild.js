@@ -1,5 +1,5 @@
 'use strict'
-const { mongo } = require('helpers/mongo')
+const mongo = require('mongoclient')
 const queryGuild = require('./queryGuild')
 const queryPlayer = require('./queryPlayer')
 const getGuildId =  require('./getGuildId')

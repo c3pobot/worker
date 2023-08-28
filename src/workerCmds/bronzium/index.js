@@ -1,6 +1,7 @@
 'use strict'
+const mongo = require('mongoclient')
 const FormatItems = require('./formatItems')
-const { log, mongo, ButtonPick, GetAllyCodeObj, GetOptValue, ReplyButton, ReplyError, ReplyMsg, ReplyTokenError } = require('helpers')
+const { log, ButtonPick, GetAllyCodeObj, GetOptValue, ReplyButton, ReplyError, ReplyMsg, ReplyTokenError } = require('helpers')
 const swgohClient = require('swgohClient')
 const numeral = require('numeral')
 module.exports = async(obj = {})=>{

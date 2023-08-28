@@ -1,5 +1,5 @@
 'use strict'
-const statCalc = require('../swgohClient/routes/statCalc')
+const statCalc = require('statcalc')
 const { configMaps } = require('./configMaps')
 const deepCopy = require('./deepCopy')
 const enum_stars = {

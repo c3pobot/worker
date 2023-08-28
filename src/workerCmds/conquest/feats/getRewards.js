@@ -1,5 +1,5 @@
 'use strict'
-const { mongo } = require('helpers')
+const mongo = require('mongoclient')
 module.exports = async(totalKeys, difficultyType, conquestDefinitionIdentifier)=>{
   try{
     let cqDef = (await mongo.find('conquestDefinitionList', {_id: conquestDefinitionIdentifier}))[0]

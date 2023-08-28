@@ -1,6 +1,7 @@
 'use strict'
 const log = require('logger')
-const { mongo, mongoStatus } = require('./mongo')
+const mongo = require('mongoclient')
+
 let botSettings = { map: {} }
 const update = async(notify = false)=>{
   try{
@@ -21,12 +22,12 @@ const update = async(notify = false)=>{
 }
 const checkMongo = ()=>{
   try{
-    let status = mongoStatus()
+    let status = mongo.status()
     if(status){
       update(true)
-    }else{
-      setTimeout(checkMongo, 5000)
+      return
     }
+    setTimeout(checkMongo, 5000)
   }catch(e){
     log.error(e)
     setTimeout(checkMongo, 5000)

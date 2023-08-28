@@ -1,5 +1,6 @@
 'use strict'
-const { mongo, DeepCopy } = require('helpers')
+const mongo = require('mongoclient')
+const { DeepCopy } = require('helpers')
 const sorter = require('json-array-sorter')
 const getFeatType = (id, type = 1)=>{
   let name

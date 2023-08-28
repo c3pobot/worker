@@ -31,6 +31,6 @@ module.exports = (inventory = [], relicRecipe = [], currentTier)=>{
     }
     return sorter([{ column: 'count', order: 'descending' }], Object.values(neededMats))
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }

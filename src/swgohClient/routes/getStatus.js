@@ -1,6 +1,7 @@
 'use strict'
 const log = require('logger')
 const apiFetch = require('./apiFetch')
+const GAME_API_NEEDED = process.env.GAME_API_NEEDED
 let apiStatus = false
 const checkStatus = async()=>{
   try{
@@ -17,7 +18,7 @@ const checkStatus = async()=>{
     setTimeout(checkStatus, 5000)
   }
 }
-checkStatus()
+if(GAME_API_NEEDED) checkStatus()
 module.exports = ()=>{
   return apiStatus
 }

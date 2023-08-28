@@ -1,5 +1,7 @@
 'use strict'
-const { log, mongo, GetAllyCodeFromDiscordId, GetGuildId, ReplyError, ReplyMsg } = require('helpers')
+const log = require('logger')
+const mongo = require('mongoclient')
+const { GetAllyCodeFromDiscordId, GetGuildId, ReplyError, ReplyMsg } = require('helpers')
 const CheckAuth = async(dId)=>{
   try{
     let guild, auth = false, obj, allyCode

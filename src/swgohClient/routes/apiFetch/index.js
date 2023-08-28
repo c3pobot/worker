@@ -1,60 +1,39 @@
 'use strict'
 const log = require('logger')
-const POD_NAME = process.env.WORKER_NAME || 'botworker'
-let GAME_CLIENT_URL = process.env.GAME_CLIENT_URL || 'http://localhost:3000'
-GAME_CLIENT_URL = GAME_CLIENT_URL.replace('http:', 'ws:')
+const path = require('path')
+const fetch = require('./fetch');
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000'
 
-const SOCKET_EMIT_TIMEOUT = process.env.SOCKET_EMIT_TIMEOUT || 30000
-const io = require('socket.io-client')
-let socket = io(GAME_CLIENT_URL, {transports: ['websocket']}), notify = true
-socket.on('connect', ()=>{
-  if(notify){
-    notify = false
-    log.info(POD_NAME+' socket.io is connected to swgoh-client...')
-  }else{
-    log.debug(POD_NAME+' socket.io is connected to swgoh-client...')
-  }
+let retryCount = 6
 
-})
-socket.on('disconnect', reason=>{
-  log.debug('socket.io is diconnected from swgoh-client socket server...')
-})
-function socketCall(endpoint, data){
-  return new Promise((resolve, reject)=>{
-    try{
-      if(!socket || !socket?.connected) reject('swgoh-client Socket Error: connection not available')
-      socket.timeout(SOCKET_EMIT_TIMEOUT).emit('request', endpoint, data, function(err, res){
-        if(err){
-          log.error(err?.type)
-          resolve({status: 400, message: {code: 999, message: `swgoh-client Socket Error: ${err.message || err}`}})
-        }
-        resolve(res)
-      })
-    }catch(e){
-      reject(e);
-    }
-  })
-}
-const handleRequest = async(uri, payload, identity, retryCount = 0)=>{
+const requestWithRetry = async(uri, opts = {}, count = 0)=>{
   try{
-    let req = { payload: payload, identity: identity }
-    let res = await socketCall(uri, req)
-    if(res?.data) return res.data
-    if(res?.message?.code === 5)  return res.message
-    /*
-    if(res?.message?.code === 999 && retryCount < 10){
-      return await handleRequest(uri, payload, identity, retryCount++)
+    let res = await fetch(uri, opts)
+    if(res?.error === 'FetchError' || res?.body?.code === 6 || (res?.status === 400 && res?.body?.message)){
+      if(count < retryCount){
+        count++
+        return await requestWithRetry(uri, opts, count)
+      }else{
+        throw(`tried request ${count} time(s) and errored with ${res.error} : ${res.message}`)
+      }
     }
-    */
-    if(res?.message) log.error(res.message)
+    return res
   }catch(e){
     throw(e)
   }
 }
-module.exports = async(uri, payload, identity)=>{
+
+module.exports = async(uri, payload = {}, identity = null)=>{
   try{
-    return await handleRequest(uri, payload, identity)
+    let opts = { headers: { 'Content-Type': 'application/json'}, timeout: 30000, compress: true, method: 'POST' }
+    let body = { payload: payload }
+    if(identity) body.identity = identity
+    opts.body = JSON.stringify(body)
+    let res = await requestWithRetry(path.join(CLIENT_URL, uri), opts)
+    if(res?.body?.message && res?.body?.code !== 5) log.error(uri+' : Code : '+res.body.code+' : Msg : '+res.body.message)
+    if(res?.body) return res.body
+    if(res?.error) log.error(console.log(uri+' : '+res.error+' '+res.type))
   }catch(e){
-    throw(e)
+    log.error(e);
   }
 }

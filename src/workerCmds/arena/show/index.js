@@ -1,5 +1,6 @@
 'use strict'
-const { mongo, GetAllyCodeFromDiscordId, GetGuildName, ReplyMsg } = require('helpers')
+const mongo = require('mongoclient')
+const { GetAllyCodeFromDiscordId, GetGuildName, ReplyMsg } = require('helpers')
 module.exports = async(obj = {}, patreon = {}, opt = [])=>{
   try{
     let msg2send = {content: 'You don\'t have any users or guilds registered'}, sendMethod = 'PATCH', updatePatreon = false

@@ -1,5 +1,5 @@
 'use strict'
-const { mongo } = require('helpers/mongo')
+const mongo = require('mongoclient')
 const { GetGuild, GetGuildMember } = require('discordapiclient')
 module.exports = async(obj = {})=>{
   try{

@@ -1,5 +1,6 @@
 'use strict'
-const { mongo, ButtonPick, GetOptValue, GetMentionUserName, ReplyButton, ReplyMsg } = require('helpers')
+const mongo = require('mongoclient')
+const { ButtonPick, GetOptValue, GetMentionUserName, ReplyButton, ReplyMsg } = require('helpers')
 module.exports = async(obj = {}, patreon = {}, opt = [])=>{
   try{
     let msg2send = {content: 'You did not provide the correct information'}

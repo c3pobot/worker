@@ -13,7 +13,7 @@ module.exports =  async(obj = {})=>{
     msg2send += 'You must be the Discord Server Owner or have a role that was added with the `/admin role add` command\n'
     msg2send += 'The Discord Server owner is : `@'+(username ? username:'UNKNOWN')+'`\n'
     msg2send += 'You can use the `/admin show` command to see which @roles have been added'
-    ReplyMsg(obj, {content: msg2send})
+    await ReplyMsg(obj, {content: msg2send})
   }catch(e){
     throw(e)
   }

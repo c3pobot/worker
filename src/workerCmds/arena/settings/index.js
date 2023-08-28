@@ -1,5 +1,6 @@
 'use strict'
-const { mongo, GetAllyCodeFromDiscordId, GetOptValue, ReplyMsg } = require('helpers')
+const mongo = require('mongoclient')
+const { GetAllyCodeFromDiscordId, GetOptValue, ReplyMsg } = require('helpers')
 const { GetChannel } = require('discordapiclient')
 module.exports = async(obj = {}, patreon = {}, opt = [])=>{
   try{

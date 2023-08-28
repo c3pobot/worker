@@ -1,22 +1,44 @@
 'use strict'
 const log = require('logger')
-const { mongo, mongoStatus, AddJob, ReplyError, RemoveJob, ReplyMsg } = require('helpers')
+const redis = require('redisclient')
+
+const LOCAL_QUE_KEY = process.env.LOCAL_QUE_KEY
+
+const { AddJob, DeepCopy, ReplyError, RemoveJob, ReplyMsg } = require('helpers')
 const { CmdMap } = require('helpers/cmdMap')
-module.exports.process = async(obj ={})=>{
+const Cmds = {}
+
+const addtoLocalQue = async(job = {})=>{
   try{
-    if(!obj?.data?.name) return
-    if(!CmdMap?.map?.cmdCount) await ReplyMsg({content: 'Oh dear! I am still starting up my services...'})
+    let obj = DeepCopy(job.data)
+    obj.timestamp = job.timestamp
+    obj.jobId = job?.opts?.jobId
+    obj.queue = job?.que?.name
+    if(!obj.id) obj.id = obj.jobId
+    if(LOCAL_QUE_KEY && redis) await redis.setTTL(`${LOCAL_QUE_KEY}-${obj.jobId}`, obj, 600)
     await AddJob(obj)
-    if(CmdMap?.map[obj.data.name]){
-      await require('workerCmds/'+obj.data.name)(obj)
-    }else{
-      await ReplyMsg(obj, {content: 'Oh dear! **'+obj.data.name+'** command not recognized...'})
-    }
+    return obj
   }catch(e){
-    log.error(e);
-    ReplyError(obj, {content: 'Oh dear! Critical command Error occured...'})
+    throw(e)
   }
 }
-module.exports.checkCmdMap = ()=>{
-  return CmdMap.map.cmdCount
+
+module.exports = async(job)=>{
+  try{
+    let res = { status: 'no job data' }
+    if(!job?.data) return res
+    res.status = 'command not found'
+    let obj = await addtoLocalQue(job)
+    if(!obj?.data?.name || !CmdMap?.map[obj.data.name]){
+      await removeFromLocalQue(obj)
+      return res
+    }
+    if(!Cmds[obj.data.name]) Cmds[obj.data.name] = require('workerCmds/'+obj.data.name)
+    res = await Cmds[obj.data.name](obj)
+    if(!res) res = {status: 'ok'}
+    if(LOCAL_QUE_KEY && redis) await redis.del(`${LOCAL_QUE_KEY}-${obj.jobId}`)
+    return res
+  }catch(e){
+    log.error(e)
+  }
 }

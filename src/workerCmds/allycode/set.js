@@ -1,5 +1,6 @@
 'use strict'
-const { mongo, ButtonPick, ReplyMsg } = require('helpers')
+const mongo = require('mongoclient')
+const { ButtonPick, ReplyMsg } = require('helpers')
 module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'You do not have an allyCode linked. use `/allycode` to link'}, allyCode, option

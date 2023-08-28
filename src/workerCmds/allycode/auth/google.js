@@ -9,8 +9,6 @@ module.exports = async(obj = {}, opt = [])=>{
     if(dObj?.allyCode){
       msg2send.content = authMsg
       msg2send.flags = 64
-      //SendLink(obj.member.user.id, dObj.allyCode)
-      //MSG.SendDM(dId, {content: authMsg})
     }
     await ReplyButton(obj, 'Sending Private message')
     await ReplyMsg(obj, msg2send, 'POST')

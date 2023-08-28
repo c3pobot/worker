@@ -1,5 +1,5 @@
 'use strict'
-const { mongo } = require('helpers/mongo')
+const mongo = require('mongoclient')
 const queryPlayer = require('../queryPlayer')
 const statCalc = require('statcalc')
 const formatPlayer = require('./formatPlayer')

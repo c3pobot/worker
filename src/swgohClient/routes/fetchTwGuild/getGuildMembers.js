@@ -1,6 +1,6 @@
 'use strict'
 const log = require('logger')
-const { mongo } = require('helpers/mongo')
+const mongo = require('mongoclient')
 const updatedDataCounts = require('../fetchGuild/updatedDataCounts')
 const getPlayer = require('../getPlayer')
 const getCachePlayers = async(memberIds = [], dataCount = {}, collection, summaryNeeded, project)=>{
@@ -18,16 +18,14 @@ const getCachePlayers = async(memberIds = [], dataCount = {}, collection, summar
   }
 }
 
-const getNewPlayers = async(member = [], dataCount = {})=>{
+const getNewPlayers = async(member = [], dataCount = {}, summaryNeeded)=>{
   try{
     let res = [], players = []
     const getGuildPlayer = async(guildMember)=>{
-
       if(!guildMember) throw('member not provided fetchGuild->getPlayers->getNewPlayers')
       let player = await getPlayer({ playerId: guildMember.playerId, collection: 'twPlayerCache' })
       if(player?.summary && player?.roster){
-        //player.memberContribution = guildMember.memberContribution
-        updatedDataCounts(player, dataCount)
+        if(summaryNeeded) updatedDataCounts(player, dataCount)
         players.push(player)
       }
     }
@@ -52,7 +50,7 @@ module.exports = async(guildId, member = [], dataCount = {}, collection, summary
     }
     if(res?.length > 0) foundMemberIds = res.map(x=>x.playerId)
     let missingMembers = member.filter(x=>!foundMemberIds.includes(x.playerId))
-    let missing = await getNewPlayers(missingMembers, dataCount)
+    let missing = await getNewPlayers(missingMembers, dataCount, summaryNeeded)
     if(missing?.length > 0) res = res.concat(missing)
     log.debug('pulled '+missing?.length+' members from client...')
     if(res.length === member.length){

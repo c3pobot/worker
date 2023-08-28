@@ -1,6 +1,8 @@
 'use strict'
 const log = require('logger')
 const fs = require('fs')
+let workerTypes = ['discord', 'oauth', 'swgoh']
+if(process.env.WORKER_TYPES) workerTypes = JSON.parse(process.env.WORKER_TYPES)
 const GetSubCommands = async(dir)=>{
   try{
     return new Promise(resolve=>{
@@ -26,7 +28,7 @@ const GetSubCommands = async(dir)=>{
 }
 const ReadFile = async(file)=>{
   try{
-    const obj = await fs.readFileSync(file)
+    let obj = await fs.readFileSync(file)
     if(obj) return JSON.parse(obj)
   }catch(e){
     log.error('Error reading file '+file)
@@ -42,12 +44,13 @@ module.exports = (dir)=>{
         }else{
           for(let i in filenames){
             if(filenames[i].split('.').length == 1){
-              const obj = await ReadFile(dir+'/'+filenames[i]+'/cmd.json')
+              let obj = await ReadFile(dir+'/'+filenames[i]+'/cmd.json')
               if(!obj?.cmd?.name || !obj?.que) continue;
+              if(workerTypes.filter(x=>x === obj.que).length === 0) continue;
               if(!data[obj.que]) data[obj.que] = { cmdMap: {}, cmds: [] }
               if(obj?.cmd?.options?.length == 0){
                 //has GetSubCommands
-                const subCommands = await GetSubCommands(dir+'/'+filenames[i])
+                let subCommands = await GetSubCommands(dir+'/'+filenames[i])
                 if(subCommands?.length > 0) obj.cmd.options = subCommands
               }
               data[obj.que].cmds.push(obj)

@@ -1,5 +1,6 @@
 'use strict'
-const { ReplyMsg, GetOptValue, mongo } = require('helpers')
+const mongo = require('mongoclient')
+const { ReplyMsg, GetOptValue } = require('helpers')
 module.exports = async(obj = {}, opt = [])=>{
   try{
     let msg2send = {content: 'error with the provided info'}, roleName

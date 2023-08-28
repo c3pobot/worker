@@ -1,5 +1,5 @@
 'use strict'
-const { mongo } = require('./mongo')
+const mongo = require('mongoclient')
 const GetGearParts = async (gearId, tempGear = {}) => {
   try{
     const returnObj = {}

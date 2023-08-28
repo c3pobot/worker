@@ -1,11 +1,11 @@
 'use strict'
 const log = require('logger')
 const path = require('path')
-const { mongo } = require('helpers/mongo')
+const mongo = require('mongoclient')
 const ReadFiles = require('./readFiles')
 const GetCmdArray = async()=>{
   try{
-    const cmdArray = await ReadFiles(path.join(baseDir, 'src', 'workerCmds'))
+    let cmdArray = await ReadFiles(path.join(baseDir, 'src', 'workerCmds'))
     if(cmdArray){
       for(let i in cmdArray){
         if(!cmdArray[i]) continue;

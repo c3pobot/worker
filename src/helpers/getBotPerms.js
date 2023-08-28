@@ -1,6 +1,6 @@
 'use strict'
 const BOT_DISCORD_ID = process.env.DISCORD_CLIENT_ID
-const botRequest = require('./botRequest')
+const botRequest = require('botrequest')
 module.exports = async(sId, dId)=>{
   try{
     if(!sId) return

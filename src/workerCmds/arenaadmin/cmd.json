@@ -1,5 +1,6 @@
 {
   "type": "bo-home",
+  "que": "swgoh",
   "cmd": {
   "type": 1,
     "name": "arenaadmin",

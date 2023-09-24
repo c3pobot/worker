@@ -1,13 +1,13 @@
 'use strict'
+const { log, CheckBotOwner, ReplyError, ReplyMsg } = require('helpers')
 const Cmds = {}
-Cmds.debug = require('./debug')
 Cmds.syncguild = require('./syncguild')
-Cmds.synctime = require('./synctime')
 Cmds.updatedata = require('./updatedata')
 Cmds.updateweather = require('./updateweather')
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
-    if(await HP.CheckBotOwner(obj)){
+    let auth = CheckBotOwner(obj)
+    if(auth){
       let tempCmd, opt
       if(obj.data && obj.data.options){
         for(let i in obj.data.options){
@@ -21,13 +21,13 @@ module.exports = async(obj)=>{
       if(tempCmd){
         await Cmds[tempCmd](obj, opt)
       }else{
-        HP.ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
+        await ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
       }
     }else{
-      HP.ReplyMsg(obj, {content: 'This command is only available to the bot owner'})
+      await ReplyMsg(obj, {content: 'This command is only available to the bot owner'})
     }
   }catch(e){
-    console.log(e)
-    HP.ReplyError(obj)
+    log.error(e)
+    ReplyError(obj)
   }
 }

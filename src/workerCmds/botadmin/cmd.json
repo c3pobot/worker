@@ -1,14 +1,10 @@
 {
   "type": "bo-home",
+  "que": "swgoh",
   "cmd": {
     "name": "botadmin",
     "description": "(Bot Owner only)",
     "options": [
-      {
-        "type": 1,
-        "name": "synctime",
-        "description": "(Bot Owner only) Get arena sync times"
-      },
       {
         "type": 2,
         "name": "admin",
@@ -51,29 +47,6 @@
             "type": 5,
             "name": "newfiles",
             "description": "Pull new data files"
-          }
-        ]
-      },
-      {
-        "type": 1,
-        "name": "debug",
-        "description": "(Bot Owner only)",
-        "options": [
-          {
-            "type": 4,
-            "name": "status",
-            "description": "Status for debug",
-            "required": true,
-            "choices": [
-              {
-                "name": "enable",
-                "value": 1
-              },
-              {
-                "name": "disable",
-                "value": 0
-              }
-            ]
           }
         ]
       },

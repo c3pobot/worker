@@ -1,0 +1,22 @@
+{
+  "type": 1,
+  "name": "report",
+  "description": "ga comparison",
+  "options": [
+    {
+      "type": 3,
+      "name": "allycode_option",
+      "description": "primary or alt allycode",
+      "choices": [
+        {
+          "name": "Primary",
+          "value": "primary"
+        },
+        {
+          "name": "Alt",
+          "value": "alt"
+        }
+      ]
+    }
+  ]
+}

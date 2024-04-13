@@ -1,0 +1,24 @@
+'use strict'
+const Cmds = {}
+const WebHook = require('./webHook')
+Cmds.AddGuildCmd = require('./addGuildCmd')
+Cmds.AddGlobalCmd = require('./addGlobalCmd')
+Cmds.DeleteMsg = require('./deleteMsg')
+Cmds.GetChannel = require('./getChannel')
+Cmds.GetGuild = require('./getGuild')
+Cmds.GetGuildMember = require('./getGuildMember')
+Cmds.GetMsg = require('./getMsg')
+Cmds.GetRoles = require('./getRoles')
+Cmds.GetUser = require('./getUser')
+Cmds.GuildMemberRoleAdd = require('./guildMemberRoleAdd')
+Cmds.GuildMemberRoleRemove = require('./guildMemberRoleRemove')
+Cmds.EditMsg = require('./editMsg')
+Cmds.GetGlobalCmds = require('./getGlobalCmds')
+Cmds.GetGuildCmds = require('./getGuildCmds')
+Cmds.SendDM = require('./sendDM')
+Cmds.SendFile = require('./sendFile')
+Cmds.SendMsg = require('./sendMsg')
+Cmds.WebHookFile = WebHook.File
+Cmds.WebHookMsg = WebHook.Msg
+Cmds.SendBotMsg = require('./sendBotMsg')
+module.exports = Cmds

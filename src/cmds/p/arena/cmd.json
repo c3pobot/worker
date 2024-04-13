@@ -1,0 +1,50 @@
+{
+  "type": 1,
+  "name": "arena",
+  "description": "Get player arena info",
+  "options": [
+    {
+      "type": 3,
+      "name": "option",
+      "description": "Squad, fleet (default is squad)",
+      "required": false,
+      "choices": [
+        {
+          "name": "Squad",
+          "value": "char"
+        },
+        {
+          "name": "Fleet",
+          "value": "ship"
+        }
+      ]
+    },
+    {
+      "type": 6,
+      "name": "user",
+      "description": "@user to lookup",
+      "required": false
+    },
+    {
+      "type": 3,
+      "name": "allycode",
+      "description": "allyCode to lookup",
+      "required": false
+    },
+    {
+      "type": 3,
+      "name": "allycode_option",
+      "description": "primary or alt allycode",
+      "choices": [
+        {
+          "name": "Primary",
+          "value": "primary"
+        },
+        {
+          "name": "Alt",
+          "value": "alt"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "rank",
+    "description": "Get estimate of rank jumps for climbing",
+    "options": [
+      {
+        "type": 4,
+        "name": "rank",
+        "description": "starting arena rank",
+        "required": true
+      }
+    ]
+  }   
+}

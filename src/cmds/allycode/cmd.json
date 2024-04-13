@@ -1,0 +1,142 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "allycode",
+    "description": "Manage allycode to discord link",
+    "options": [
+      {
+        "type": 1,
+        "name": "add",
+        "description": "link discordId to allyCode",
+        "options": [
+          {
+            "type": 3,
+            "name": "allycode",
+            "description": "allycode to add",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "show",
+        "description": "show registerd allycodes",
+        "options": [
+          {
+            "type": 6,
+            "name": "user",
+            "description": "@user to lookup",
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "name": "auth",
+        "description": "set up to allow bot to login to your account directly",
+        "options": [
+          {
+            "type": 1,
+            "name": "google",
+            "description": "attempt to use google auth to allow bot to login to your game",
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "required": false,
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "guest",
+            "description": "set up guest auth for bot to log in to your account (requires temporary facebook account)",
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "required": false,
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "remove",
+            "description": "remove auth for bot to log in to your account",
+            "options": [
+              {
+                "type": 4,
+                "name": "confirm",
+                "description": "confirm you want to remove bot auth to your account",
+                "required": true,
+                "choices": [
+                  {
+                    "name": "just kidding",
+                    "value": 0
+                  },
+                  {
+                    "name": "Yes",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "required": false,
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "remove",
+        "description": "remove a registered allyCode"
+      },
+      {
+        "type": 1,
+        "name": "clean",
+        "description": "clean up duplicate registerd allyCodes"
+      },
+      {
+        "type": 1,
+        "name": "set",
+        "description": "set primary/alt allyCode"
+      }
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "p",
+    "description": "Bot Player Commands",
+    "options": []
+  }
+}

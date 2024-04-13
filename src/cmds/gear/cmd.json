@@ -1,0 +1,23 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "gear",
+    "description": "shows the gear needed for the unit. (Shows all gear limited to items needing 30 or more salvage)",
+    "options": [
+      {
+          "type": 3,
+          "name": "unit",
+          "description": "Units Name",
+          "required": true,
+          "autocomplete": true,
+          "focused": true
+      },
+      {
+        "type": 4,
+        "name": "gear",
+        "description": "Gear level to limit results to",
+        "required": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+[
+    {
+        "secondaryStat": [
+            {
+                "stat": {
+                    "unitStatId": 49,
+                    "statValueDecimal": "355",
+                    "unscaledDecimalValue": "3559000",
+                    "uiDisplayOverrideValue": "-1",
+                    "scalar": "0"
+                }
+            }
+        ],
+        "definitionId": "461",
+        "level": 15,
+        "tier": 3,
+        "primaryStat": {
+            "stat": {
+                "unitStatId": 48,
+                "statValueDecimal": "850",
+                "unscaledDecimalValue": "8500000",
+                "uiDisplayOverrideValue": "-1",
+                "scalar": "0"
+            }
+        }
+    }
+]

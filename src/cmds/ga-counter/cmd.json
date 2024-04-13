@@ -1,0 +1,137 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "ga-counter",
+    "description": "show ga counters",
+    "options": [
+      {
+        "type": 1,
+        "name": "3v3",
+        "description": "show 3v3 ga counters",
+        "options": [
+          {
+            "type": 3,
+            "name": "leader",
+            "description": "squad leader",
+            "required": true,
+            "autocomplete": true,
+            "focused": true
+          },
+          {
+            "type": 3,
+            "name": "unit1",
+            "description": "additional unit to include",
+            "autocomplete": true,
+            "focused": true
+          },
+          {
+            "type": 3,
+            "name": "unit2",
+            "description": "additional unit to include",
+            "autocomplete": true,
+            "focused": true
+          },
+          {
+            "type": 5,
+            "name": "exclude_gl",
+            "description": "Exclude attacks with GL (default is false)"
+          },
+          {
+            "type": 4,
+            "name": "limit",
+            "description": "max number of results to show (default is 10)"
+          },
+          {
+            "type": 3,
+            "name": "sort",
+            "description": "sort results (default is win rate)",
+            "choices": [
+              {
+                "name": "Win Rate",
+                "value": "rate"
+              },
+              {
+                "name": "Seen",
+                "value": "seen"
+              }
+            ]
+          },
+          {
+            "type": 4,
+            "name": "battles",
+            "description": "minimum number of battles (default is 2)"
+          },
+          {
+            "type": 4,
+            "name": "season",
+            "description": "ga season to use results from (this will ignore game mode)"
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "5v5",
+        "description": "show 5v5 ga counters",
+        "options": [
+          {
+            "type": 3,
+            "name": "leader",
+            "description": "squad leader",
+            "required": true,
+            "autocomplete": true,
+            "focused": true
+          },
+          {
+            "type": 3,
+            "name": "unit1",
+            "description": "additional unit to include",
+            "autocomplete": true,
+            "focused": true
+          },
+          {
+            "type": 3,
+            "name": "unit2",
+            "description": "additional unit to include",
+            "autocomplete": true,
+            "focused": true
+          },
+          {
+            "type": 5,
+            "name": "exclude_gl",
+            "description": "Exclude attacks with GL (default is false)"
+          },
+          {
+            "type": 4,
+            "name": "limit",
+            "description": "max number of results to show (default is 10)"
+          },
+          {
+            "type": 3,
+            "name": "sort",
+            "description": "sort results (default is win rate)",
+            "choices": [
+              {
+                "name": "Win Rate",
+                "value": "rate"
+              },
+              {
+                "name": "Seen",
+                "value": "seen"
+              }
+            ]
+          },
+          {
+            "type": 4,
+            "name": "battles",
+            "description": "minimum number of battles (default is 2)"
+          },
+          {
+            "type": 4,
+            "name": "season",
+            "description": "minimum number of battles for a result to be included (default is 2)"
+          }
+        ]
+      }
+    ]
+  }
+}

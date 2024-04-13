@@ -1,0 +1,678 @@
+{
+  "type": "shard",
+  "cmd": {
+    "name": "shardadmin",
+    "description": "shard admin commands",
+    "options": [
+      {
+        "type": 2,
+        "name": "rotation",
+        "description": "Manage Rotation Schedules",
+        "options": [
+          {
+            "type": 1,
+            "name": "show",
+            "description": "Shows the rotation schedule(s)",
+            "options":[
+              {
+                "type": 3,
+                "name": "schedule",
+                "description": "schedule name",
+                "required": false
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "set",
+            "description": "add/edit Rotation schedule",
+            "options":[
+              {
+                "type": 3,
+                "name": "schedule",
+                "description": "Schedule name",
+                "required": true
+              },
+              {
+                "type": 7,
+                "name": "channel",
+                "description": "channel for the announcement (optional)",
+                "required": false
+              },
+              {
+                "type": 3,
+                "name": "role",
+                "description": "role to announce. use 'none' to remove (optional)"
+              },
+              {
+                "type": 4,
+                "name": "hours",
+                "description": "number of hours before payout to make announcement (optional)",
+                "required": false
+              },
+              {
+                "type": 3,
+                "name": "notify",
+                "description": "enable/disable pinging players (optional)",
+                "required": false,
+                "choices": [
+                  {
+                    "name": "enable",
+                    "value": "on"
+                  },
+                  {
+                    "name": "disable",
+                    "value": "off"
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "name": "potime",
+                "description": "allyCode/@user to set the schedule po time",
+                "required": false
+              },
+              {
+                "type": 3,
+                "name": "order",
+                "description": "Order for payout rotation",
+                "required": false,
+                "choices": [
+                  {
+                    "name": "normal",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "reverse",
+                    "value": "reverse"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "add",
+            "description": "Add player(s) to rotation schedule",
+            "options": [
+              {
+                "type": 3,
+                "name": "schedule",
+                "description": "schedule name",
+                "required": true
+              },
+              {
+                "type": 3,
+                "name": "players",
+                "description": "list of players to add to the schedule can be @user, allycode or name seperated by a ','",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "advance",
+            "description": "Advances a rotation schedule",
+            "options":[
+              {
+                "type": 3,
+                "name": "schedule",
+                "description": "schedule name",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "send",
+            "description": "Manual send of the rotation schedule",
+            "options":[
+              {
+                "type": 3,
+                "name": "schedule",
+                "description": "schedule name",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "delete",
+            "description": "Delete rotation schedule",
+            "options": [
+              {
+                "type": 3,
+                "name": "schedule",
+                "description": "schedule name",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "remove",
+            "description": "remove player from schedule",
+            "options":[
+              {
+                "type": 3,
+                "name": "schedule",
+                "description": "schedule name",
+                "required": true
+              },
+              {
+                "type": 3,
+                "name": "player",
+                "description": "player to remove from the schedule can be @user, allycode or name",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "name": "enemy",
+        "description": "Group enemy watch by emoji",
+        "options": [
+          {
+            "type": 1,
+            "name": "show",
+            "description": "shows enemy watch setup"
+          },
+          {
+            "type": 1,
+            "name": "add",
+            "description": "add an enemy emoji or allyCode to the list",
+            "options": [
+              {
+                "type": 3,
+                "name": "emoji",
+                "description": "emoji to add to the list",
+                "required": false
+              },
+              {
+                "type": 3,
+                "name": "allycode",
+                "description": "allycode of player to add",
+                "required": false
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "settings",
+            "description": "edit settings for the group watch",
+            "options": [
+              {
+                "type": 8,
+                "name": "role",
+                "description": "@role to ping for movements. Use 'none' to remove",
+                "required": false
+              },
+              {
+                "type": 4,
+                "name": "rank",
+                "description": "rank threshold for movements",
+                "required": false
+              },
+              {
+                "type": 7,
+                "name": "channel",
+                "description": "channel to announce movements. Defaults to log channel",
+                "required": false
+              },
+              {
+                "type": 3,
+                "name": "trigger",
+                "description": "Sets to announce all movements above rank threshold or just once when they cross",
+                "required": false,
+                "choices": [
+                  {
+                    "name": "once",
+                    "value": "once"
+                  },
+                  {
+                    "name": "all",
+                    "value": "all"
+                  }
+                ]
+              },
+              {
+                "type": 4,
+                "name": "status",
+                "description": "Enable or disable the group watch",
+                "required": false,
+                "choices": [
+                  {
+                    "name": "enable",
+                    "value": 1
+                  },
+                  {
+                    "name": "disable",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "remove",
+            "description": "remove an enemy emoji or allyCode to the list",
+            "options": [
+              {
+                "type": 3,
+                "name": "emoji",
+                "description": "emoji to add to the list",
+                "required": false
+              },
+              {
+                "type": 3,
+                "name": "allycode",
+                "description": "allycode of player to add",
+                "required": false
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "clear",
+            "description": "Clear Group enemy watch",
+            "options": [
+              {
+                "type": 3,
+                "name": "confirm",
+                "description": "confirm you want to clear",
+                "required": true,
+                "choices": [
+                  {
+                    "name": "just kidding",
+                    "value": "no"
+                  },
+                  {
+                    "name": "Yes",
+                    "value": "yes"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "name": "watch",
+        "description": "Single enemy watch",
+        "options": [
+          {
+            "type": 1,
+            "name": "show",
+            "description": "Shows role watch(s)",
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode",
+                "description": "allyCode of player role watch to show",
+                "required": false
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "set",
+            "description": "Set enemy role watch",
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode",
+                "description": "allyCode of player to watch",
+                "required": true
+              },
+              {
+                "type": 8,
+                "name": "role",
+                "description": "role to be pinged for movements",
+                "required": true
+              },
+              {
+                "type": 7,
+                "name": "channel",
+                "description": "channel for reports",
+                "required": false
+              },
+              {
+                "type": 4,
+                "name": "hours",
+                "description": "number of hours before payout to start reporting",
+                "required": false
+              },
+              {
+                "type": 4,
+                "name": "rank",
+                "description": "rank threshold to start reporting",
+                "required": false
+              },{
+                "type": 3,
+                "name": "direction",
+                "description": "Movement direction to report on",
+                "required": false,
+                "choices":[
+                  {
+                    "name": "both",
+                    "value": "both"
+                  },
+                  {
+                    "name": "climb",
+                    "value": "up"
+                  },
+                  {
+                    "name": "drop",
+                    "value": "down"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "remove",
+            "description": "remove an enemies role watch",
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode",
+                "description": "allyCode of player to remove from role watch",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "clear",
+            "description": "Clear all @role watches",
+            "options": [
+              {
+                "type": 3,
+                "name": "confirm",
+                "description": "confirm you want to clear",
+                "required": true,
+                "choices": [
+                  {
+                    "name": "just kidding",
+                    "value": "no"
+                  },
+                  {
+                    "name": "Yes",
+                    "value": "yes"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "name": "settings",
+        "description": "Shard Settings",
+        "options": [
+          {
+            "type": 1,
+            "name": "general",
+            "description": "shard general settings",
+            "options": [
+              {
+                "type": 8,
+                "name": "admin-add",
+                "description": "Add admin role",
+                "required": false
+              },
+              {
+                "type": 8,
+                "name": "admin-remove",
+                "description": "remove admin role",
+                "required": false
+              },
+              {
+                "type": 3,
+                "name": "message",
+                "description": "message to show on rank/payout list. use word 'default' to reset",
+                "required": false
+              },
+              {
+                "type": 4,
+                "name": "modify",
+                "description": "enable/disable allowing anyone to add/edit shard players",
+                "required": false,
+                "choices": [{
+                    "name": "enable",
+                    "value": 1
+                  },
+                  {
+                    "name": "disable",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "payouts",
+            "description": "settings for po report",
+            "options": [
+              {
+                "type": 3,
+                "name": "sort",
+                "description": "Changes the payout report sort",
+                "required": false,
+                "choices": [{
+                    "name": "ascending",
+                    "value": "ascending"
+                  },
+                  {
+                    "name": "descending",
+                    "value": "descending"
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "name": "group-sort",
+                "description": "change the sort order for players grouped in po time",
+                "required": false,
+                "choices": [{
+                    "name": "name",
+                    "value": "name"
+                  },
+                  {
+                    "name": "rank",
+                    "value": "rank"
+                  }
+                ]
+              },
+              {
+                "type": 4,
+                "name": "limit",
+                "description": "set limit on ranks to show in the report"
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "ranks",
+            "description": "settings for rank report",
+            "options": [
+              {
+                "type": 3,
+                "name": "sort",
+                "description": "Changes the rank report sort",
+                "required": false,
+                "choices": [{
+                    "name": "ascending",
+                    "value": "ascending"
+                  },
+                  {
+                    "name": "descending",
+                    "value": "descending"
+                  }
+                ]
+              },
+              {
+                "type": 4,
+                "name": "limit",
+                "description": "set limit on ranks to show in the report"
+              },
+              {
+                "type": 5,
+                "name": "leader",
+                "description": "enable/disable showing the players squad leader in the rank report"
+              },
+              {
+                "type": 5,
+                "name": "truncate",
+                "description": "enable/disable shorting squad lead name in the rank report"
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "admin-messages",
+            "description": "Get informed of player po time or name changes",
+            "options": [
+              {
+                "type": 3,
+                "name": "option",
+                "description": "Disable, send to channel or DM",
+                "required": true,
+                "choices": [
+                  {
+                    "name": "off",
+                    "value": "off"
+                  },
+                  {
+                    "name": "channel",
+                    "value": "channel"
+                  },
+                  {
+                    "name": "dm",
+                    "value": "dm"
+                  }
+                ]
+              },
+              {
+                "type": 7,
+                "name": "channel",
+                "description": "channel to send admin messages to"
+              },
+              {
+                "type": 6,
+                "name": "user",
+                "description": "user to send message to"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "name": "alias",
+        "description": "manage alias for squad leads",
+        "options": [
+          {
+            "type": 1,
+            "name": "add",
+            "description": "add alias for squad leader",
+            "options": [
+              {
+                "type": 3,
+                "name": "alias",
+                "description": "alias for shard lead",
+                "required": true
+              },
+              {
+                "type": 3,
+                "name": "unit",
+                "description": "unit to use alias for",
+                "required": true,
+                "autocomplete": true,
+                "focused": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "remove",
+            "description": "remove alias for squad leader",
+            "options": [
+              {
+                "type": 3,
+                "name": "alias",
+                "description": "alias for shard lead",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "show",
+            "description": "show alias for squad leader"
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "channels",
+        "description": "Set channels",
+        "options": [
+          {
+            "type": 7,
+            "name": "payouts",
+            "description": "payouts Channel",
+            "required": false,
+            "default": false
+          },
+          {
+            "type": 7,
+            "name": "ranks",
+            "description": "Ranks Channel",
+            "required": false,
+            "default": false
+          },
+          {
+            "type": 7,
+            "name": "logs",
+            "description": "Log Channel",
+            "required": false,
+            "default": false
+          },
+          {
+            "type": 7,
+            "name": "alt-log",
+            "description": "alt Log Channel",
+            "required": false,
+            "default": false
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "prune",
+        "description": "Prune shard members",
+        "options": [
+          {
+            "type": 4,
+            "name": "rank",
+            "description": "starting rank to prune",
+            "required": true
+          },
+          {
+            "type": 3,
+            "name": "emoji",
+            "description": "limit to provided emoji"
+          }
+        ]
+      }
+    ]
+  }
+}

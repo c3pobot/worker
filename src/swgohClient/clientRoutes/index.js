@@ -1,0 +1,19 @@
+'use strict'
+const Cmds = {}
+Cmds.fetchArenaPlayers = require('./getArenaPlayers')
+Cmds.fetchGAPlayer = require('./fetchGAPlayer')
+Cmds.fetchGuild = require('./fetchGuild')
+Cmds.fetchGuildArena = require('./fetchGuildArena')
+Cmds.fetchPlayer = require('./fetchPlayer')
+Cmds.fetchTWGuild = require('./fetchTWGuild')
+Cmds.getAllyCode = require('./getAllyCode')
+Cmds.getArenaPlayer = require('./getArenaPlayer')
+Cmds.getGuildId = require('./getGuildId')
+Cmds.getGuildMemberLevel = require('./getGuildMemberLevel')
+Cmds.getPlayer = require('./getPlayer')
+Cmds.getEnums = require('./getEnums')
+Cmds.queryGuild = require('./queryGuild')
+Cmds.queryPlayer = require('./queryPlayer')
+Cmds.queryArenaPlayers = require('./queryArenaPlayers')
+Cmds.queryGuildPlayers = require('./queryGuildPlayers')
+module.exports = Cmds

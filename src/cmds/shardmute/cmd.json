@@ -1,0 +1,41 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "shardmute",
+    "description": "mute shard tracker notifications (can only re-enable thru /shard p notify in shard chat)",
+    "type": 1,
+    "options": [
+      {
+        "type": 3,
+        "name": "type",
+        "description": "shard type to mute",
+        "required": true,
+        "choices": [
+          {
+            "name": "char",
+            "value": "char"
+          },
+          {
+            "name": "ship",
+            "value": "ship"
+          }
+        ]
+      },
+      {
+        "type": 3,
+        "name": "allycode_option",
+        "description": "primary or alt allycode",
+        "choices": [
+          {
+            "name": "Primary",
+            "value": "primary"
+          },
+          {
+            "name": "Alt",
+            "value": "alt"
+          }
+        ]
+      }
+    ]
+  }
+}

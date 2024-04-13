@@ -1,0 +1,297 @@
+{
+  "type": "shard",
+  "cmd": {
+    "name": "shard-rules",
+    "description": "shard rules",
+    "options": [
+      {
+        "type": 1,
+        "name": "stats",
+        "description": "Show/clear rule stats",
+        "options": [
+          {
+            "type": 3,
+            "name": "stat",
+            "description": "stat to show or clear (default is all)",
+            "choices": [
+              {
+                "name": "all",
+                "value": "all"
+              },
+              {
+                "name": "enemy hits",
+                "value": "hits"
+              },
+              {
+                "name": "enemy skips",
+                "value": "skips"
+              },
+              {
+                "name": "early hits",
+                "value": "early"
+              }
+            ]
+          },
+          {
+            "type": 3,
+            "name" : "option",
+            "description" : "show or clear (default is show)",
+            "choices": [
+              {
+                "name": "show",
+                "value": "show"
+              },
+              {
+                "name": "clear",
+                "value": "clear"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "enemy-hits",
+        "description": "manage reporting and recording of hits on shard enemies",
+        "options": [
+          {
+            "type": 4,
+            "name": "status",
+            "description": "Enable or disable reporting",
+            "choices": [
+              {
+                "name": "enabled",
+                "value": 1
+              },
+              {
+                "name": "disabled",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "type": 3,
+            "name": "notify",
+            "description": "notify player (default disabled)",
+            "choices": [
+              {
+                "name": "disabled",
+                "value": "disabled"
+              },
+              {
+                "name": "dm",
+                "value": "dm"
+              },
+              {
+                "name": "channel",
+                "value": "channel"
+              }
+            ]
+          },
+          {
+            "type": 3,
+            "name": "option",
+            "description": "add or remove emoji/hour/rank/channel/role (default is add)",
+            "choices":[
+              {
+                "name": "add",
+                "value": "add"
+              },
+              {
+                "name": "remove",
+                "value": "remove"
+              }
+            ]
+          },
+          {
+            "type": 7,
+            "name": "channel",
+            "description": "channel to report in (defaults to log channel)"
+          },
+          {
+            "type": 3,
+            "name": "emoji",
+            "description": "Emoji for enemies (shared with all rules reporting)"
+          },
+          {
+            "type": 8,
+            "name": "role",
+            "description": "@role to ping for message"
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "early-hits",
+        "description": "manage reporting of hits on shard friendlies before payout",
+        "options": [
+          {
+            "type": 4,
+            "name": "status",
+            "description": "Enable or disable reporting",
+            "choices": [
+              {
+                "name": "enabled",
+                "value": 1
+              },
+              {
+                "name": "disabled",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "type": 3,
+            "name": "notify",
+            "description": "notify player (default disabled)",
+            "choices": [
+              {
+                "name": "disabled",
+                "value": "disabled"
+              },
+              {
+                "name": "dm",
+                "value": "dm"
+              },
+              {
+                "name": "channel",
+                "value": "channel"
+              }
+            ]
+          },
+          {
+            "type": 5,
+            "name": "closer",
+            "description": "ignore if player climbing has a closer po (default is false)"
+          },
+          {
+            "type": 4,
+            "name": "hour",
+            "description": "Number of hours before po to not hit friendlies (defaults to 2)"
+          },
+          {
+            "type": 3,
+            "name": "option",
+            "description": "add or remove emoji/hour/rank/channel (default is add)",
+            "choices": [
+              {
+                "name": "add",
+                "value": "add"
+              },
+              {
+                "name": "remove",
+                "value": "remove"
+              }
+            ]
+          },
+          {
+            "type": 7,
+            "name": "channel",
+            "description": "channel to report in (defaults to log channel)"
+          },
+          {
+            "type": 3,
+            "name": "emoji",
+            "description": "Emoji for enemies (shared with all rules reporting)"
+          },
+          {
+            "type": 4,
+            "name": "top-rank",
+            "description": "Number ranks below the new rank to look for enemy (shared with early-hits)"
+          },
+          {
+            "type": 4,
+            "name": "bottom-rank",
+            "description": "Number of ranks above old rank to look for enemy (shared with early-hits)"
+          },
+          {
+            "type": 8,
+            "name": "role",
+            "description": "@role to ping for message"
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "enemy-skips",
+        "description": "manage reporting of skipping shard enemy for shard friendlies",
+        "options" : [
+          {
+            "type": 4,
+            "name": "status",
+            "description": "Enable or disable reporting",
+            "choices": [
+              {
+                "name": "enabled",
+                "value": 1
+              },
+              {
+                "name": "disabled",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "type": 3,
+            "name": "notify",
+            "description": "notify player (default disabled)",
+            "choices": [
+              {
+                "name": "disabled",
+                "value": "disabled"
+              },
+              {
+                "name": "dm",
+                "value": "dm"
+              },
+              {
+                "name": "channel",
+                "value": "channel"
+              }
+            ]
+          },
+          {
+            "type": 3,
+            "name": "option",
+            "description": "add or remove emoji/hour/rank/channel (default is add)",
+            "choices":[
+              {
+                "name": "add",
+                "value": "add"
+              },
+              {
+                "name": "remove",
+                "value": "remove"
+              }
+            ]
+          },
+          {
+            "type": 7,
+            "name": "channel",
+            "description": "channel to report in (defaults to log channel)"
+          },
+          {
+            "type": 3,
+            "name": "emoji",
+            "description": "Emoji for enemies (shared with all rules reporting)"
+          },
+          {
+            "type": 4,
+            "name": "top-rank",
+            "description": "Number ranks below the new rank to look for enemy (shared with enemy-skips)"
+          },
+          {
+            "type": 4,
+            "name": "bottom-rank",
+            "description": "Number of ranks above old rank to look for enemy (shared with enemy-skips)"
+          },
+          {
+            "type": 8,
+            "name": "role",
+            "description": "@role to ping for message"
+          }
+        ]
+      }
+    ]
+  }
+}

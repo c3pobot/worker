@@ -1,0 +1,15 @@
+{
+  "type": "home-guild",
+  "cmd": {
+    "name": "excel",
+    "description": "get guild data in excel format",
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "description": "@user to lookup",
+        "required": false
+      }
+    ]
+  }
+}

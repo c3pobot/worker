@@ -1,0 +1,97 @@
+{
+  "type": "bo-public",
+  "cmd": {
+    "name": "poserver",
+    "description": "payout shard management",
+    "options": [
+      {
+        "type": 1,
+        "name": "add",
+        "description": "(Bot owner only) add shard",
+        "options": [
+          {
+            "type": 3,
+            "name": "type",
+            "description": "type of shard to add",
+            "default": false,
+            "required": true,
+            "choices": [{
+                "name" : "char",
+                "value" : "char"
+              },
+              {
+                "name" : "ship",
+                "value" : "ship"
+              }]
+          },
+          {
+            "type": 6,
+            "name": "patreon",
+            "description": "shard sponser",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "remove",
+        "description": "(Bot owner only) remove shard",
+        "options": [
+          {
+            "type": 3,
+            "name": "shardid",
+            "description": "Id of shard to remove",
+            "default": false,
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "list",
+        "description": "(Bot owner only) list po shard info",
+        "options": [
+          {
+            "type": 3,
+            "name": "option",
+            "description": "what to show",
+            "required": true,
+            "choices": [
+              {
+                "name": "all",
+                "value": "all"
+              },
+              {
+                "name": "shard",
+                "value": "shard"
+              },
+              {
+                "name": "single",
+                "value": "single"
+              }
+            ]
+          },
+          {
+            "type": 3,
+            "name": "id",
+            "description": "id",
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "import",
+        "description": "(Bot owner only) import shard to new one",
+        "options": [
+          {
+            "type": 3,
+            "name": "shardid",
+            "description": "old shardid",
+            "required" : true
+          }
+        ]
+      }
+    ]
+  }
+}

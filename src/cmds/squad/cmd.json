@@ -1,0 +1,163 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "squad",
+    "description": "squads",
+    "options": [
+      {
+        "type": 1,
+        "name": "check",
+        "description": "Check player units vs squad requirements",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "squad name",
+            "required": true
+          },
+          {
+            "type": 6,
+            "name": "user",
+            "description": "@user to check",
+            "required": false
+          },
+          {
+            "type": 3,
+            "name": "allycode",
+            "description": "allyCode to lookup",
+            "required": false
+          },
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "stats",
+        "description": "Show player unit in the squad with some stats",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "squad name",
+            "required": true
+          },
+          {
+            "type": 6,
+            "name": "user",
+            "description": "@user to check",
+            "required": false
+          },
+          {
+            "type": 3,
+            "name": "allycode",
+            "description": "allyCode to lookup",
+            "required": false
+          },
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "compare",
+        "description": "compare squad to another player",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "squad name",
+            "required": true
+          },
+          {
+            "type": 6,
+            "name": "user",
+            "description": "@user to compare to",
+            "required": false
+          },
+          {
+            "type": 3,
+            "name": "allycode",
+            "description": "allyCode to compare to",
+            "required": false
+          },
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode for user running the command",
+            "required": false,
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "list",
+        "description": "Shows available squad templates",
+        "options": [
+          {
+            "type": 3,
+            "name": "search",
+            "description": "phrase to limit results by"
+          },
+          {
+            "type": 6,
+            "name": "user",
+            "description": "@user to check",
+            "required": false
+          },
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

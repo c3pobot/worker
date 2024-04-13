@@ -1,0 +1,79 @@
+{
+  "type": 1,
+  "name": "history",
+  "description": "pull ga history (defaults to user history)",
+  "options": [
+    {
+      "type": 4,
+      "name": "ga-date",
+      "description": "ga match date",
+      "required": true,
+      "autocomplete": true,
+      "focused": true
+    },
+    {
+      "type": 4,
+      "name": "round",
+      "description": "ga round (default is 1)",
+      "choices": [
+        {
+          "name": "1",
+          "value": 1
+        },
+        {
+          "name": "2",
+          "value": 2
+        },
+        {
+          "name": "3",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "type": 5,
+      "name": "hold-only",
+      "description": "only show defense holds (default false)"
+    },
+    {
+      "type": 3,
+      "name": "side",
+      "description": "attack or defense (default is defense)",
+      "choices": [
+        {
+          "name": "attack",
+          "value": "a"
+        },
+        {
+          "name": "defense",
+          "value": "d"
+        }
+      ]
+    },
+    {
+      "type": 6,
+      "name" : "user",
+      "description" : "@user history to show"
+    },
+    {
+      "type": 3,
+      "name": "allycode",
+      "description" : "allycode of player history to show"
+    },
+    {
+      "type": 3,
+      "name": "allycode_option",
+      "description": "primary or alt allycode",
+      "choices": [
+        {
+          "name": "Primary",
+          "value": "primary"
+        },
+        {
+          "name": "Alt",
+          "value": "alt"
+        }
+      ]
+    }
+  ]
+}

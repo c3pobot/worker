@@ -1,0 +1,48 @@
+{
+  "type": 1,
+  "name": "gear",
+  "description": "Check player gear needed for completion",
+  "options":[
+    {
+      "type": 3,
+      "name": "unit",
+      "description": "unit to check",
+      "required": true,
+      "autocomplete": true,
+      "focused": true
+    },
+    {
+      "type": 4,
+      "name": "tier",
+      "description": "desired gear tier to reach (defaults to 13)"
+    },
+    {
+      "type": 6,
+      "name": "user",
+      "description": "@user to lookup",
+      "required": false
+    },
+    {
+      "type": 3,
+      "name": "allycode",
+      "description": "allyCode to lookup",
+      "required": false
+    },
+    {
+      "type": 3,
+      "name": "allycode_option",
+      "description": "primary or alt allycode",
+      "required": false,
+      "choices": [
+        {
+          "name": "Primary",
+          "value": "primary"
+        },
+        {
+          "name": "Alt",
+          "value": "alt"
+        }
+      ]
+    }
+  ]
+}

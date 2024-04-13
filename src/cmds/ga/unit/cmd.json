@@ -1,0 +1,30 @@
+{
+  "type": 1,
+  "name": "unit",
+  "description": "compare unit to ga opponent",
+  "options": [
+    {
+      "type": 3,
+      "name": "unit",
+      "description": "Unit to query",
+      "required": true,
+      "autocomplete": true,
+      "focused": true
+    },
+    {
+      "type": 3,
+      "name": "allycode_option",
+      "description": "primary or alt allycode",
+      "choices": [
+        {
+          "name": "Primary",
+          "value": "primary"
+        },
+        {
+          "name": "Alt",
+          "value": "alt"
+        }
+      ]
+    }
+  ]
+}

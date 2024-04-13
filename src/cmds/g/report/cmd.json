@@ -1,0 +1,28 @@
+{
+  "type": 1,
+  "name": "report",
+  "description": "Shows current guild report",
+  "options": [
+    {
+      "type": 5,
+      "name": "units",
+      "description": "include units in the report (defaults to false)"
+    },
+    {
+      "type": 3,
+      "name": "allycode_option",
+      "description": "primary or alt allycode",
+      "required": false,
+      "choices": [
+        {
+          "name": "Primary",
+          "value": "primary"
+        },
+        {
+          "name": "Alt",
+          "value": "alt"
+        }
+      ]
+    }
+  ]
+}

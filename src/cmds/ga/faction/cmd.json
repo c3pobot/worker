@@ -1,0 +1,45 @@
+{
+  "type": 1,
+  "name": "faction",
+  "description": "compare faction to ga opponent",
+  "options": [
+    {
+      "type": 3,
+      "name": "faction",
+      "description": "faction to query",
+      "required": true,
+      "autocomplete": true,
+      "focused": true
+    },
+    {
+      "type": 4,
+      "name": "option",
+      "description": "char/ship (defaults to char)",
+      "choices": [
+        {
+          "name": "char",
+          "value": 1
+        },
+        {
+          "name": "ship",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "type": 3,
+      "name": "allycode_option",
+      "description": "primary or alt allycode",
+      "choices": [
+        {
+          "name": "Primary",
+          "value": "primary"
+        },
+        {
+          "name": "Alt",
+          "value": "alt"
+        }
+      ]
+    }
+  ]
+}

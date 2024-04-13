@@ -1,0 +1,85 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "raids",
+    "description": "Manage Raid Announcements",
+    "options": [
+      {
+        "type": 1,
+        "name": "show",
+        "description": "show scheduled raid announcenments (sync guilds only)"
+      },
+      {
+        "type": 1,
+        "name": "sync",
+        "description": "update raid announcenments based on current ticket count (sync guilds only)"
+      },
+      {
+        "type": 1,
+        "name": "configure",
+        "description": "Configure raid announcenments (sync guild only)",
+        "options": [
+          {
+            "type": 3,
+            "name": "option",
+            "description": "add or remove raid configuration",
+            "required": true,
+            "choices": [
+              {
+                "name": "show",
+                "value": "show"
+              },
+              {
+                "name": "add",
+                "value": "add"
+              },
+              {
+                "name": "remove",
+                "value": "remove"
+              }
+            ]
+          },
+          {
+            "type": 3,
+            "name": "raid",
+            "description": "Raid to configure",
+            "required": true,
+            "choices": [
+              {
+                "name": "rancor",
+                "value": "rancor"
+              },
+              {
+                "name": "tank",
+                "value": "tank"
+              },
+              {
+                "name": "sith",
+                "value": "sith"
+              },
+              {
+                "name": "crancor",
+                "value": "crancor"
+              }
+            ]
+          },
+          {
+            "type": 7,
+            "name": "channel",
+            "description": "channel for announcenments"
+          },
+          {
+            "type": 8,
+            "name": "role",
+            "description": "@role to mention for Announcements"
+          },
+          {
+            "type": 4,
+            "name": "hold",
+            "description": "damage hold time in minutes"
+          }
+        ]
+      }
+    ]
+  }
+}

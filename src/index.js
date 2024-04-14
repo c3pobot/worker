@@ -1,7 +1,7 @@
 'use strict'
 const log = require('logger')
 const SaveSlashCmds = require('./saveSlashCmds')
-const { cmdMapReady } = require('./helpers/cmdMap')
+const createCmdMap = require('./helpers/createCmdMap')
 const { dataList } = require('.helpers/dataList')
 const cmdQue = require('./cmdQue')
 let workerType = process.env.WORKER_TYPE || 'swgoh'
@@ -50,7 +50,7 @@ const CheckGameData = async()=>{
 const CheckCmdMap = async()=>{
   try{
     if(process.env.POD_NAME?.toString().endsWith("0")) await saveSlashCmds(baseDir+'/src/cmds', workerType)
-    let status = cmdMapReady()
+    let status = createCmdMap()
     if(status){
       CmdQue.start()
       return

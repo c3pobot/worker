@@ -3,17 +3,11 @@ const Cmds = {}
 Cmds.all = require('./all')
 Cmds.shard = require('./shard')
 Cmds.single = require('./single')
-module.exports = async(obj, opt)=>{
-  try{
-    let tempCmd
-    if(opt.find(x=>x.name == 'option')) tempCmd = opt.find(x=>x.name == 'option').value
-    if(tempCmd && Cmds[tempCmd]){
-      Cmds[tempCmd](obj, opt)
-    }else{
-      HP.ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
-    }
-  }catch(e){
-    console.log(e)
-    HP.ReplyError(obj)
-  }
+const { getOptValue } = require('src/helpers')
+
+module.exports = async(obj = {}, opt = [])=>{
+  let tempCmd = getOptValue(opt, 'option')
+  let msg2send = {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')}
+  if(tempCmd && Cmds[tempCmd]) msg2send = await Cmds[tempCmd](obj, opt)
+  return msg2send
 }

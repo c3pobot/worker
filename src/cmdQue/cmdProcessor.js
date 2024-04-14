@@ -2,6 +2,7 @@
 const log = require('logger');
 const jobCache = require('helpers/jobCache');
 const { checkCmdMap } = require('helpers/cmdMap')
+const { replyError } = require('src/helpers')
 let Cmds = {}
 module.exports = async(obj = {})=>{
   try{
@@ -12,7 +13,8 @@ module.exports = async(obj = {})=>{
     let cmdExists = checkCmdMap(obj.data.name)
     if(!cmdExists) return
     if(!Cmds[obj.data.name]) Cmds[obj.data.name] = require(`src/cmds/${obj.data.name}`)
-    await Cmds[obj.data.name](obj)
+    let msg2send = await Cmds[obj.data.name](obj)
+    if(msg2send) await replyMsg(obj, msg2send)
   }catch(e){
     log.error(e)
   }

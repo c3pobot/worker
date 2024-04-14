@@ -1,24 +1,23 @@
 'use strict'
-module.exports = async(obj, shard, opt = [])=>{
-  try{
-    let msg2send = {content: 'Error with provided info'}, unit, uInfo, alias, confirmRemove
-    if(obj.confirm && obj.confirm.response) confirmRemove = obj.confirm.response
-    if(opt.find(x=>x.name == 'alias')) alias = opt.find(x=>x.name == 'alias').value.trim()
-    if(alias){
-      msg2send.content = '**'+alias+'** is not a squad lead alias for this server'
-      if(shard && shard.alias && shard.alias.filter(x=>x.alias == alias).length > 0 && !confirmRemove){
-        await HP.ConfirmButton(obj, 'Are your sure you want to remove alias **'+alias+'** as a squad lead alias for **'+shard.alias.filter(x=>x.alias == alias)[0].nameKey+'**?')
-      }
-    }
-    if(confirmRemove){
-      msg2send.content = 'Command Canceled'
-      if(confirmRemove == 'yes'){
-        await mongo.pull('payoutServers', {_id: shard._id}, {alias: {alias: alias}})
-        msg2send.content = '**'+alias+'** was removed as a squad lead alias for this server'
-      }
-    }
-    HP.ReplyMsg(obj, msg2send)
-  }catch(e){
-    console.log(e)
+const mongo = require('mongoclient')
+const { getOptValue, confirmButton } = require('src/helpers')
+
+module.exports = async(obj = {}, shard = {}, opt = [])=>{
+  let msg2send = {content: 'Error with provided info'}, alias, confirmRemove
+  let confirmRemove = obj.confirm?.response
+  let alias = getOptValue(opt, 'alias')?.trim()
+  if(!alias) return { content: 'you did not provide an alias'}
+  msg2send.content = '**'+alias+'** is not a squad lead alias for this server'
+  if(!confirmRemove){
+    let unit = shard?.alias?.find(x=>x.alias?.toUpperCase() === alias?.toUpperCase())
+    if(!unit) return msg2send
+    await confirmButton(obj, 'Are your sure you want to remove **'+alias+'** as a squad lead alias for **'+unit.nameKey+'**?')
+    return
   }
+  msg2send = 'Command canceled'
+  if(confirmRemove == 'yes'){
+    await mongo.pull('payoutServers', {_id: shard._id}, {alias: {alias: alias}})
+    msg2send.content = '**'+alias+'** was removed as a squad lead alias for this server'
+  }
+  return msg2send
 }

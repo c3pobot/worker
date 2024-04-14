@@ -1,7 +1,7 @@
 'use strict'
 const checkAuth = require('./checkAuth')
 const mongo = require('mongoclient')
-const { replyMsg, replyError } = require('src/helpers')
+const { replyError } = require('src/helpers')
 const Cmds = {}
 Cmds.guild = require('./guild')
 Cmds.notify = require('./notify')
@@ -32,7 +32,7 @@ module.exports = async(obj = {})=>{
       msg2send.content = 'This is only avaliable to patreons'
       if(patreon) msg2send = await Cmds[tempCmd](obj, patreon, opt)
     }
-    if(msg2send) await replyMsg(obj, msg2send)
+    return msg2send
   }catch(e){
     replyError(obj)
     throw(e)

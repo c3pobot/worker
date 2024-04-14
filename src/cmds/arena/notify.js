@@ -30,7 +30,7 @@ module.exports = async(obj = {}, opt = [])=>{
     tempNotify.dId = obj.member.user.id
     if(pObj.name) tempNotify.name = pObj.name
     if(notifyStatus >= 0){
-      tempNotify.notify.status = +opt.find(x=>x.name == 'status').value
+      tempNotify.notify.status = +notifyStatus
     }else{
       if(notifyStatus){
         tempNotify.notify.status = 1

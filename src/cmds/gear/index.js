@@ -1,6 +1,7 @@
 'use strict'
+const sorter = require('json-array-sorter')
 const getHTML = require('webimg').gear
-const { getOptValue, getGearParts, replyButton, replyMsg, replyError, getImg } = require('src/helpers')
+const { getOptValue, getGearParts, replyButton, replyError, getImg } = require('src/helpers')
 
 module.exports = async(obj = {})=>{
   try{
@@ -65,7 +66,7 @@ module.exports = async(obj = {})=>{
         }
         gearInfo.header = uInfo.nameKey + '\'s Gear needed at Gear level ' + gLevel
       }
-      gearArray = await sorter([{ column: 'count', order: 'descending' }], Object.values(gearObj))
+      gearArray = sorter([{ column: 'count', order: 'descending' }], Object.values(gearObj))
       if(gLevel == 13) gearArray = gearArray.filter(x=>x.count > 29)
     }
     if(gearArray?.length > 0){
@@ -82,7 +83,7 @@ module.exports = async(obj = {})=>{
       msg2send.file = gearImg
       msg2send.fileName = uInfo.baseId + "-gear.png"
     }
-    if(msg2send) await replyMsg(obj, msg2send)
+    return msg2send
   }catch(e){
     replyError(obj)
     throw(e)

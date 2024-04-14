@@ -1,5 +1,7 @@
 'use strict'
-const GetMaxRankJump = (currentRank) => {
+const numeral = require('numeral')
+const { getOptValue, replyError } = require('src/helpers')
+const getMaxRankJump = (currentRank) => {
   if (currentRank < 6) {
     return 1;
   } else if (currentRank < 13) {
@@ -18,10 +20,10 @@ const GetMaxRankJump = (currentRank) => {
     return numeral((currentRank * 0.85) - 1).format('0');
   }
 }
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   try{
     let msg2send = {content: 'You did not provide a starting rank'}
-    let startRank = HP.GetOptValue((obj?.data?.options || []), 'rank')
+    let startRank = getOptValue((obj?.data?.options || []), 'rank')
     if(startRank){
       let rankList = startRank
       if(startRank > 0){
@@ -29,10 +31,10 @@ module.exports = async(obj)=>{
           rankList += ' > 1'
         }else{
           let currentRank = startRank
-          const ranks = []
+          let ranks = []
           let i = 0
           while(i < 5){
-            const nextRank = GetMaxRankJump(currentRank);
+            let nextRank = getMaxRankJump(currentRank);
             if(nextRank < 6) {
               ranks.push(nextRank)
               if(nextRank == 1){
@@ -54,7 +56,7 @@ module.exports = async(obj)=>{
             rankList += " > " + ranks[j]
           }
         }
-        const embedMsg = {
+        let embedMsg = {
           color: 15844367,
           timestamp: new Date(),
           fields: [{
@@ -69,9 +71,9 @@ module.exports = async(obj)=>{
         msg2send.embeds = [embedMsg]
       }
     }
-    HP.ReplyMsg(obj, msg2send)
+    return msg2send
   }catch(e){
-    console.log(e)
-    HP.ReplyError(obj)
+    replyError(obj)
+    throw(e)
   }
 }

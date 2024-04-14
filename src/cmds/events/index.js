@@ -1,7 +1,7 @@
 'use strict'
 const mongo = require('mongoclient')
 const sorter = require('json-array-sorter')
-const { replyMsg, replyError } = require('src/helpers')
+const { replyError } = require('src/helpers')
 
 module.exports = async(obj = {})=>{
   try{
@@ -29,7 +29,7 @@ module.exports = async(obj = {})=>{
       msg2send.content = null
       msg2send.embeds = [embedMsg]
     }
-    await replyMsg(obj, msg2send)
+    return msg2send
   }catch(e){
     replyError(obj)
     throw(e)

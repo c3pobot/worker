@@ -1,7 +1,7 @@
 'use strict'
 const mongo = require('mongoclient')
 const getHTML = require('webimg').datacron
-const { getOptValue, fetchPlayer, getPlayerAC, replyMsg, replyError, getImg } = require('src/helpers')
+const { getOptValue, fetchPlayer, getPlayerAC, replyError, getImg } = require('src/helpers')
 
 module.exports = async(obj = {})=>{
   try{
@@ -52,7 +52,7 @@ module.exports = async(obj = {})=>{
       msg2send.file = webImg
       msg2send.fileName = pObj.name+'-datacron'+'.png'
     }
-    await replyMsg(obj, msg2send)
+    return msg2send
   }catch(e){
     replyError(obj)
     throw(e)

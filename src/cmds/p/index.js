@@ -10,7 +10,7 @@ Cmds.report = require('./report')
 Cmds.stats = require('./stats')
 Cmds.unit = require('./unit')
 Cmds['unit-compare'] = require('./unitCompare')
-const { replyMsg, replyError } = require('src/helpers')
+const { replyError } = require('src/helpers')
 
 module.exports = async(obj = {})=>{
   try{
@@ -25,7 +25,7 @@ module.exports = async(obj = {})=>{
     }
     let msg2send = {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')}
     if(tempCmd && Cmds[tempCmd]) msg2send = await Cmds[tempCmd](obj, opt)
-    if(msg2send) await replyMsg(obj, msg2send)
+    return msg2send
   }catch(e){
     replyError(obj)
     throw(e)

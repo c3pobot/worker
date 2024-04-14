@@ -3,7 +3,7 @@ const Cmds = {}
 Cmds['3v3'] = '3v3'
 Cmds['5v5'] = '5v5'
 const cleanup = require('./cleanup')
-const { replyMsg, replyError } = require('src/helpers')
+const { replyError } = require('src/helpers')
 
 module.exports = async(obj = {})=>{
   try{
@@ -18,7 +18,7 @@ module.exports = async(obj = {})=>{
       }
     }
     if(mode) msg2send = await cleanup(obj, opt, mode)
-    if(msg2send) await replyMsg(obj, msg2send)
+    return msg2send
   }catch(e){
     replyError(obj)
     throw(e)

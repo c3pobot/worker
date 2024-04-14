@@ -1,7 +1,7 @@
 'use strict'
 const mongo = require('mongoclient')
 const sorter = require('json-array-sorter')
-const { getPlayerAC, getFaction, replyMsg, replyError } = require('src/helpers')
+const { getPlayerAC, getFaction, replyError } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
 const json2xls = require('json2xls');
 
@@ -60,7 +60,7 @@ module.exports = async( obj = {} )=>{
         msg2send.fileName = gObj.name+'.xlsx'
       }
     }
-    await replyMsg(obj, msg2send)
+    return msg2send
   }catch(e){
     replyError(obj)
     throw(e)

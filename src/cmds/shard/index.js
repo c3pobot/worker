@@ -6,10 +6,14 @@ Cmds.player = require('./player')
 Cmds.p = require('./player')
 Cmds.ranks = require('./ranks')
 Cmds.status = require('./status')
-module.exports = async(obj)=>{
+const { getShard, replyError } = require('src/helpers')
+
+module.exports = async(obj = {})=>{
   try{
-    const shard = await HP.GetShard(obj)
-    if(shard && shard.status){
+    let shard = await getShard(obj)
+    let msg2send = {content: 'No payout shard was found for this channel category'}
+    if(shard && !shard.status) msg2send.content = 'Your payout server has been disabled'
+    if(shard?.status){
       let tempCmd, opt
       if(obj.data && obj.data.options){
         for(let i in obj.data.options){
@@ -20,20 +24,12 @@ module.exports = async(obj)=>{
           }
         }
       }
-      if(tempCmd){
-        await Cmds[tempCmd](obj, shard, opt)
-      }else{
-        HP.ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
-      }
-    }else{
-      if(shard){
-        HP.ReplyMsg(obj, {content: 'Your payout server has been disabled'})
-      }else{
-        HP.ReplyMsg(obj, {content: 'No payout shard was found for this channel category'})
-      }
+      msg2send = {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')}
+      if(tempCmd) msg2send = await Cmds[tempCmd](obj, shard, opt)
     }
+    return msg2send
   }catch(e){
-    console.error(e);
-    HP.ReplyError(obj)
+    replyError(obj)
+    throw(e)
   }
 }

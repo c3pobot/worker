@@ -1,0 +1,41 @@
+'use strict'
+const { getRanks, getShardName } = require('src/helpers')
+const { WebHookMsg } = require('src/helpers/discordmsg')
+
+module.exports = async(obj = {}, shard = {}, opt = [])=>{
+  let msg2send = {content: 'Error getting payouts'}
+  let fields = await getRanks(shard)
+  if(fields && fields.length > 0){
+    let fieldLength = +fields.length, numMsgs = 1
+    if(fieldLength > 5 && numMsgs == 1) numMsgs = Math.round( +fieldLength / 5)
+    if(fieldLength > 5 && numMsgs == 1) numMsgs = 2
+    if(numMsgs > 1) fieldLength = Math.round( +fields.length / numMsgs)
+    let embedMsg = {
+      color: 15844367,
+      fields: []
+    }
+    let count = 0
+    for(let i in fields){
+      if(i == 0){
+        embedMsg.title = getShardName(shard)+' Arena Ranks'
+        if(shard.message && shard.message != 'default') embedMsg.description = shard.message.replace('<br>', '\n')
+      }
+      embedMsg.fields.push(fields[i])
+      count++
+      if(+i + 1 == fields.length && count < fieldLength) count = +fieldLength
+      if(+i + 1 == fields.length){
+        embedMsg.timestamp = new Date()
+        embedMsg.footer = {text: 'Updated'}
+      }
+      if(count == fieldLength){
+        await WebHookMsg(obj.token, {embeds: [JSON.parse(JSON.stringify(embedMsg))]}, 'POST')
+        delete embedMsg.title
+        delete embedMsg.description
+        embedMsg.fields = []
+        count = 0
+      }
+    }
+    return
+  }
+  return msg2send
+}

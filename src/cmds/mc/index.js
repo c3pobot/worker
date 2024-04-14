@@ -1,6 +1,6 @@
 'use strict'
 const numeral = require('numeral')
-const { getPlayerAC, fetchPlayer, replyMsg, replyError } = require('src/helpers')
+const { getPlayerAC, fetchPlayer, replyError } = require('src/helpers')
 const { getNoMods, getMissingMods, getIncModsets, getMissingMods, getLowModPips } = require('src/format')
 const modCount = (obj)=>{
   let count = 0
@@ -43,7 +43,7 @@ module.exports = async(obj = {})=>{
       msg2send.content = null
       msg2send.embeds = [embedMsg]
     }
-    if(msg2send) await replyMsg(obj, msg2send)
+    return msg2send
   }catch(e){
     replyError(obj)
     throw(e)

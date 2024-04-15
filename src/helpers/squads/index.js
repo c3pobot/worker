@@ -1,7 +1,7 @@
 'use strict'
 const Cmds = {}
-Cmds.GetSquad = require('./getSquad')
-Cmds.CheckStats = require('./checkStats')
-Cmds.CheckSquads = require('./checkSquads')
-Cmds.FormatPlayerSquad = require('./formatPlayerSquad')
+Cmds.getSquad = require('./getSquad')
+Cmds.checkStats = require('./checkStats')
+Cmds.checkSquads = require('./checkSquads')
+Cmds.formatPlayerSquad = require('./formatPlayerSquad')
 module.exports = Cmds

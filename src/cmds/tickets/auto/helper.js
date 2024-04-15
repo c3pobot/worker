@@ -1,7 +1,7 @@
 'use strict'
 const Cmds = {}
-Cmds.Show = async(gObj, auto)=>{
-  const embedMsg = {
+Cmds.show = (gObj = {}, auto = {})=>{
+  let embedMsg = {
     color: 15844367,
     title: gObj.profile.name+' Auto Raid Ticket check settings',
     footer: {

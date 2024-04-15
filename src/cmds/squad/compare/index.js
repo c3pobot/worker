@@ -1,28 +1,27 @@
 'use strict'
-const GetImg = require('./getImg')
-module.exports = async(obj, opt = [])=>{
-  try{
-    let msg2send = {content: 'You must provide another player to compare with'}, squad, pObj, eObj
-    let squadName = HP.GetOptValue(opt, 'name')
-    const eAlly = await HP.GetPlayerAC(obj, opt)
-    const pAlly = await HP.GetDiscordAC(obj.member.user.id, opt)
-    if(!pAlly) msg2send.content = 'You do not have allycode linked to discordId'
-    if(pAlly && eAlly && eAlly.mentionError) msg2send.content = 'that user does not have allyCode linked to discordId'
-    if(squadName){
-      squadName = squadName.toString().trim()
-      msg2send.content = 'Error finding squad **'+squadName+'**'
-      squad = await HP.Squads.GetSquad(obj, opt, squadName)
-    }
-    if(pAlly.allyCode == eAlly.allyCode) msg2send.content = 'you can\'t compare to your self'
-    if(squad && pAlly?.allyCode && eAlly?.allyCode && pAlly.allyCode != eAlly.allyCode){
-      await HP.ReplyButton(obj, 'Getting info for squad **'+squadName+'** ...')
-      msg2send.content = 'Error pullling player info'
-      pObj = await HP.FetchPlayer({allyCode: pAlly.allyCode.toString()})
-      eObj = await HP.FetchPlayer({allyCode: eAlly.allyCode.toString()})
-    }
-    if(pObj?.allyCode && eObj?.allyCode) msg2send = await GetImg(squad, pObj, eObj)
-    await HP.ReplyMsg(obj, msg2send)
-  }catch(e){
-    console.error(e);
+const getImg = require('./getImg')
+const { getOptValue, getDiscordAC, getPlayerAC, fetchPlayer } = require('src/helpers')
+const { getSquad } = require('src/helpers/squads')
+
+module.exports = async(obj = {}, opt = [])=>{
+  let msg2send = {content: 'you did not provide a squad name...'}, pObj, eObj
+  let squadName = getOptValue(opt, 'name')?.toString()?.trim()
+  if(!squadName) return msg2send
+  let eAlly = await getPlayerAC(obj, opt)
+  let pAlly = await getDiscordAC(obj.member.user.id, opt)
+  if(!pAlly || !pAlly?.allyCode) return { content: 'You do not have allycode linked to discordId' }
+  if(eAlly?.mentionError) return { content: 'that user does not have allyCode linked to discordId' }
+  if(!eAlly?.allyCode) return { content: 'You must provide another player to compare with' }
+  if(pAlly?.allyCode === eAlly?.allyCode) return { content: 'you can\'t compare to your self' }
+  msg2send.content = 'Error finding squad **'+squadName+'**'
+  let squad = await getSquad(obj, opt, squadName)
+
+  if(squad){
+    await replyButton(obj, 'Getting info for squad **'+squadName+'** ...')
+    msg2send.content = 'Error pullling player info'
+    pObj = await fetchPlayer({allyCode: pAlly?.allyCode?.toString()})
+    eObj = await fetchPlayer({allyCode: eAlly?.allyCode?.toString()})
   }
+  if(pObj?.allyCode && eObj?.allyCode) msg2send = await getImg(squad, pObj, eObj)
+  return msg2send
 }

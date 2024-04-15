@@ -5,7 +5,8 @@ Cmds.missed = require('./missed')
 Cmds.mom = require('./mom')
 Cmds.sendmessages = require('./sendmessages')
 Cmds.check = require('./check')
-module.exports = async(obj)=>{
+const { replyError } = require('src/helpers')
+module.exports = async(obj = {})=>{
   try{
     let opt = [], tempCmd
     for(let i in obj.data.options){
@@ -15,13 +16,11 @@ module.exports = async(obj)=>{
         break;
       }
     }
-    if(tempCmd){
-      await Cmds[tempCmd](obj, opt)
-    }else{
-      HP.ReplyMsg(obj, {content: 'Command not recognized'})
-    }
+    let msg2send = {content: 'Command not recognized'}
+    if(tempCmd) msg2send = await Cmds[tempCmd](obj, opt)
+    return msg2send
   }catch(e){
-    console.error(e)
-    HP.ReplyError(obj)
+    replyError(obj)
+    throw(e)
   }
 }

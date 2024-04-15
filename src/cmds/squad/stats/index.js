@@ -1,24 +1,22 @@
 'use strict'
-const GetImg = require('./getImg')
-module.exports = async(obj, opt)=>{
-  try{
-    let squadName, squad, msg2send = {content: 'You do not have allyCode linked to discordId'}, squadData = {squads: [], info:{tdSpan: 0}}, allyCode, pObj
-    const allyObj = await HP.GetPlayerAC(obj, opt)
-    if(allyObj && allyObj.allyCode) allyCode = allyObj.allyCode
-    if(allyObj && allyObj.mentionError) msg2send.content = 'that user does not have allyCode linked to discordId'
-    if(opt && opt.find(x=>x.name == 'name')) squadName = opt.find(x=>x.name == 'name').value.trim().toLowerCase()
-    if(allyCode){
-      msg2send.content = 'Error finding squad **'+squadName+'**'
-      squad = await HP.Squads.GetSquad(obj, opt, squadName)
-    }
-    if(squad){
-      msg2send.content = 'error getting player data'
-      pObj = await HP.FetchPlayer({token: obj.token, allyCode: allyCode.toString()})
-    }
-    if(pObj?.rosterUnit) msg2send = await GetImg(squad, pObj)
-    await HP.ReplyMsg(obj, msg2send)
-  }catch(e){
-    console.log(e)
-    HP.ReplyError(obj)
+const getImg = require('./getImg')
+const { getOptValue, getPlayerAC, fetchPlayer } = require('src/helpers')
+const { getSquad } = require('src/helpers/squads')
+
+module.exports = async(obj = {}, opt = [])=>{
+  let squadName, squad, msg2send = {content: 'You do not have allyCode linked to discordId'}, squadData = {squads: [], info:{tdSpan: 0}}, allyCode, pObj
+  let squadName = getOptValue(opt, 'name')?.toString()?.trim()?.toLowerCase()
+  if(!squadName) return { content: 'You did not provide a squad name', components: [] }
+  let allyObj = await getPlayerAC(obj, opt)
+  if(allyObj?.mentionError) return { content: 'that user does not have allyCode linked to discordId' }
+  let allyCode = allyObj?.allyCode
+  if(!allyCode) return msg2send
+  msg2send.content = 'Error finding squad **'+squadName+'**'
+  let squad = await getSquad(obj, opt, squadName)
+  if(squad){
+    msg2send.content = 'error getting player data'
+    pObj = await fetchPlayer({token: obj.token, allyCode: allyCode.toString()})
   }
+  if(pObj?.rosterUnit) msg2send = await getImg(squad, pObj)
+  return msg2send
 }

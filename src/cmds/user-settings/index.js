@@ -3,6 +3,8 @@ const Cmds = {}
 Cmds.set = require('./set')
 Cmds.show = require('./show')
 Cmds.clear = require('./clear')
+const { replyError } = require('src/helpers')
+
 module.exports = async(obj = {})=>{
   try{
     let tempCmd, opt = []
@@ -15,13 +17,11 @@ module.exports = async(obj = {})=>{
         }
       }
     }
-    if(tempCmd && Cmds[tempCmd]){
-      await Cmds[tempCmd](obj, opt)
-    }else{
-      HP.ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
-    }
+    let msg2send = {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')}
+    if(tempCmd && Cmds[tempCmd]) msg2send = await Cmds[tempCmd](obj, opt)
+    return msg2send
   }catch(e){
-    console.error(e);
-    HP.ReplyError(obj)
+    replyError(obj)
+    throw(e)
   }
 }

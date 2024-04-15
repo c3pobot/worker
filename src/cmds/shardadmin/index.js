@@ -10,7 +10,7 @@ Cmds.settings = require('./settings')
 Cmds.watch = require('./watch')
 const { getShard, replyError, checkShardAdmin } = require('src/helpers')
 
-module.exports = async(obj= {})=>{
+module.exports = async(obj = {})=>{
   try{
     let shard = await getShard(obj)
     let msg2send = { content: 'No payout shard was found for this channel category' }

@@ -1,20 +1,16 @@
 'use strict'
-const { ForceMessage } = require('./helper')
-module.exports = async(obj, shard, opt)=>{
-  try{
-    let schedule, msg2send = {content: 'Rotation schedule not found'}
-    const rots = (await mongo.find('shardRotations', {_id: shard._id}))[0]
-    if(opt && opt.find(x=>x.name == 'schedule')) schedule = opt.find(x=>x.name == 'schedule').value.toUpperCase()
-    if(rots && schedule && rots[schedule]){
-      msg2send.content = 'po offSet is not set for **'+schedule+'**'
-      if(rots[schedule]){
-        await ForceMessage(rots[schedule])
-        msg2send.content = 'Sent message to <#'+rots[schedule].chId+'>'
-      }
-    }
-    HP.ReplyMsg(obj, msg2send)
-  }catch(e){
-    console.log(e)
-    HP.ReplyError(obj)
-  }
+const mongo = require('mongoclient')
+const { forceMessage } = require('./helper')
+const { getOptValue } = require('src/helpers')
+
+module.exports = async(obj = {}, shard = {}, opt = [])=>{
+  let msg2send = {content: 'Rotation schedule not found'}
+  let schedule = getOptValue(opt, 'schedule')?.toUpperCase()
+  if(!schedule) return { content: 'you did not provide a rotation schedule name'}
+  let rots = (await mongo.find('shardRotations', {_id: shard._id}))[0]
+  if(!rots || !rots[schedule]) return msg2send
+  if(rots[schedule].poOffSet == null) return { content: 'po offSet is not set for **'+schedule+'**' }
+  msg2send.content = 'Sent message to <#'+rots[schedule].chId+'>'
+  forceMessage(rots[schedule])
+  return msg2send
 }

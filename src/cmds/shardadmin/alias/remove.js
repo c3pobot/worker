@@ -14,8 +14,8 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
     await confirmButton(obj, 'Are your sure you want to remove **'+alias+'** as a squad lead alias for **'+unit.nameKey+'**?')
     return
   }
-  msg2send = 'Command canceled'
-  if(confirmRemove == 'yes'){
+  msg2send.content = 'Command canceled'
+  if(confirmRemove === 'yes'){
     await mongo.pull('payoutServers', {_id: shard._id}, {alias: {alias: alias}})
     msg2send.content = '**'+alias+'** was removed as a squad lead alias for this server'
   }

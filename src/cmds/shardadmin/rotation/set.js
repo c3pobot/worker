@@ -1,56 +1,55 @@
 'use strict'
-module.exports = async(obj, shard, opt)=>{
-  try{
-    let schedule, msg2send = {content: 'You did not provide the correct information'}
-    if(opt && opt.find(x=>x.name == 'schedule')) schedule = opt.find(x=>x.name == 'schedule').value.toUpperCase()
-    if(schedule){
-      let tempRot = {
-        id: schedule,
-        chId: obj.channel_id,
-        sId: shard.sId,
-        shardId: shard._id,
-        type: shard.type,
-        startTime: 2,
-        order: 'normal',
-        notify: 'off',
-        notifyStart: 0,
-        players: []
-      }
-      const rots = (await mongo.find('shardRotations', {_id: shard._id}))[0]
-      if(rots && rots[schedule]) tempRot = rots[schedule]
-      if(opt.find(x=>x.name == 'channel')) tempRot.chId = opt.find(x=>x.name == 'channel').value
-      if(opt.find(x=>x.name == 'role')){
-        if(opt.find(x=>x.name == 'role').value.startsWith('<@&')){
-          tempRot.roleId = opt.find(x=>x.name == 'role').value.replace(/[<@&>]/g, '')
-        }else{
-          delete tempRot.roleId
+const mongo = require('mongoclient')
+const { getOptValue, getDiscordAC } = require('src/helpers')
+const swgohClient = require('src/swgohClient')
 
-        }
-      }
-      if(opt.find(x=>x.name == 'hours')) tempRot.startTime = opt.find(x=>x.name == 'hours').value
-      if(opt.find(x=>x.name == 'notify')) tempRot.notify = opt.find(x=>x.name == 'notify').value
-      if(opt.find(x=>x.name == 'order')) tempRot.order = opt.find(x=>x.name == 'order').value
-      if(opt.find(x=>x.name == 'potime')){
-        let allyCode, pObj
-        if(opt.find(x=>x.name == 'potime').value.replace(/-/g, '') > 999999) allyCode = opt.find(x=>x.name == 'potime').value.replace(/-/g, '')
-        if(!allyCode){
-          let dObj = (await mongo.find('shardPlayerCache', {dId: opt.find(x=>x.name == 'potime').value.replace(/[<@!>]/g, ''), shardId: shard._id}))[0]
-          if(dObj && dObj.allyCode) allyCode = dObj.allyCode
-          if(!allyCode){
-            dObj = await HP.GetDiscordAC(opt.find(x=>x.name == 'potime').value.replace(/[<@!>]/g, ''))
-            if(dObj && dObj.allyCode) allyCode = dObj.allyCode
-          }
-        }
-        if(allyCode) pObj = await Client.post('getArenaPlayer', {allyCode: allyCode}, null)
-        if(pObj && (pObj.poOffSet || pObj.poOffSet == 0)) tempRot.poOffSet = pObj.poOffSet
-      }
-      await mongo.set('shardRotations', {_id: shard._id}, {[schedule]: tempRot})
-      msg2send.content = await HP.ShowRotationSchedule(obj, tempRot, shard, true)
-      if(!tempRot.poOffSet && tempRot.poOffSet != 0) msg2send.content += '**Note: There is no poOffSet for the rotation schedule.\nYou need to provide an allyCode or mention a user that has allyCode linked to discordId**'
-    }
-    HP.ReplyMsg(obj, msg2send)
-  }catch(e){
-    console.log(e)
-    HP.ReplyError(obj)
+module.exports = async(obj = {}, shard = {}, opt = [])=>{
+  let msg2send = {content: 'You did not provide the correct information'}, pObj, allyCode, dId
+  let schedule = getOptValue(opt, 'schedule')?.toUpperCase()  
+  if(!schedule) return { content: 'you did not provide a rotation schedule name'}
+  let tempRot = {
+    id: schedule,
+    chId: obj.channel_id,
+    sId: shard.sId,
+    shardId: shard._id,
+    type: shard.type,
+    startTime: 2,
+    order: 'normal',
+    notify: 'off',
+    notifyStart: 0,
+    players: []
   }
+  let rots = (await mongo.find('shardRotations', {_id: shard._id}))[0]
+  if(rots && rots[schedule]) tempRot = rots[schedule]
+  tempRot.chId = getOptValue(opt, 'channel', tempRot.chId)
+  tempRot.startTime = getOptValue(opt, 'hours', tempRot.startTime)
+  tempRot.notify = getOptValue(opt, 'notify', tempRot.notify)
+  tempRot.order = getOptValue(opt, 'order', tempRot.order)
+  let role = getOptValue(opt, 'role')
+  if(role){
+    if(role.startsWith('<@&')){
+      tempRot.roleId = opt.find(x=>x.name == 'role').value.replace(/[<@&>]/g, '')
+    }else{
+      delete tempRot.roleId
+    }
+  }
+  let poTime = getOptValue(opt, 'potime')
+  if(poTime?.startsWith('<@')){
+    dId = poTime.replace(/[<@!>]/g, '')
+  }else{
+    allyCode = poTime?.toString()?.replace(/-/g, '')
+  }
+  if(dId){
+    let dObj = (await mongo.find('shardPlayerCache', {dId: dId, shardId: shard._id}))[0]
+    if(!dObj?.allyCode) dObj = await getDiscordAC(dId)
+    allyCode = dObj?.allyCode?.toString()
+  }
+  if(allyCode){
+    let pObj = await swgohClient.post('getArenaPlayer', {allyCode: allyCode.toString()}, null)
+    if(pObj && pObj.poOffSet != null) tempRot.poOffSet = pObj.poOffSet
+  }
+  await mongo.set('shardRotations', {_id: shard._id}, {[schedule]: tempRot})
+  msg2send.content = await showRotationSchedule(obj, tempRot, shard, true)
+  if(tempRot.poOffSet != null) msg2send.content += '**Note: There is no poOffSet for the rotation schedule.\nYou need to provide an allyCode or mention a user that has allyCode linked to discordId**'
+  return msg2send
 }

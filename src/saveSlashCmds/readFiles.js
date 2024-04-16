@@ -13,6 +13,7 @@ module.exports = (dir, dbKey)=>{
         for(let i in filenames){
           if(filenames[i].split('.').length == 1){
             let obj = await readFile(`${dir}/${filenames[i]}/cmd.json`)
+            if(obj?.cmd?.worker !== dbKey) continue
             if(obj?.cmd?.name && data.cmds.filter(x=>x.cmd.name === obj.cmd.name).length === 0){
               if(obj?.cmd?.options?.length == 0){//has GetSubCommands
                 let subCommands = await getSubCommands(`${dir}/${filenames[i]}`)

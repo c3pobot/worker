@@ -1,13 +1,13 @@
 'use strict'
 const enumTW = require('./enumTWZones')
-const CalcPerfectScore = (maxSquads)=>{
+const calcPerfectScore = (maxSquads)=>{
   const maxDefense = ( ( enumTW.scores.p1.perCharDefSet * maxSquads ) * 8) + ( ( enumTW.scores.p1.perShipDefSet * maxSquads ) * 2)
   const maxClear = ( ( enumTW.scores.p1.clearPerSquadBonus * maxSquads ) * 10) + (enumTW.scores.p1.clearBonus * 7) + (enumTW.scores.p4.clearBonus * 3)
   const maxOffense = ( ( enumTW.scores.p1.perCharSquadMax * maxSquads ) * 8) + ( ( enumTW.scores.p1.perShipSquadMax * maxSquads ) * 2)
   return ( maxDefense + maxClear + maxOffense )
 }
-module.exports = (guildData)=>{
-  const tempObj = {
+module.exports = (guildData = {})=>{
+  let tempObj = {
     homeGuild: guildData.homeGuild.conflictStatus,
     awayGuild: guildData.awayGuild.conflictStatus,
     banners: {

@@ -10,7 +10,9 @@ Cmds.member = require('./member')
 Cmds.preload = require('./preload')
 Cmds.status = require('./status')
 Cmds.stats = require('./stats')
-module.exports = async(obj)=>{
+const { replyError } = require('src/helpers')
+
+module.exports = async(obj = {})=>{
   try{
     let tempCmd, opt = []
     if(obj.data.options){
@@ -21,13 +23,11 @@ module.exports = async(obj)=>{
         }
       }
     }
-    if(tempCmd && Cmds[tempCmd]){
-      await Cmds[tempCmd](obj, opt)
-    }else{
-      HP.ReplyMsg(obj, {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')})
-    }
+    let msg2send = {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')}
+    if(tempCmd && Cmds[tempCmd]) msg2send = await Cmds[tempCmd](obj, opt)
+    return msg2send
   }catch(e){
-    console.log(e)
-    HP.ReplyError(obj)
+    replyError(obj)
+    throw(e)
   }
 }

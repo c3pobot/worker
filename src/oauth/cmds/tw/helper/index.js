@@ -1,18 +1,16 @@
 'use strict'
+const sorter = require('json-array-sorter')
+const numeral = require('numeral')
 const newObj = require('./newTWObj')
 const enumTW = require('./enumTWZones')
-const HomeGuild = require('./homeGuild')
-const AwayGuild = require('./awayGuild')
-const GetTimeTillEnd = require('./timeTillEnd')
-const AdjustPerfectScore = (obj, guild)=>{
+const homeGuild = require('./homeGuild')
+const awayGuild = require('./awayGuild')
+const getTimeTillEnd = require('./timeTillEnd')
+const adjustPerfectScore = (obj, guild)=>{
   const opponent = (guild == 'home' ? 'away' : 'home')
   return obj.banners[guild].perfectScore - (enumTW.scores.p1.perCharSquadMax * +obj.drops[guild].charNotSet) - (enumTW.scores.p1.perShipSquadMax * +obj.drops[guild].shipNotSet) - (enumTW.scores.p1.perShipDefSet * +obj.drops[opponent].shipNotSet) - (enumTW.scores.p1.perCharDefSet * +obj.drops[opponent].charNotSet)
 }
-const CalcUnitDrops = (obj, guild)=>{
-  /*if(guild == 'home'){
-    fs.writeFileSync('/home/node/app/data/cache/twData.json', JSON.stringify(obj))
-  }
-  */
+const calcUnitDrops = (obj, guild)=>{
   if(obj.banners[guild].clear > 0){
     return( obj.banners[guild].perfectScore - obj.banners[guild].finalScore - obj.drops[guild].charBannerDrops -  obj.drops[guild].shipBannerDrops)
   }else{
@@ -37,45 +35,42 @@ const CalcUnitDrops = (obj, guild)=>{
     return ( maxScore - obj.banners[guild].finalScore - obj.drops[guild].charBannerDrops -  obj.drops[guild].shipBannerDrops)
   }
 }
-const GetMaxBattles = (obj)=>{
+const getMaxBattles = (obj)=>{
   return (obj.conflictStatus.reduce((acc, a)=>{
     return acc + a.squadCapacity
   },0))
 }
 module.exports = async(guildData, guildId)=>{
-  try{
-    let status = 'ok'
-    const twData = await newObj(guildData)
-    status = await HomeGuild(twData)
-    status = await AwayGuild(twData)
-    twData.joined = guildData.optedInMember?.map(m => {
-      return Object.assign({}, {
-        playerId: m.memberId,
-        gp: m.power
-      })
+  let twData = newObj(guildData)
+  status = homeGuild(twData)
+  status = awayGuild(twData)
+  twData.joined = guildData.optedInMember?.map(m => {
+    return Object.assign({}, {
+      playerId: m.memberId,
+      gp: m.power
     })
-    twData.currentStat = guildData.currentStat
-    twData.leaders.home = await sorter([{order:"descending", column: "defends"}], twData.leaders.home)
-    twData.leaders.away = await sorter([{order:"descending", column: "defends"}], twData.leaders.away)
-    twData.drops.home.units = await CalcUnitDrops(twData, "home")
-    twData.drops.away.units = await CalcUnitDrops(twData, "away")
-    twData.timeTillEnd = await GetTimeTillEnd(guildData.instanceInfo.instance.find(x=>x.id === guildData.instanceId.split(':')[1]).endTime)
-    twData.maxBattles = await GetMaxBattles(guildData.homeGuild)
-    twData.banners.home.perfectScore = await AdjustPerfectScore(twData, 'home')
-    twData.banners.away.perfectScore = await AdjustPerfectScore(twData, 'away')
-    twData.banners.home.finalScore = numeral(twData.banners.home.finalScore).format("0,0")
-    twData.banners.away.finalScore = numeral(twData.banners.away.finalScore).format("0,0")
-    twData.banners.home.bestScore = numeral(twData.banners.home.bestScore).format("0,0")
-    twData.banners.away.bestScore = numeral(twData.banners.away.bestScore).format("0,0")
-    twData.banners.perfectScore = numeral(twData.banners.perfectScore).format("0,0")
-    twData.banners.home.perfectScore = numeral(twData.banners.home.perfectScore).format('0,0')
-    twData.banners.away.perfectScore = numeral(twData.banners.away.perfectScore).format('0,0')
-    if(status == 'ok'){
-      await mongo.set('twStatusCache', {_id: guildId}, twData)
-      return twData
-    }
-  }catch(e){
-    console.log(e)
-    return ('error')
+  })
+  twData.currentStat = guildData.currentStat
+  twData.leaders.home = sorter([{order:"descending", column: "defends"}], twData.leaders.home)
+  twData.leaders.away = sorter([{order:"descending", column: "defends"}], twData.leaders.away)
+  twData.drops.home.units = calcUnitDrops(twData, "home")
+  twData.drops.away.units = calcUnitDrops(twData, "away")
+  twData.timeTillEnd = getTimeTillEnd(guildData.instanceInfo.instance.find(x=>x.id === guildData.instanceId.split(':')[1]).endTime)
+  twData.maxBattles = getMaxBattles(guildData.homeGuild)
+  twData.banners.home.perfectScore = adjustPerfectScore(twData, 'home')
+  twData.banners.away.perfectScore = adjustPerfectScore(twData, 'away')
+  twData.banners.home.finalScore = numeral(twData.banners.home.finalScore).format("0,0")
+  twData.banners.away.finalScore = numeral(twData.banners.away.finalScore).format("0,0")
+  twData.banners.home.bestScore = numeral(twData.banners.home.bestScore).format("0,0")
+  twData.banners.away.bestScore = numeral(twData.banners.away.bestScore).format("0,0")
+  twData.banners.perfectScore = numeral(twData.banners.perfectScore).format("0,0")
+  twData.banners.home.perfectScore = numeral(twData.banners.home.perfectScore).format('0,0')
+  twData.banners.away.perfectScore = numeral(twData.banners.away.perfectScore).format('0,0')
+  return twData
+  /*
+  if(status == 'ok'){
+    await mongo.set('twStatusCache', {_id: guildId}, twData)
+
   }
+  */
 }

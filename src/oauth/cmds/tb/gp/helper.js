@@ -1,7 +1,8 @@
 'use strict'
+const numeral = require('numeral')
 const Cmds = {}
-Cmds.GetMissingGP = (member, gpDeployed)=>{
-  const tempObj = {
+Cmds.getMissingGP = (member, gpDeployed)=>{
+  let tempObj = {
     name: member.name,
     value: "```autohotkey\n"
   }

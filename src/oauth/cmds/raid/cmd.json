@@ -1,5 +1,6 @@
 {
   "type": "public",
+  "worker": "oauth",
   "cmd": {
     "name": "raid",
     "description": "Show current raid status (requires google link)",

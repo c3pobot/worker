@@ -1,5 +1,6 @@
 {
   "type": "home-guild",
+  "worker": "oauth",
   "cmd": {
     "name": "bronzium",
     "description": "open multiple Bronzium Data Cards (default 100)",

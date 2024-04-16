@@ -14,7 +14,7 @@ module.exports = async(obj = {}, param)=>{
       if(unitArray.length == 1) baseId = unitArray[0].baseId
       if(!baseId && unitArray.length > 1 && unitArray.length < 21){
         unitArray = sorter([{column: 'name', order: 'ascending'}], unitArray)
-        const embedMsg = {
+        let embedMsg = {
           content: 'There were multiple results for **'+ param + '**. Please pick desired unit',
           components: [],
           flags: 64

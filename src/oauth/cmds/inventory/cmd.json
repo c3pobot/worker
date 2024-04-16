@@ -1,5 +1,6 @@
 {
   "type": "public",
+  "worker": "oauth",
   "cmd": {
     "name": "inventory",
     "description": "Show Player inventory (requires google link)",

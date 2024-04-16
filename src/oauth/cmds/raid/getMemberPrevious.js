@@ -1,5 +1,5 @@
 'use strict'
-module.exports = async(raidResult = [], raidId)=>{
+module.exports = (raidResult = [], raidId)=>{
   try{
     if(raidResult.length === 0) return
     let res = {}

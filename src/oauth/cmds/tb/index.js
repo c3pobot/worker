@@ -2,13 +2,13 @@
 const Cmds = {}
 Cmds.gp = require('./gp')
 Cmds.status = require('./status')
-Cmds.watch = require('./watch')
 Cmds.info = require('./info')
 Cmds.platoons = require('./platoons')
 Cmds['platoons-cache'] = require('./platoons-cache')
 Cmds['platoons-export'] = require('./platoons-export')
 Cmds['my-platoons'] = require('./my-platoons')
-module.exports = async(obj)=>{
+const { replyError } = require('src/helpers')
+module.exports = async(obj = {})=>{
   try{
     let tempCmd, opt = []
     if(obj.data.options){

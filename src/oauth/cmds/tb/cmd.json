@@ -1,5 +1,6 @@
 {
   "type": "public",
+  "worker": "oauth",
   "cmd": {
     "name": "tb",
     "description": "tb info",
@@ -263,29 +264,6 @@
                     "value": "alt"
                   }
                 ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": 1,
-        "name": "watch",
-        "description": "(requires synced guild) runs tb status command 15 mins before phase switch",
-        "options": [
-          {
-            "type": 3,
-            "name": "allycode_option",
-            "description": "primary or alt allycode",
-            "required": false,
-            "choices": [
-              {
-                "name": "Primary",
-                "value": "primary"
-              },
-              {
-                "name": "Alt",
-                "value": "alt"
               }
             ]
           }

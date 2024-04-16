@@ -1,5 +1,6 @@
 {
   "type": "public",
+  "worker": "oauth",
   "cmd": {
     "name": "conquest",
     "description": "Show conquest info (requires google/fb link)",

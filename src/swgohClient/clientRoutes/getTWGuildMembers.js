@@ -16,16 +16,12 @@ const getMember = async(playerId, projection)=>{
   }
 }
 module.exports = async(members = [], projection)=>{
-  try{
-    let array = [], res = [], i = members.length
-    const fetchMember = async(playerId, projection)=>{
-      let data = await getMember(playerId, projection)
-      if(data?.playerId) res.push(data)
-    }
-    while(i--) array.push(fetchMember(members[i].playerId, projection))
-    await Promise.all(array)
-    return res
-  }catch(e){
-    throw(e)
+  let array = [], res = [], i = members.length
+  const fetchMember = async(playerId, projection)=>{
+    let data = await getMember(playerId, projection)
+    if(data?.playerId) res.push(data)
   }
+  while(i--) array.push(fetchMember(members[i].playerId, projection))
+  await Promise.all(array)
+  return res
 }

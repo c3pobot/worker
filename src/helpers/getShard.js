@@ -1,6 +1,7 @@
 'use strict'
+const mongo = require('mongoclient')
 const { GetChannel } = require('./discordmsg')
-module.exports = async(obj)=>{
+module.exports = async(obj = {})=>{
   let catId, channel, shard
   if(obj && obj.channel_id) channel = await GetChannel(obj.channel_id)
   if(channel && channel.parent_id) catId = channel.parent_id

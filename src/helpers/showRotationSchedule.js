@@ -13,8 +13,8 @@ module.exports = async(obj, rObj, shardObj, opt)=>{
       }
     }
   }
-  const guildRole = await GetRole(shardObj.sId, rObj.roleId)
-  const guildChannel = await GetChannel(rObj.chId)
+  let guildRole = await GetRole(shardObj.sId, rObj.roleId)
+  let guildChannel = await GetChannel(rObj.chId)
   if(rObj.poOffSet || rObj.poOffSet == 0) timeTillPO = timeTillPayout(rObj.poOffSet, rObj.type)
   msg2send = '>>> **'+rObj.id+'** Rotation Schedule ('+rObj.players.length+')\n'
   msg2send += '```\n'
@@ -35,5 +35,5 @@ module.exports = async(obj, rObj, shardObj, opt)=>{
     }
     msg2send += '```'
   }
-  await replyMsg(obj, {content: msg2send})
+  return msg2send
 }

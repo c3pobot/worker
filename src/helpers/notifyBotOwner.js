@@ -1,10 +1,10 @@
 'use strict'
+const { botSettings } = require('./botSettings')
 const mongo = require('mongoclient')
 const { SendMsg, SendDM } = require('./discordmsg')
 const BOT_OWNER_ID = process.env.BOT_OWNER_ID
 module.exports = async(content)=>{
-  let obj = (await mongo.find('botSettings', {_id: '1'}))[0]
-  if(obj?.reportSId && obj?.reportChId){
+  if(botSettings?.reportSId && botSettings?.reportChId){
     await SendMsg({chId: obj.reportChId}, content)
     return
   }

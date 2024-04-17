@@ -9,8 +9,7 @@ module.exports = (imgs = [], opts = {})=>{
       img.png()
       resolve(img.toBuffer())
     }).catch(e=>{
-      log.error(e)
-      reject()
+      reject(e)
     })
   })
 }

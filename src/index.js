@@ -1,8 +1,9 @@
 'use strict'
 const log = require('logger')
-const SaveSlashCmds = require('./saveSlashCmds')
+const saveSlashCmds = require('./saveSlashCmds')
 const createCmdMap = require('./helpers/createCmdMap')
-const { dataList } = require('.helpers/dataList')
+const { dataList } = require('./helpers/dataList')
+const { botSettings } = require('./helpers/botSettings')
 const cmdQue = require('./cmdQue')
 let workerType = process.env.WORKER_TYPE || 'swgoh'
 const CheckRedis = ()=>{

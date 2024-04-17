@@ -2,11 +2,14 @@
 const Cmds = {}
 Cmds.embedField = require('./embedField')
 
-Cmds.formatGAMods = = require('./formatGAMods')
+Cmds.formatArenaPlayer = require('./formatArenaPlayer')
+Cmds.formatGAMods = require('./formatGAMods')
 Cmds.formatGAOverview = require('./formatGAOverview')
 Cmds.formatGAQuality = require('./formatGAQuality')
 Cmds.formatGARelics = require('./formatGARelics')
 Cmds.formatGAUnitBasic  = require('./formatGAUnitBasic')
+Cmds.formatGuild = require('./formatGuild')
+Cmds.formatPlayer = require('./formatPlayer')
 Cmds.formatPlayerStat = require('./formatPlayerStat')
 Cmds.formatPlayerStats = require('./formatPlayerStats')
 Cmds.formatReportGP = require('./formatReportGP')

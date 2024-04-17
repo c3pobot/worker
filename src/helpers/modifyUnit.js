@@ -6,7 +6,7 @@ const { calcRosterStats } = require('statcalc')
 const modifyUnit = async(uInfo = {}, roster = [], gLevel = null, rLevel = null, rarity = null, calcStats = true)=>{
   if(!uInfo.baseId) return
   let units = [], unit, unitStats
-  const tempUnit = roster.find(x=>x.definitionId.startsWith(uInfo.baseId + ':'))
+  let tempUnit = roster.find(x=>x.definitionId.startsWith(uInfo.baseId + ':'))
   if(tempUnit){
     unit = JSON.parse(JSON.stringify(tempUnit))
     if(gLevel || rLevel || rarity){
@@ -32,9 +32,9 @@ const modifyUnit = async(uInfo = {}, roster = [], gLevel = null, rLevel = null, 
     }
     units.push(unit)
     if(calcStats && uInfo.combatType === 2 && uInfo.crew?.length > 0){
-      const crewInfos = await mongo.find('units', {_id: {$in: uInfo.crew}})
+      let crewInfos = await mongo.find('units', {_id: {$in: uInfo.crew}})
       for(let i in uInfo.crew){
-        const tempCrew = await modifyUnit(crewInfos.find(x=>x._id === uInfo.crew[i]), roster, gLevel, rLevel, rarity, false)
+        let tempCrew = await modifyUnit(crewInfos.find(x=>x._id === uInfo.crew[i]), roster, gLevel, rLevel, rarity, false)
         if(tempCrew) units.push(tempCrew)
       }
     }

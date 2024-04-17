@@ -1,5 +1,4 @@
 'use strict'
-const log = require('logger')
 const mongo = require('mongoclient')
 const Cmds = {}
 const CryptoJS = require('crypto-js')
@@ -11,28 +10,16 @@ const client = new OauthClientWrapper({
   cache_client: process.env.OAUTH_CLIENT_CACHE || false
 })
 const GetRefreshToken = async(uid)=>{
-  try{
-    let refreshToken;
-    let obj = (await mongo.find('tokens', {_id: uid}))[0]
-    if(obj && obj.refreshToken) refreshToken = await Decrypt(obj.refreshToken)
-    return refreshToken
-  }catch(e){
-    log.error(e)
-  }
+  let refreshToken;
+  let obj = (await mongo.find('tokens', {_id: uid}))[0]
+  if(obj && obj.refreshToken) refreshToken = await Decrypt(obj.refreshToken)
+  return refreshToken
 }
 const Decrypt = async(token)=>{
-  try{
-    return await (CryptoJS.AES.decrypt(token, process.env.GOOG_CLIENT_SECRET)).toString(CryptoJS.enc.Utf8)
-  }catch(e){
-    log.error(e)
-  }
+  return await (CryptoJS.AES.decrypt(token, process.env.GOOG_CLIENT_SECRET)).toString(CryptoJS.enc.Utf8)
 }
 const Encrypt = async(token)=>{
-  try{
-    return await (CryptoJS.AES.encrypt(token, process.env.GOOG_CLIENT_SECRET)).toString()
-  }catch(e){
-    log.error(e)
-  }
+  return await (CryptoJS.AES.encrypt(token, process.env.GOOG_CLIENT_SECRET)).toString()
 }
 Cmds.GetAutUrl = async()=>{
   return await client.getUrl()
@@ -46,17 +33,13 @@ Cmds.GetAccessToken = async(uid)=>{
   return accessToken
 }
 Cmds.SaveRefreshToken = async(uid, refreshToken)=>{
-  try{
-    let tempObj = {status: 'errorOccured'}
-    let encryptedToken = await Encrypt(refreshToken)
-    if(encryptedToken){
-      await mongo.set('tokens', {_id: uid}, {refreshToken: encryptedToken})
-      tempObj.status = 'googleLinkComplete'
-    }
-    return tempObj
-  }catch(e){
-    log.error(e)
+  let tempObj = {status: 'errorOccured'}
+  let encryptedToken = await Encrypt(refreshToken)
+  if(encryptedToken){
+    await mongo.set('tokens', {_id: uid}, {refreshToken: encryptedToken})
+    tempObj.status = 'googleLinkComplete'
   }
+  return tempObj
 }
 
 Cmds.NewToken = async(code)=>{

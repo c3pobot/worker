@@ -2,23 +2,19 @@
 const getNeededGear = require('./getNeededGear')
 const getNeededRelicMats =  require('./getNeededRelicMats')
 const getRelicMats = (unit = {}, relicRecipe = [], res = {}, inventory = [])=>{
-  try{
-    let neededRelicMats = getNeededRelicMats([], relicRecipe.filter(x=>(unit.reqRelic - 2) >= x.tier), (unit.relic - 2) || 0, unit.reqRelic - 2)
-    for(let i in neededRelicMats){
-      if(neededRelicMats[i]?.count > 0){
-        if(!res[neededRelicMats[i].id]){
-          res[neededRelicMats[i].id] = JSON.parse(JSON.stringify(neededRelicMats[i]))
-          res[neededRelicMats[i].id].count = 0
-          if(inventory?.length > 0){
-            let item = inventory.find(x=>x.id === neededRelicMats[i].id)
-            if(item?.quantity) res[neededRelicMats[i].id].inventory = item.quantity
-          }
+  let neededRelicMats = getNeededRelicMats([], relicRecipe.filter(x=>(unit.reqRelic - 2) >= x.tier), (unit.relic - 2) || 0, unit.reqRelic - 2)
+  for(let i in neededRelicMats){
+    if(neededRelicMats[i]?.count > 0){
+      if(!res[neededRelicMats[i].id]){
+        res[neededRelicMats[i].id] = JSON.parse(JSON.stringify(neededRelicMats[i]))
+        res[neededRelicMats[i].id].count = 0
+        if(inventory?.length > 0){
+          let item = inventory.find(x=>x.id === neededRelicMats[i].id)
+          if(item?.quantity) res[neededRelicMats[i].id].inventory = item.quantity
         }
-        res[neededRelicMats[i].id].count += neededRelicMats[i].count
       }
+      res[neededRelicMats[i].id].count += neededRelicMats[i].count
     }
-  }catch(e){
-    throw(e);
   }
 }
 const getGear = async(unit, res, inventory = [])=>{

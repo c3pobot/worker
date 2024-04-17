@@ -1,7 +1,7 @@
 'use strict'
 const log = require('logger')
 const queryPlayer = require('./queryPlayer');
-const formatPlayer = require('./format/formatPlayer');
+const { formatPlayer } = require('src/format');
 const { calcRosterStats } = require('src/helper');
 const playerCache = require('../cache/player');
 const guildIdCache = require('../cache/guildId');

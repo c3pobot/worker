@@ -4,7 +4,7 @@ const getGuildId = require('./getGuildId')
 module.exports = async(obj = {}, opt = [], guild)=>{
   let auth, server, guildId
   if(!guild){
-    const pObj = await getGuildId({dId: obj?.member?.user?.id}, {}, opt)
+    let pObj = await getGuildId({dId: obj?.member?.user?.id}, {}, opt)
     if(pObj?.guildId) guildId = pObj?.guildId
   }
   if(guildId) server = (await mongo.find('discordServer', {_id: obj.guild_id}, {admin: 1, guilds: 1}))[0]

@@ -3,15 +3,11 @@ const WEBRENDER_URI = process.env.WEBRENDER_URI
 const path = require('path')
 const fetch = require('node-fetch')
 const parseResponse = async(res)=>{
-  try{
-    if(!res) return
-    if(res.status?.toString().startsWith('5')) throw('Bad status code '+res.status)
-    if(res.status?.toString().startsWith('2')){
-      let arrayBuffer = await res.arrayBuffer()
-      return await Buffer.from(arrayBuffer)
-    }
-  }catch(e){
-    throw(e);
+  if(!res) return
+  if(res.status?.toString().startsWith('5')) throw('Bad status code '+res.status)
+  if(res.status?.toString().startsWith('2')){
+    let arrayBuffer = await res.arrayBuffer()
+    return await Buffer.from(arrayBuffer)
   }
 }
 module.exports = async(html, pKey, width = 80, resizeImg = false)=>{

@@ -6,7 +6,10 @@ const projection = require('./dbProjection')
 const { getOptValue, getGuildId, calcGuildStats, guildReport, getFaction, getUnit } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You do not have your allycode linked to discord id'}, glUnits = []
+  let guildMsg = ''
+  if(obj.confirm?.enemyName && obj.confirm?.enemyId) guildMsg = `${obj.confirm?.enemyName} swgoh.gg link\nhttps://swgoh.gg/g/${obj.confirm?.enemyId}/\n`
+  let msg2send = {content: `${guildMsg}You do not have your allycode linked to discord id`}, glUnits = []
+
   let includeUnits = getOptValue(opt, 'units', true)
 
   let pObj = await getGuildId({dId: obj.member.user.id}, {}, opt)
@@ -27,13 +30,13 @@ module.exports = async(obj = {}, opt = [])=>{
   }
   if(charUnits?.length > 0) charUnits = sorter([{column: 'nameKey', order: 'ascending'}], charUnits)
   if(shipUnits?.length > 0) shipUnits = sorter([{column: 'nameKey', order: 'ascending'}], shipUnits)
-  await replyButton(obj, 'Getting guild data...')
+  await replyButton(obj, `${guildMsg}Getting guild data...`)
   let [ gObj, eObj] = await Promise.all([
     swgohClient.post('fetchTWGuild', { id: pObj.guildId, projection: projection })
     swgohClient.post('fetchTWGuild', { id: enemyId, projection: projection})
   ])
 
-  if(!gObj?.member || !eObj?.member) return { content: 'Error getting guild data...'}
+  if(!gObj?.member || !eObj?.member) return { content: `${guildMsg}Error getting guild data...`}
 
   if(joined?.length > 0) gObj.member = gObj.member.filter(x=>joined.includes(x.playerId))
   calcGuildStats(gObj, gObj.member)
@@ -50,7 +53,7 @@ module.exports = async(obj = {}, opt = [])=>{
       text: "Data Updated"
     }
   }
-  await replyButton(obj, 'Starting the report creation...')
+  await replyButton(obj, `${guildMsg}Starting the report creation...`)
   let repotGP = guildReport.getGP(gObj, eObj)
   let overView = guildReport.getOverview(glUnits, gObj, eObj)
   let twRecord = guildReport.getTWRecord(gObj.recentTerritoryWarResult, eObj.recentTerritoryWarResult)
@@ -72,7 +75,7 @@ module.exports = async(obj = {}, opt = [])=>{
         }
       }
       let count = 0
-      await replyButton(obj, 'Adding GL units to the report ...')
+      await replyButton(obj, `${guildMsg}Adding GL units to the report ...`)
       for(let i in glUnits){
         let uInfo = glUnits[i]
         if(uInfo){
@@ -92,7 +95,7 @@ module.exports = async(obj = {}, opt = [])=>{
     }
   }
   if(includeUnits && charUnits.length > 0){
-    await replyButton(obj, 'Adding character units to the report ...')
+    await replyButton(obj, `${guildMsg}Adding character units to the report ...`)
     let charMsg = {
       color: 15844367,
       timestamp: new Date(gObj.updated),
@@ -124,7 +127,7 @@ module.exports = async(obj = {}, opt = [])=>{
   }
 
   if(includeUnits && shipUnits.length > 0){
-    await replyButton(obj, 'Adding ship units to the report ...')
+    await replyButton(obj, `${guildMsg}Adding ship units to the report ...`)
     let shipMsg = {
       color: 15844367,
       timestamp: new Date(gObj.updated),

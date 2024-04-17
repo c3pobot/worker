@@ -3,6 +3,7 @@ const mongo = require('mongoclient')
 let botSettings = {}, mongoReady = mongo.status(), notify = true
 const update = async()=>{
   try{
+    let syncTime = 5
     if(!mongoReady) mongoReady = mongo.status()
     if(mongoReady){
       let data = (await mongo.find('botSettings', {_id: 1}, {_id: 0, TTL: 0}))[0]
@@ -13,9 +14,10 @@ const update = async()=>{
           notify = false
           log.info(`updated botSettings...`)
         }
+        syncTime = 60
       }
     }
-    setTimeout(update, 60000)
+    setTimeout(update, syncTime * 1000)
   }catch(e){
     log.error(e)
     setTimeout(update, 5000)

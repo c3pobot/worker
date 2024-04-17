@@ -29,35 +29,31 @@ const rows = [
   }
 ]
 module.exports = (obj = {}, loginConfirm)=>{
-  try{
-    let msgComponents = []
-    for(let i in rows){
-      let tempObj = {
-        type: 1,
-        components: []
-      }
-      for(let b in rows[i].buttons){
-        if(rows[i].buttons[b].disabled){
-          tempObj.components.push({
-            type: 2,
-            style: 1,
-            label: 'n/a',
-            disabled: true,
-            custom_id: JSON.stringify({ id: obj.id, zoneId: b})
-          })
-        }else{
-          tempObj.components.push({
-            type: 2,
-            label: rows[i].buttons[b].nameKey,
-            style: 1,
-            custom_id: JSON.stringify({ id: obj.id, zoneId: rows[i].buttons[b].zoneId, response: loginConfirm })
-          })
-        }
-      }
-      msgComponents[rows[i].index] = tempObj
+  let msgComponents = []
+  for(let i in rows){
+    let tempObj = {
+      type: 1,
+      components: []
     }
-    return msgComponents
-  }catch(e){
-    throw(e)
+    for(let b in rows[i].buttons){
+      if(rows[i].buttons[b].disabled){
+        tempObj.components.push({
+          type: 2,
+          style: 1,
+          label: 'n/a',
+          disabled: true,
+          custom_id: JSON.stringify({ id: obj.id, zoneId: b})
+        })
+      }else{
+        tempObj.components.push({
+          type: 2,
+          label: rows[i].buttons[b].nameKey,
+          style: 1,
+          custom_id: JSON.stringify({ id: obj.id, zoneId: rows[i].buttons[b].zoneId, response: loginConfirm })
+        })
+      }
+    }
+    msgComponents[rows[i].index] = tempObj
   }
+  return msgComponents
 }

@@ -1,3 +1,4 @@
+'use strict'
 module.exports = {
   tw_jakku01_phase01_conflict01: "T1",
   tw_jakku01_phase02_conflict01: 'T2',

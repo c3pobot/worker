@@ -1,4 +1,5 @@
 'use strict'
+const numeral = require('numeral')
 const enumTW = require('./enumTWZones')
 const calcPerfectScore = (maxSquads)=>{
   const maxDefense = ( ( enumTW.scores.p1.perCharDefSet * maxSquads ) * 8) + ( ( enumTW.scores.p1.perShipDefSet * maxSquads ) * 2)
@@ -11,9 +12,9 @@ module.exports = (guildData = {})=>{
     homeGuild: guildData.homeGuild.conflictStatus,
     awayGuild: guildData.awayGuild.conflictStatus,
     banners: {
-      perfectScore: CalcPerfectScore(guildData.homeGuild.conflictStatus[0].squadCapacity),
+      perfectScore: calcPerfectScore(guildData.homeGuild.conflictStatus[0].squadCapacity),
       home: {
-        perfectScore: CalcPerfectScore(guildData.homeGuild.conflictStatus[0].squadCapacity),
+        perfectScore: calcPerfectScore(guildData.homeGuild.conflictStatus[0].squadCapacity),
         name: guildData.homeGuild.profile.name,
         guildId: guildData.homeGuild.profile.id,
         gp: numeral(parseInt(guildData.homeGuild.profile.guildGalacticPower)).format("0,0"),
@@ -25,7 +26,7 @@ module.exports = (guildData = {})=>{
         clear: 1,
       },
       away: {
-        perfectScore: CalcPerfectScore(guildData.awayGuild.conflictStatus[0].squadCapacity),
+        perfectScore: calcPerfectScore(guildData.awayGuild.conflictStatus[0].squadCapacity),
         name: guildData.awayGuild.profile.name,
         guildId: guildData.awayGuild.profile.id,
         gp: numeral(parseInt(guildData.awayGuild.profile.guildGalacticPower)).format("0,0"),

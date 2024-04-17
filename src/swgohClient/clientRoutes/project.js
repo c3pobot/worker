@@ -30,11 +30,11 @@ function project(source, projection) {
       // assume this is a top level source, nested array projections not really supported
 
     } else {
-      const keys = Object.keys(projection);
+      let keys = Object.keys(projection);
       if (keys.length > 0) {
         for (let projectKey of keys) {
-          const sourceValue = source[projectKey];
-          const projectValue = projection[projectKey];
+          let sourceValue = source[projectKey];
+          let projectValue = projection[projectKey];
 
           // handle nested projections
           if (isTruthyObject(sourceValue) && isTruthyObject(projectValue)) {

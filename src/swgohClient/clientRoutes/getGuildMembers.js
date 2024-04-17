@@ -1,24 +1,35 @@
 'use strict'
 const getPlayer = require('./getPlayer');
 const cache = require('../cache/player');
+const maxRetry = 6
 
+const filterMembers = (all = [], found = [])=>{
+  if(found?.length === 0) return all
+  let foundIds = found?.map(x=>x.playerId);
+  return all.filter(x=>!foundIds.includes(x.playerId));
+}
 const getMember = async(playerId, projection)=>{
-  try{
-    let data = await cache.get('playerCache', playerId, null, projection)
-    if(!data) data = await getPlayer({ playerId: playerId }, { collection: 'playerCache', projection: projection }, false)
-    return data
-  }catch(e){
-    throw(e)
-  }
+  let data = await cache.get('playerCache', playerId, null, projection)
+  if(!data) data = await getPlayer({ playerId: playerId }, { collection: 'playerCache', projection: projection }, false)
+  return data
+}
+
+const getMembers = async(members = [], projection)=>{
+  let array = [], i = members.length
+  while(i--) array.push(getMember(members[i].playerId, projection))
+  let res = await Promise.allSettled(array)
+  return res?.filter(x=>x?.value?.playerId)?.map(x=>x.value)
 }
 
 module.exports = async(members = [], projection)=>{
-  let array = [], res = [], i = members.length
-  const fetchMember = async(playerId, projection)=>{
-    let data = await getMember(playerId, projection)
-    if(data?.playerId) res.push(data)
+  let count = 0, res = []
+  while(count < maxRetry){
+    let tempMembers = filterMembers(members, res)
+    let tempRes = await getMembers(tempMembers, projection)
+    if(tempRes?.length === members?.length) return tempRes
+    if(tempRes?.length > 0) res = res.concat(tempRes)
+    if(res?.length === members?.length) break;
+    count++
   }
-  while(i--) array.push(fetchMember(members[i].playerId, projection))
-  await Promise.all(array)
   return res
 }

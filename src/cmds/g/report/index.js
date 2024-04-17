@@ -1,6 +1,6 @@
 'use strict'
 const mongo = require('mongoclient')
-const { getGuildId, fetchGuild, getOptValue, getPlayerAC } = require('src/helpers')
+const { getGuildId, fetchGuild, getOptValue, getPlayerAC, dbProjection } = require('src/helpers')
 const sorter = require('json-array-sorter')
 const { formatReportGP, formatReportGuild, formatTWRecord, formatReportUnit } = require('src/format')
 
@@ -19,7 +19,7 @@ module.exports = async(obj = {}, opt = [])=>{
   }
   if(guildId){
     msg2send.content = 'Error getting guild info'
-    gObj = await fetchGuild({token: obj.token, id: guildId, projection: HP.dbProjection.guildReport})
+    gObj = await fetchGuild({token: obj.token, id: guildId, projection: dbProjection.guildReport})
   }
   if(gObj){
     let tempGl = (await mongo.find('factions', {_id: 'galactic_legend'}))[0]

@@ -1,12 +1,8 @@
 'use strict'
-const calcGuildStats = require('./calcGuildStats')
+const { calcGuildStats } = require('src/helpers')
 module.exports = (obj, members = [])=>{
-  try{
-    obj.updated = Date.now()
-    obj.id = obj.profile.id
-    obj.name = obj.profile.name
-    calcGuildStats(obj, members)
-  }catch(e){
-    throw(e);
-  }
+  obj.updated = Date.now()
+  obj.id = obj.profile.id
+  obj.name = obj.profile.name
+  calcGuildStats(obj, members)
 }

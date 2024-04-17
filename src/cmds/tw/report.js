@@ -2,8 +2,7 @@
 const mongo = require('mongoclient')
 const sorter = require('json-array-sorter')
 const swgohClient = require('src/swgohClient')
-const projection = require('./dbProjection')
-const { getOptValue, getGuildId, calcGuildStats, guildReport, getFaction, getUnit } = require('src/helpers')
+const { getOptValue, getGuildId, calcGuildStats, guildReport, getFaction, getUnit, dbProjection } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
   let guildMsg = ''
@@ -32,8 +31,8 @@ module.exports = async(obj = {}, opt = [])=>{
   if(shipUnits?.length > 0) shipUnits = sorter([{column: 'nameKey', order: 'ascending'}], shipUnits)
   await replyButton(obj, `${guildMsg}Getting guild data...`)
   let [ gObj, eObj] = await Promise.all([
-    swgohClient.post('fetchTWGuild', { id: pObj.guildId, projection: projection })
-    swgohClient.post('fetchTWGuild', { id: enemyId, projection: projection})
+    swgohClient.post('fetchTWGuild', { id: pObj.guildId, projection: dbProjection.guildReport })
+    swgohClient.post('fetchTWGuild', { id: enemyId, projection: dbProjection.guildReport})
   ])
 
   if(!gObj?.member || !eObj?.member) return { content: `${guildMsg}Error getting guild data...`}

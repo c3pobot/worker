@@ -1,7 +1,7 @@
 'use strict'
 const sorter = require('json-array-sorter')
-const getAbilityType = require('helpers/getAbilityType')
-module.exports = async(unit = {}, uInfo = {})=>{
+const getAbilityType = require('src/helpers/getAbilityType')
+module.exports = (unit = {}, uInfo = {})=>{
   try{
     let res = []
     if(unit?.purchasedAbilityId?.length > 0){

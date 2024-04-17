@@ -138,5 +138,6 @@
         "description": "set primary/alt allyCode"
       }
     ]
-  }
+  },
+  "worker": "swgoh"
 }

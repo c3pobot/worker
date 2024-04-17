@@ -101,7 +101,7 @@
             "type": 1,
             "name": "settings",
             "description": "change settings for guild auto ticket check",
-            "options":[
+            "options": [
               {
                 "type": 4,
                 "name": "status",
@@ -287,5 +287,6 @@
         ]
       }
     ]
-  }
+  },
+  "worker": "swgoh"
 }

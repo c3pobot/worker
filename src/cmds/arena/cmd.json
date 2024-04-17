@@ -118,7 +118,7 @@
             "name": "option",
             "description": "add or remove",
             "required": true,
-            "choices":[
+            "choices": [
               {
                 "name": "add",
                 "value": "add"
@@ -207,5 +207,6 @@
         ]
       }
     ]
-  }
+  },
+  "worker": "swgoh"
 }

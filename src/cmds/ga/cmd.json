@@ -4,5 +4,6 @@
     "name": "ga",
     "description": "ga matchup info",
     "options": []
-  }
+  },
+  "worker": "swgoh"
 }

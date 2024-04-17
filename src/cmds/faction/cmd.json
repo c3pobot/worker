@@ -8,7 +8,7 @@
         "type": 1,
         "name": "basic",
         "description": "Player basic faction query",
-        "options":[
+        "options": [
           {
             "type": 3,
             "name": "faction",
@@ -73,7 +73,7 @@
         "type": 1,
         "name": "stats",
         "description": "Player faction stats query",
-        "options":[
+        "options": [
           {
             "type": 3,
             "name": "faction",
@@ -138,7 +138,7 @@
         "type": 1,
         "name": "compare",
         "description": "compare your faction units to another players",
-        "options":[
+        "options": [
           {
             "type": 3,
             "name": "faction",
@@ -200,5 +200,6 @@
         ]
       }
     ]
-  }
+  },
+  "worker": "swgoh"
 }

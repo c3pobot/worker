@@ -3,5 +3,6 @@
   "cmd": {
     "name": "events",
     "description": "Get schedule of events"
-  }
+  },
+  "worker": "swgoh"
 }

@@ -13,7 +13,7 @@
             "type": 1,
             "name": "show",
             "description": "Shows the rotation schedule(s)",
-            "options":[
+            "options": [
               {
                 "type": 3,
                 "name": "schedule",
@@ -26,7 +26,7 @@
             "type": 1,
             "name": "set",
             "description": "add/edit Rotation schedule",
-            "options":[
+            "options": [
               {
                 "type": 3,
                 "name": "schedule",
@@ -113,7 +113,7 @@
             "type": 1,
             "name": "advance",
             "description": "Advances a rotation schedule",
-            "options":[
+            "options": [
               {
                 "type": 3,
                 "name": "schedule",
@@ -126,7 +126,7 @@
             "type": 1,
             "name": "send",
             "description": "Manual send of the rotation schedule",
-            "options":[
+            "options": [
               {
                 "type": 3,
                 "name": "schedule",
@@ -152,7 +152,7 @@
             "type": 1,
             "name": "remove",
             "description": "remove player from schedule",
-            "options":[
+            "options": [
               {
                 "type": 3,
                 "name": "schedule",
@@ -351,12 +351,13 @@
                 "name": "rank",
                 "description": "rank threshold to start reporting",
                 "required": false
-              },{
+              },
+              {
                 "type": 3,
                 "name": "direction",
                 "description": "Movement direction to report on",
                 "required": false,
-                "choices":[
+                "choices": [
                   {
                     "name": "both",
                     "value": "both"
@@ -444,7 +445,8 @@
                 "name": "modify",
                 "description": "enable/disable allowing anyone to add/edit shard players",
                 "required": false,
-                "choices": [{
+                "choices": [
+                  {
                     "name": "enable",
                     "value": 1
                   },
@@ -466,7 +468,8 @@
                 "name": "sort",
                 "description": "Changes the payout report sort",
                 "required": false,
-                "choices": [{
+                "choices": [
+                  {
                     "name": "ascending",
                     "value": "ascending"
                   },
@@ -481,7 +484,8 @@
                 "name": "group-sort",
                 "description": "change the sort order for players grouped in po time",
                 "required": false,
-                "choices": [{
+                "choices": [
+                  {
                     "name": "name",
                     "value": "name"
                   },
@@ -508,7 +512,8 @@
                 "name": "sort",
                 "description": "Changes the rank report sort",
                 "required": false,
-                "choices": [{
+                "choices": [
+                  {
                     "name": "ascending",
                     "value": "ascending"
                   },
@@ -674,5 +679,6 @@
         ]
       }
     ]
-  }
+  },
+  "worker": "swgoh"
 }

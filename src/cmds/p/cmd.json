@@ -4,5 +4,6 @@
     "name": "p",
     "description": "Bot Player Commands",
     "options": []
-  }
+  },
+  "worker": "swgoh"
 }

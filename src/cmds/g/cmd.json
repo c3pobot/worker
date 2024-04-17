@@ -1,8 +1,9 @@
 {
   "type": "public",
   "cmd": {
-    "name":"g",
+    "name": "g",
     "description": "Bot guild commands",
     "options": []
-  }
+  },
+  "worker": "swgoh"
 }

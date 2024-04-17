@@ -15,14 +15,16 @@
             "description": "type of shard to add",
             "default": false,
             "required": true,
-            "choices": [{
-                "name" : "char",
-                "value" : "char"
+            "choices": [
+              {
+                "name": "char",
+                "value": "char"
               },
               {
-                "name" : "ship",
-                "value" : "ship"
-              }]
+                "name": "ship",
+                "value": "ship"
+              }
+            ]
           },
           {
             "type": 6,
@@ -88,10 +90,11 @@
             "type": 3,
             "name": "shardid",
             "description": "old shardid",
-            "required" : true
+            "required": true
           }
         ]
       }
     ]
-  }
+  },
+  "worker": "swgoh"
 }

@@ -47,5 +47,6 @@
         "description": "clear user settings"
       }
     ]
-  }
+  },
+  "worker": "swgoh"
 }

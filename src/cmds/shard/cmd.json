@@ -3,7 +3,8 @@
   "cmd": {
     "name": "shard",
     "description": "Shard Commands",
-    "options": [{
+    "options": [
+      {
         "type": 1,
         "name": "payouts",
         "description": "Shows po list"
@@ -27,7 +28,8 @@
             "type": 1,
             "name": "add",
             "description": "add a player to the shard list",
-            "options": [{
+            "options": [
+              {
                 "type": 3,
                 "name": "allycode",
                 "description": "AllyCode of player to add",
@@ -47,19 +49,22 @@
             "type": 1,
             "name": "discord",
             "description": "links your discordId to allyCode for shard notifications",
-            "options": [{
-              "type": 3,
-              "name": "allycode",
-              "description": "Your allyCode to link to your discord Id for notifications",
-              "default": false,
-              "required": true
-            }]
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode",
+                "description": "Your allyCode to link to your discord Id for notifications",
+                "default": false,
+                "required": true
+              }
+            ]
           },
           {
             "type": 1,
             "name": "edit",
             "description": "edit shard player",
-            "options": [{
+            "options": [
+              {
                 "type": 3,
                 "name": "allycode",
                 "description": "allyCode of player to edit",
@@ -79,49 +84,57 @@
             "type": 1,
             "name": "find",
             "description": "returns list of all the players allyCodes in the guild with player of provided allyCode",
-            "options": [{
-              "type": 3,
-              "name": "allycode",
-              "description": "allyCode of player whose guild you want to look up",
-              "default": false,
-              "required": true
-            }]
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode",
+                "description": "allyCode of player whose guild you want to look up",
+                "default": false,
+                "required": true
+              }
+            ]
           },
           {
             "type": 1,
             "name": "watch",
             "description": "sets notification for when player at provided rank moves",
-            "options": [{
-              "type": 4,
-              "name": "rank",
-              "description": "rank to watch",
-              "default": false,
-              "required": true
-            }]
+            "options": [
+              {
+                "type": 4,
+                "name": "rank",
+                "description": "rank to watch",
+                "default": false,
+                "required": true
+              }
+            ]
           },
           {
             "type": 1,
             "name": "unwatch",
             "description": "Removes rank watch. If no rank is provided will remove all rank watches",
-            "options": [{
-              "type": 4,
-              "name": "rank",
-              "description": "rank to unwatch",
-              "default": false,
-              "required": false
-            }]
+            "options": [
+              {
+                "type": 4,
+                "name": "rank",
+                "description": "rank to unwatch",
+                "default": false,
+                "required": false
+              }
+            ]
           },
           {
             "type": 1,
             "name": "import",
             "description": "import top 50 of shard (requires google/fb linked to account)",
-            "options": [{
-              "type": 3,
-              "name": "emoji",
-              "description": "default emoji for new players",
-              "default": false,
-              "required": false
-            }]
+            "options": [
+              {
+                "type": 3,
+                "name": "emoji",
+                "description": "default emoji for new players",
+                "default": false,
+                "required": false
+              }
+            ]
           },
           {
             "type": 1,
@@ -132,13 +145,15 @@
             "type": 1,
             "name": "notify",
             "description": "sets up notifications for yourself",
-            "options": [{
+            "options": [
+              {
                 "type": 3,
                 "name": "status",
                 "description": "turn notification on or off or set destination",
                 "default": false,
                 "required": false,
-                "choices": [{
+                "choices": [
+                  {
                     "name": "on",
                     "value": "1"
                   },
@@ -169,7 +184,8 @@
                 "description": "enable/disable payout notifications",
                 "default": false,
                 "required": false,
-                "choices": [{
+                "choices": [
+                  {
                     "name": "on",
                     "value": 1
                   },
@@ -185,7 +201,8 @@
                 "description": "enable or disable alternate arena notifications",
                 "default": false,
                 "required": false,
-                "choices": [{
+                "choices": [
+                  {
                     "name": "on",
                     "value": 1
                   },
@@ -201,31 +218,36 @@
             "type": 1,
             "name": "remove",
             "description": "remove player from the shard list",
-            "options": [{
-              "type": 3,
-              "name": "allycode",
-              "description": "allyCode of player to remove",
-              "default": false,
-              "required": true
-            }]
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode",
+                "description": "allyCode of player to remove",
+                "default": false,
+                "required": true
+              }
+            ]
           },
           {
             "type": 1,
             "name": "rotation",
             "description": "Shows payout rotation schedule(s)",
-            "options": [{
-              "type": 3,
-              "name": "schedule",
-              "description": "name of schedule to look up",
-              "default": false,
-              "required": false
-            }]
+            "options": [
+              {
+                "type": 3,
+                "name": "schedule",
+                "description": "name of schedule to look up",
+                "default": false,
+                "required": false
+              }
+            ]
           },
           {
             "type": 1,
             "name": "status",
             "description": "shows player info",
-            "options": [{
+            "options": [
+              {
                 "type": 3,
                 "name": "allycode",
                 "description": "allyCode of player to look up",
@@ -249,5 +271,6 @@
         "description": "Shows shard info"
       }
     ]
-  }
+  },
+  "worker": "swgoh"
 }

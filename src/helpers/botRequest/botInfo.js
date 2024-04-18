@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const mqtt = require('../mqtt');
 const BOT_NAMESPACE = process.env.BOT_NAMESPACE || 'default', BOT_SET_NAME = process.env.BOT_SET_NAME || 'bot', BOT_SVC = process.env.BOT_SVC || 'bot', BOT_SVC_PORT = process.env.BOT_SVC_PORT || 3000
 let botTopic = `k8-status/statefulset/${BOT_NAMESPACE}/${BOT_SET_NAME}`, NUM_SHARDS = 0

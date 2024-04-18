@@ -3,7 +3,7 @@ const mqtt = require('mqtt')
 const log = require('logger')
 const MQTT_HOST = process.env.MQTT_HOST || 'mqtt-broker.datastore'
 const MQTT_PORT = process.env.MQTT_PORT || '1883'
-const POD_NAME = process.env.POD_NAME || 'bot'
+const POD_NAME = process.env.POD_NAME || 'worker'
 let clientReady, connectMsg
 let connectOptions = {
   clientId: `${POD_NAME}`,

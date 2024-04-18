@@ -6,7 +6,7 @@ const { getOptValue } = require('src/helpers')
 
 module.exports = async(obj = {}, shard = {}, opt = [])=>{
   let msg2send = {content: 'There are no stats available'}
-  let show = getOptValue(opt, 'stat'. 'all')
+  let show = getOptValue(opt, 'stat', 'all')
   let stats = await mongo.find('shardHitList', {shardId: shard._id})
   if(stats?.length > 0){
     let players = await mongo.find('shardPlayers', {shardId: shard._id})

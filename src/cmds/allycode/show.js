@@ -1,6 +1,6 @@
 'use strict'
 const mongo = require('mongoclient')
-const { getOptValue } = require()
+const { getOptValue } = require('src/helpers')
 module.exports = async(obj = {}, opt = [])=>{
   let msg2send = {content: 'That user does not have allyCode linked to discord id'}, username
   let dId = getOptValue(opt, 'user')

@@ -4,7 +4,7 @@ const { getOptValue } = require('src/helpers')
 const show = require('./show')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let settings = {}, dObj, msg2send = {content: 'Error running the command'}
+  let msg2send = {content: 'Error running the command'}
   let dId = obj.member.user.id
   let type = getOptValue(opt, 'type', 'ga')
   let dObj = (await mongo.find('discordId', {_id: obj.member.user.id}))[0]

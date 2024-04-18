@@ -5,7 +5,7 @@ const sorter = require('json-array-sorter')
 const { formatReportGP, formatReportGuild, formatTWRecord, formatReportUnit } = require('src/format')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You do not have allyCode linked to discordId'}, guildId, pObj, gObj, charUnits = [], shipUnits = [], glUnits = []
+  let msg2send = {content: 'You do not have allyCode linked to discordId'}, guildId, gObj, charUnits = [], shipUnits = [], glUnits = []
 
   let includeUnits = getOptValue(opt, 'units', false)
   let allyObj = await getPlayerAC(obj, opt)

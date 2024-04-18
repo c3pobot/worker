@@ -6,7 +6,7 @@ const swgohClient = require('src/swgohClient')
 const { getDiscordAC, replyButton, replyTokenError  } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'Your allyCode is not linked to your discord id'}, loginConfirm, pObj, gaLB gaInfo
+  let msg2send = {content: 'Your allyCode is not linked to your discord id'}, loginConfirm, pObj, gaLB, gaInfo
   if(obj.confirm?.response) loginConfirm = obj.confirm.response
   let dObj = await getDiscordAC(obj.member.user.id, opt)
   if(dObj && dObj.allyCode){

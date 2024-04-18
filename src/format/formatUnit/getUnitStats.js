@@ -1,5 +1,5 @@
 'use strict'
-const { reqStats, gearColors, relicStats } = require('helpers/enum')
+const { reqStats, gearColors, relicStats } = require('src/helpers/enum')
 const numeral = require('numeral')
 module.exports = (stats, combatType)=>{
   try{

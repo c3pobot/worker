@@ -1,5 +1,5 @@
 'use strict'
-const { calcGuildStats } = require('./helpers')
+const calcGuildStats = require('src/helpers/calcGuildStats')
 module.exports = (obj = {}, members = [])=>{
   obj.updated = Date.now()
   obj.id = obj.profile.id

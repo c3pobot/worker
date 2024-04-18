@@ -1,8 +1,6 @@
 'use strict'
 const log = require('logger')
 const fetch = require('./fetch')
-
-const { getGuildShardId } = require('../getGuildShardId')
 const { getPodName, getNumShards } = require('./botInfo')
 let BOT_SVC = process.env.BOT_SVC || 'bot', BOT_SVC_PORT = process.env.BOT_SVC_PORT || 3000, BOT_SET_NAME = process.env.BOT_SET_NAME, BOT_NAMESPACE = process.env.BOT_NAME
 

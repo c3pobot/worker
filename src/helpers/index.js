@@ -80,6 +80,6 @@ Cmds.sendMessages = require('./sendMessages')
 Cmds.showRotationSchedule = require('./showRotationSchedule')
 Cmds.squads = require('./squads')
 
-Cmd.timeTillPayout = require('./timeTillPayout')
+Cmds.timeTillPayout = require('./timeTillPayout')
 Cmds.truncateString = require('./truncateString')
 module.exports = Cmds

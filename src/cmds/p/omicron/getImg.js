@@ -4,8 +4,8 @@ const sorter = require('json-array-sorter')
 const getOmiUnits = require('./getOmiUnits')
 const getHTML = require('webimg').omicron
 const omiFilter = require('./omiFilter')
-const enumOmicron = require('./enum')
-const { enum, getOptValue, getImg  } = require('src/helpers')
+const Enums = require('src/helpers/enum')
+const { getOptValue, getImg  } = require('src/helpers')
 
 module.exports = async(pObj = {}, opt = [])=>{
   try{
@@ -17,7 +17,7 @@ module.exports = async(pObj = {}, opt = [])=>{
     }
     let omiData = await mongo.find('omicronList', {})
     if(omiFilter){
-      res.content = 'There are no **'+enum?.omicron[omiType]+'** omicron(s) stored in the DB'
+      res.content = 'There are no **'+Enums?.omicron[omiType]+'** omicron(s) stored in the DB'
       omiData = omiData.filter(omiFilter)
     }
     if(omiData?.length > 0){

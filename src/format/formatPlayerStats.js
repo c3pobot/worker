@@ -1,7 +1,7 @@
 'use strict'
 const formatPlayerStat = require('./formatPlayerStat')
 const sorter = require('json-array-sorter')
-module.exports = = async(roster = [], statInfo = {}, sort = 'mod')=>{
+module.exports = async(roster = [], statInfo = {}, sort = 'mod')=>{
   let res = []
   for(let i in roster){
     if(roster[i]?.stats){

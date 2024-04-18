@@ -3,7 +3,7 @@ const { getOptValue, getGuildId, fetchGuild, getPlayerAC } = require('src/helper
 const sorter = require('json-array-sorter')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You do not have allyCode linked to discord'}, pObj, allyCode guildId, gObj, gLevel = 13, rLevel = 0, order ='ascending', dId = obj.member?.user?.id
+  let msg2send = {content: 'You do not have allyCode linked to discord'}, pObj, allyCode, gObj, gLevel = 13, rLevel = 0, order ='ascending', dId = obj.member?.user?.id
   let allyObj = await getPlayerAC(obj, opt)
   if(allyObj?.mentionError) msg2send.content = 'that user does not have allyCode linked to discordId'
   if(allyObj?.allyCode) allyCode = allyObj.allyCode

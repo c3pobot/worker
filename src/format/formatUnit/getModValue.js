@@ -1,6 +1,6 @@
 'use strict'
 const numeral = require('numeral')
-const { pct } = require('helpers/enum')
+const { pct } = require('src/helpers/enum')
 module.exports = (statId, value)=>{
   try{
     let newValue

@@ -1,7 +1,7 @@
 'use strict'
 const mongo = require('mongoclient')
 const { getOptValue, createIntialMessage } = require('src/helpers')
-const { GetChannel } = require('src/helpers/dicordmsg')
+const { GetChannel } = require('src/helpers/discordmsg')
 
 module.exports = async(obj = {}, shard = {}, opt = [])=>{
   let msg2send = {content: ""}, payload, payChannel

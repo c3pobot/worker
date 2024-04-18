@@ -1,5 +1,5 @@
 'use strict'
-const mongo = require('mongo')
+const mongo = require('mongoclient')
 const numeral = require('numeral')
 const swgohClient = require('src/swgohClient')
 const redis = require('redisclient')
@@ -40,7 +40,7 @@ const createMissedMsg = (gObj, cache)=>{
     }
     return embedMsg
 }
-const { checkGuildAdmin, getGuildId, createMissedMsg } = require('src/helpers')
+const { checkGuildAdmin, getGuildId } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
   let msg2send = {content: 'This command is only available to guild admins'}, redisCache = 0

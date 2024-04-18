@@ -1,6 +1,6 @@
 const log = require('logger');
-const arrayToObject = require('helpers/arrayToObject')
-const mqtt = require('helpers/mqtt');
+const arrayToObject = require('src/helpers/arrayToObject')
+const mqtt = require('src/helpers/mqtt');
 const mongo = require('mongoclient');
 const statCalc = require('statcalc');
 let dataList = {
@@ -35,14 +35,14 @@ const updateFactionList = async()=>{
 const update = async()=>{
   try{
     let obj = (await mongo.find('botSettings', {_id: 'gameData'}))[0]
-    if(obj?.data && (obj?.version === currentGameVersion || !currentGameVersion)){
+    if(obj?.data && (obj?.version === dataList?.gameVersion || !dataList?.gameVersion)){
       let status = statCalc.setGameData(obj.data)
       if(status) status = await updateUnitsList()
       if(status) status = await updateFactionList()
       if(status){
         dataList.gameVersion = obj.version
         dataList.gameData = obj.data
-        log.info(`gameData set to ${currentGameVersion}`)
+        log.info(`gameData set to ${dataList?.gameVersion}`)
         return
       }
       setTimeout(update, 5000)

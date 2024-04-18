@@ -5,7 +5,7 @@ const { getOptValue, findUnit } = require('src/helpers')
 const { formatUnit } = require('src/format')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let uInfo, gLevel1 = 13, rLevel1 = botSettings.maxRelic || 10, gLevel2 = 13, rLevel2 = botSettings.maxRelic || 10, webUnit1, webUnit2, webData, unitImage
+  let gLevel1 = 13, rLevel1 = botSettings.maxRelic || 10, gLevel2 = 13, rLevel2 = botSettings.maxRelic || 10, webData, unitImage
   let msg2send = {content: 'unit not provided'}
   let unit = getOptValue(opt, 'unit')?.toString()?.trim()
   if(!unit) return msg2send
@@ -30,8 +30,8 @@ module.exports = async(obj = {}, opt = [])=>{
   if(!uInfo) return msg2send
   await replyButton(obj, 'Getting info for **'+uInfo.nameKey+'** ...')
   msg2send.content = 'Error calculating stats'
-  webUnit1 = await getFakeUnit(uInfo, gLevel1, rLevel1, rarity, true)
-  webUnit2 = await getFakeUnit(uInfo, gLevel2, rLevel2, rarity, true)
+  let webUnit1 = await getFakeUnit(uInfo, gLevel1, rLevel1, rarity, true)
+  let webUnit2 = await getFakeUnit(uInfo, gLevel2, rLevel2, rarity, true)
   if(webUnit1) webUnit1 = await formatUnit(uInfo, webUnit1)
   if(webUnit2) webUnit2 = await formatUnit(uInfo, webUnit2)
   if(webUnit1 && webUnit2){

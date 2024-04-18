@@ -14,13 +14,20 @@
   "dependencies": {
     "crypto-js": "^4.1.1",
     "express": "^4.19.2",
+    "form-data": "^4.0.0",
     "google-auth-library": "^9.7.0",
+    "join-images": "^1.1.5",
     "json-array-sorter": "^0.0.5",
     "json2xls": "^0.1.2",
+    "logger": "github:c3pobot/logger",
+    "mongoclient": "github:c3pobot/mongoclient",
     "mqtt": "^5.5.2",
     "node-fetch": "^2.6.7",
     "numeral": "^2.0.6",
     "rabbitmq-client": "^4.5.3",
-    "uuid": "^9.0.1"
+    "redisclient": "github:c3pobot/redisclient",
+    "statcalc": "github:c3pobot/statcalc",
+    "uuid": "^9.0.1",
+    "webimg": "github:c3pobot/webimg"
   }
 }

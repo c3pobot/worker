@@ -1,5 +1,5 @@
 'use strict'
-const mongo = require('mongo')
+const mongo = require('mongoclient')
 const { buttonPick, getOptValue } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
 

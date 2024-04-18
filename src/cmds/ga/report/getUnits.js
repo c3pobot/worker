@@ -2,7 +2,7 @@
 const mongo = require('mongoclient')
 const { formatGAUnitBasic } = require('src/format')
 
-module.exports = async(pObj = {}, eObj = {}, units = [], msg2send = { embeds = [] }, type)=>{
+module.exports = async(pObj = {}, eObj = {}, units = [], msg2send = { embeds: [] }, type)=>{
   let unitMsg = {
     color: 15844367,
     timestamp: new Date(eObj.updated),

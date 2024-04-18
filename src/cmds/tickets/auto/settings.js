@@ -1,7 +1,7 @@
 'use strict'
 const mongo = require('mongoclient')
 const { show } = require('./helper')
-const { checkGuildAdmin. getOptValue, getGuildId } = require('src/helpers')
+const { checkGuildAdmin, getOptValue, getGuildId } = require('src/helpers')
 const { GetChannel } = require('src/helpers/discordmsg')
 const swgohClient = require('src/swgohClient')
 

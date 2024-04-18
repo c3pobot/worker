@@ -4,7 +4,7 @@ const { GetChannel } = require('src/helpers/discordmsg')
 const { getOptValue, buttonPick, getGuildName } = require('src/helpers')
 
 module.exports = async(obj = {}, patreon = {}, opt = [])=>{
-  let guildId, gObj, chId, channelPerm = 1, msg2send = {content: 'You do not have any guilds configured'}
+  let guildId, gObj, channelPerm = 1, msg2send = {content: 'You do not have any guilds configured'}
   let chId = getOptValue(opt, 'channel')
   if(patreon.guilds?.length > 0){
     if(obj.confirm?.guildId) guildId = obj.confirm.guildId

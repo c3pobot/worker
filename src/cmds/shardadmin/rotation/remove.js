@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 const { getOptValue } = require('src/helpers')
 
 module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  let schedule, msg2send = {content: 'that player is not part of the rot schedule'}, playerName, dId, allyCode, player
+  let msg2send = {content: 'that player is not part of the rot schedule'}, dId, allyCode, player
   let schedule = getOptValue(opt, 'schedule')?.toUpperCase()
   if(!schedule) return { content: 'you did not provide a rotation schedule name'}
   let rots = (await mongo.find('shardRotations', {_id: shard._id}))[0]

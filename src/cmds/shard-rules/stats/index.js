@@ -2,7 +2,7 @@
 const Cmds = {}
 Cmds.show = require('./show')
 Cmds.clear = require('./clear')
-const { getOptValue } = require()
+const { getOptValue } = require('src/helpers')
 
 module.exports = async(obj = {}, shard = {}, opt = [], auth)=>{
   let tempCmd = getOptValue(opt, 'option', 'show')

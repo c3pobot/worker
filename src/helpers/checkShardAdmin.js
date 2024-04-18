@@ -9,7 +9,7 @@ module.exports = async(obj = {}, shard = {})=>{
     if(guild?.owner_id == obj.member.user.id) auth++
     if(shard?.patreonId == obj.member.user.id) auth++
   }
-  if(!auth && shard?.admin?.length > 0 obj.member?.roles?.length > 0){
+  if(!auth && shard?.admin?.length > 0 && obj.member?.roles?.length > 0){
     for(let i in shard.admin){
       if(obj.member.roles.filter(x=>x == i).length > 0){
         auth++;

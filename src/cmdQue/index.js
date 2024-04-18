@@ -1,6 +1,6 @@
 'use strict'
 const log = require('logger')
-const rabbitmq = require('helpers/rabbitmq')
+const rabbitmq = require('src/helpers/rabbitmq')
 const cmdProcessor = require('./cmdProcessor')
 let queName = process.env.WORKER_QUE_PREFIX || 'worker', consumer, workerType = process.env.WORKER_TYPE || 'swgoh', POD_NAME = process.env.POD_NAME
 queName += `.${workerType}`

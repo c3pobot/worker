@@ -10,7 +10,7 @@ const mongo = require('mongoclient')
 const { getOptValue } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'you did not provide the correct information'}, units
+  let msg2send = {content: 'you did not provide the correct information'}
   let effect = getOptValue(opt, 'effect')?.trim()
   if(!effect) return msg2send
   let show = getOptValue(opt, 'show', 'chars')?.trim()

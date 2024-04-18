@@ -4,7 +4,7 @@ Cmds['enemy-hits'] = require('./enemyHits')
 Cmds['enemy-skips'] = require('./enemySkips')
 Cmds['early-hits'] = require('./earlyHits')
 Cmds.stats = require('./stats')
-const { getShardm checkShardAdmin, replyError } = require('src/helpers')
+const { getShard, checkShardAdmin, replyError } = require('src/helpers')
 
 module.exports = async(obj = {})=>{
   try{

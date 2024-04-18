@@ -1,7 +1,7 @@
 'use strict'
 const numeral = require('numeral')
 const { getPlayerAC, fetchPlayer, replyError } = require('src/helpers')
-const { getNoMods, getMissingMods, getIncModsets, getMissingMods, getLowModPips } = require('src/format')
+const { getNoMods, getMissingMods, getIncModsets, getLowModPips } = require('src/format')
 const modCount = (obj)=>{
   let count = 0
   for(let i in obj) count += (+obj[i].equippedStatMod.length || 0)

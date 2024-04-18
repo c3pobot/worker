@@ -11,7 +11,7 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
   if(opt.length > 0){
     msg2send.content = ''
     if(rankSort){
-      mongo.set('payoutServers', {_id: shard._id}, {rankSort: rankSort )
+      mongo.set('payoutServers', {_id: shard._id}, {rankSort: rankSort})
       msg2send.content += 'Rank report sort has been set to '+rankSort+'\n'
     }
     if(rankLimit >= 0){

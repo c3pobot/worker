@@ -5,7 +5,7 @@ const removePct = (str)=>{
 }
 const getModValue = require('./getModValue')
 const sorter = require('json-array-sorter')
-const enum = require('helpers/enum')
+const Enums = require('src/helpers/enum')
 module.exports = async(mods)=>{
   let res = []
   for(let i=0;i<mods.length;i++){
@@ -16,7 +16,7 @@ module.exports = async(mods)=>{
         shapeId: "shape-"+(modDef.rarity > 4 ? modDef.rarity : 5)+"-"+((+modDef.slot) - 1)+"-"+mods[i].tier,
         iconId: "icon-"+modDef.setId+"-"+mods[i].tier,
         posId: (+modDef.setId == 4 ? "pos-"+((+modDef.slot) - 1)+"-align-speed":"pos-"+((+modDef.slot) - 1)+"-align"),
-        pStatText: getModValue(mods[i].primaryStat.stat.unitStatId, +mods[i].primaryStat.stat.unscaledDecimalValue)+" "+removePct(enum.stats[mods[i]?.primaryStat?.stat?.unitStatId]),
+        pStatText: getModValue(mods[i].primaryStat.stat.unitStatId, +mods[i].primaryStat.stat.unscaledDecimalValue)+" "+removePct(Enums.stats[mods[i]?.primaryStat?.stat?.unitStatId]),
         tier: mods[i].tier,
         level: mods[i].level,
         set: modDef.setId,
@@ -25,7 +25,7 @@ module.exports = async(mods)=>{
       if(mods[i]?.secondaryStat?.length > 0){
         tempObj.sStatText = ''
         for(let s in mods[i].secondaryStat){
-          tempObj.sStatText += '('+mods[i].secondaryStat[s].statRolls+") "+getModValue(mods[i].secondaryStat[s].stat.unitStatId, +mods[i].secondaryStat[s].stat.unscaledDecimalValue)+" "+removePct(enum.stats[mods[i].secondaryStat[s].stat.unitStatId])
+          tempObj.sStatText += '('+mods[i].secondaryStat[s].statRolls+") "+getModValue(mods[i].secondaryStat[s].stat.unitStatId, +mods[i].secondaryStat[s].stat.unscaledDecimalValue)+" "+removePct(Enums.stats[mods[i].secondaryStat[s].stat.unitStatId])
           if(s < mods[i].secondaryStat.length) tempObj.sStatText += "<br>"
         }
       }

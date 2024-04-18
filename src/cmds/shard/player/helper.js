@@ -44,5 +44,6 @@ Cmds.showNotifyStatus = async(shard, pId)=>{
       embedMsg.description += '```'
     }
     return embedMsg
+  }
 }
 module.exports = Cmds

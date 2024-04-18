@@ -22,7 +22,7 @@ const discordRequest = async(uri, method, body, headers)=>{
 }
 const apiRequest = async(uri, method, body, headers = null, retry = true, count = 0)=>{
   let res = await discordRequest(uri, method, body, headers)
-  if(res?.error && count < 6 && retry){
+  if(res?.error === 'FetchError' && count < 6 && retry){
     count++
     return await apiRequest(uri, method, body, headers, retry, count)
   }

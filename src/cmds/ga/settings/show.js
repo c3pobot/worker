@@ -2,7 +2,7 @@
 const { getGAInfo } = require('src/cmds/ga/helpers')
 const { getDiscordAC, replyButton } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
-const getUnits = (pObj = {}, units = [], msg2send = { embeds = []}, type)=>{
+const getUnits = (pObj = {}, units = [], msg2send = { embeds: []}, type)=>{
   let unitMsg = {
     color: 15844367,
     title: `${pObj.name} ${type} units for GA comparison`,

@@ -6,7 +6,7 @@ const getRelicStats = require('./getRelicStats')
 const getUnitSkills = require('./getUnitSkills')
 const getUnitStats = require('./getUnitStats')
 const specStats = require('./specStats')
-const getAblityDmg = require('helpers/getAblityDmg')
+const getAblityDmg = require('src/helpers/getAblityDmg')
 module.exports = async(uInfo, unit = {})=>{
   try{
     if(!uInfo) return

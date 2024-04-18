@@ -11,7 +11,7 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
   if(opt.length > 0){
     msg2send.content = ''
     if(adminAdd && obj.data?.resolved?.roles && obj.data?.resolved?.roles[adminAdd]){
-      let addRole = obj.data.resolved.roles.[adminAdd]
+      let addRole = obj.data.resolved.roles[adminAdd]
       if(!shard.admin || !shard.admin[addRole.id]){
         await mongo.set('payoutServers', {_id: shard._id}, {['admin.'+addRole.id]: {id: addRole.id, name: addRole.name}})
         msg2send.content += '@'+addRole.name+' was added as shard admin role\n'
@@ -19,7 +19,7 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
         msg2send.content += '@'+addRole.name+' is already a shard admin role\n'
       }
     }
-    if(adminRemove)){
+    if(adminRemove){
       if(shard.admin[adminRemove]){
         let rmvRole = shard.admin[adminRemove]
         await mongo.unset('payoutServers', {_id: shard._id}, {['admin.'+rmvRole.id]: rmvRole})

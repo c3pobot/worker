@@ -4,9 +4,8 @@ const { getOptValue } = require('src/helpers')
 const { GetChannel } = require('src/helpers/discordmsg')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'Shard Id not provided'}, players = [], channel, sId = obj.guild_id, catId, shard, players
-  let shardId = getOptValue(opt, 'shardid')
-  if(shardId) shardId = shardId.trim)
+  let msg2send = {content: 'Shard Id not provided'}, players = [], channel, sId = obj.guild_id, catId, shard
+  let shardId = getOptValue(opt, 'shardid')?.trim()
   if(obj.channel_id) channel = await GetChannel(obj.channel_id)
   if(channel?.parent_id > 999999) catId = channel.parent_id
   if(sId && catId){

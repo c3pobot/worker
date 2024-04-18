@@ -136,6 +136,5 @@ module.exports = async(obj = {}, opt = [], mode = '5v5')=>{
     await buttonPick(obj, msg2send, method)
     return
   }
-  return msg2sendHP.ReplyError(obj)
-  }
+  return msg2send
 }

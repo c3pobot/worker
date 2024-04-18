@@ -1,7 +1,7 @@
 'use strict'
 const numeral = require('numeral')
 const sorter = require('json-array-sorter')
-const { relicStats } = require('helpers/enum')
+const { relicStats } = require('src/helpers/enum')
 module.exports = (unit)=>{
   try{
     let stats = unit.stats

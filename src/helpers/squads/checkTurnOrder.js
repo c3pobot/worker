@@ -1,5 +1,5 @@
 'use strict'
-const sorter = require('json-arra-sorter')
+const sorter = require('json-array-sorter')
 module.exports = (units, squadUnits, squad)=>{
   let tempUnits = []
   for(let i in squad.units){

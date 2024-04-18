@@ -1,6 +1,6 @@
 'use strict'
 const numeral = require('numeral')
-const mongo = require('mongo')
+const mongo = require('mongoclient')
 const formatWebUnit = require('src/format/formatWebUnit')
 const checkStats = require('./checkStats')
 const checkTurnOrder = require('./checkTurnOrder')

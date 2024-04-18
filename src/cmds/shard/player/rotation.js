@@ -4,7 +4,7 @@ const { getOptValue, showRotationSchedule } = require('src/helpers')
 const { GetGuild } = require('src/helpers/discordmsg')
 
 module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  let schedule, msg2send = {content: "There are not shard rotation schedules"}
+  let msg2send = {content: "There are not shard rotation schedules"}
   let rots = (await mongo.find('shardRotations', {_id: shard._id}, {_id: 0, TTL: 0} ))[0]
   let schedule = getOptValue(opt, 'schedule')?.toUpperCase()
   if(!rots) return msg2send

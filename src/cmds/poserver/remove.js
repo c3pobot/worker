@@ -1,5 +1,5 @@
 'use strict'
-const mongo = require('src/mongo')
+const mongo = require('mongoclient')
 const { getOptValue, confirmButton, removeShardCmds } = require('src/helpers')
 const { GetChannel } = require('src/helpers/discordmsg')
 

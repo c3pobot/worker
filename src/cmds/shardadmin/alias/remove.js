@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 const { getOptValue, confirmButton } = require('src/helpers')
 
 module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  let msg2send = {content: 'Error with provided info'}, alias, confirmRemove
+  let msg2send = {content: 'Error with provided info'}
   let confirmRemove = obj.confirm?.response
   let alias = getOptValue(opt, 'alias')?.trim()
   if(!alias) return { content: 'you did not provide an alias'}

@@ -1,5 +1,5 @@
 'use strict'
-const { formatGuild } = require('src/format');
+const formatGuild = require('src/format/formatGuild');
 const getGuildId = require('./getGuildId');
 const getGuildMembers = require('./getGuildMembers');
 const queryGuild = require('./queryGuild');

@@ -4,7 +4,7 @@ const { getOptValue, getPlayerAC, fetchPlayer } = require('src/helpers')
 const { getSquad } = require('src/helpers/squads')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let squadName, squad, msg2send = {content: 'You do not have allyCode linked to discordId'}, squadData = {squads: [], info:{tdSpan: 0}}, allyCode, pObj
+  let msg2send = {content: 'You do not have allyCode linked to discordId'}, squadData = {squads: [], info:{tdSpan: 0}}, pObj
   let squadName = getOptValue(opt, 'name')?.toString()?.trim()?.toLowerCase()
   if(!squadName) return { content: 'You did not provide a squad name', components: [] }
   let allyObj = await getPlayerAC(obj, opt)

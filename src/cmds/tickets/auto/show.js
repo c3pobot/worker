@@ -1,10 +1,10 @@
 'use strict'
-const mongo = require('mongo')
+const mongo = require('mongoclient')
 const { show } = require('./helper')
 const { getGuildId } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'Error getting player guild'}, guild
+  let msg2send = {content: 'Error getting player guild'}
   let pObj = await getGuildId({dId: obj.member.user.id}, {}, opt)
   if(!pObj?.guildId) return msg2send
   msg2send.content = 'You do not have auto tickets set up'

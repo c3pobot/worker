@@ -3,7 +3,7 @@ const getImg = require('./getImg')
 const { getOptValue, getPlayerAC, fetchPlayer, findUnit, replyButton } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let uInfo, allyCode, guildId, msg2send = {content: 'You do not have allycode linked to discordId'}, pObj
+  let uInfo, guildId, msg2send = {content: 'You do not have allycode linked to discordId'}, pObj
   let allyObj = await getPlayerAC(obj, opt)
   if(allyObj?.mentionError) return { content: 'that user does not have allyCode linked to discordId' }
   let allyCode = allyObj?.allyCode

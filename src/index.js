@@ -1,5 +1,9 @@
 'use strict'
 const log = require('logger')
+log.setLevel('debug');
+const redis = require('redisclient')
+const mongo = require('mongoclient')
+const swgohClient = require('./swgohClient')
 const saveSlashCmds = require('./saveSlashCmds')
 const createCmdMap = require('./helpers/createCmdMap')
 const { dataList } = require('./helpers/dataList')
@@ -24,7 +28,7 @@ const CheckMongo = ()=>{
 }
 const CheckApi = async()=>{
   try{
-    let obj = await Client.post('metadata')
+    let obj = await swgohClient.post('metadata')
     if(obj?.latestGamedataVersion){
       log.info('API is ready...')
       CheckGameData()
@@ -53,7 +57,7 @@ const CheckCmdMap = async()=>{
     if(process.env.POD_NAME?.toString().endsWith("0")) await saveSlashCmds(baseDir+'/src/cmds', workerType)
     let status = createCmdMap()
     if(status){
-      CmdQue.start()
+      cmdQue.start()
       return
     }
     setTimeout(CheckCmdMap, 5000)

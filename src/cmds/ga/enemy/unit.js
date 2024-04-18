@@ -1,7 +1,7 @@
 'use strict'
 const { getGAInfo } = require('src/cmds/ga/helpers')
 const getImg = require('src/cmds/p/unit/basic/getImg')
-const { getDiscordAC getOptValue, replyButton } = require('src/helpers')
+const { getDiscordAC, getOptValue, replyButton } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
 
 module.exports = async(obj = {}, opt = [])=>{

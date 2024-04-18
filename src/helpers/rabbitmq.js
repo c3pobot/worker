@@ -24,6 +24,6 @@ client.on('error', (err)=>{
 })
 client.on('connection', ()=>{
   clientReady = true
-  log.info(`messagebus producer client on ${POD_NAME} connection successfully (re)established`)
+  log.info(`messagebus client on ${POD_NAME} connection successfully (re)established`)
 })
 module.exports = client

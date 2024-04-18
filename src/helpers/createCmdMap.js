@@ -2,7 +2,7 @@
 const log = require('logger')
 const mongo = require('mongoclient')
 const { cmdMap = {} } = require('./cmdMap')
-let workerType = process.env.WORKER_TYPE || 'swgoh', cmdMapReady, mongoReady = mongo.status(), notify = true
+let workerType = process.env.WORKER_TYPE || 'swgoh', cmdMapReady, mongoReady = mongo.status(), notify = true, started
 const create = async()=>{
   try{
     let data, syncTime = 5
@@ -11,6 +11,7 @@ const create = async()=>{
     if(data?.cmdMap){
       for(let i in data.cmdMap){
         if(!cmdMap[i]) cmdMap[i] = require(`src/cmds/${i}`)
+        //if(!cmdMap[i]) cmdMap[i] = data.cmdMap[i]
       }
       cmdMapReady = true
       if(notify){
@@ -27,6 +28,12 @@ const create = async()=>{
   }
 }
 create()
-module.exports = ()=>{
+module.exports = async()=>{
+  /*
+  if(!started){
+     await create()
+     started = true
+  }
+  */
   return cmdMapReady
 }

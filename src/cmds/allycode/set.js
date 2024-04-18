@@ -8,7 +8,7 @@ module.exports = async(obj = {}, opt = [])=>{
     if(obj.confirm.allyCode) allyCode = +obj.confirm.allyCode
   }
   let dObj = (await mongo.find('discordId', {_id: obj.member.user.id}))[0]
-  if(1 >= dObj?.allCodes?.length || !dObj.allCodes){
+  if(1 >= dObj?.allyCodes?.length || !dObj.allyCodes){
     return { content: 'You must have more than 1 allyCode linked to set a primary or alt' }
   }
   if(!option){

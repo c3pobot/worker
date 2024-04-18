@@ -11,7 +11,7 @@ module.exports = async(obj = {}, opt = [])=>{
   let allyCode = allyObj?.allyCode
   if(!allyCode) return msg2send
   msg2send.content = '**'+allyCode+'** is an invalid allyCode'
-  let pObj = await swgohClient('fetchPlayer', {allyCode: allyCode.toString()})
+  let pObj = await swgohClient.post('fetchPlayer', {allyCode: allyCode.toString()})
   if(pObj?.allyCode){
     msg2send.content = null
     msg2send.embeds = []

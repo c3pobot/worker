@@ -1,7 +1,6 @@
 'use strict'
 const Cmds = {}
 Cmds.google = require('./google')
-Cmds.guest = require('./guest')
 Cmds.remove = require('./remove')
 
 module.exports = async(obj = {}, opts = [])=>{

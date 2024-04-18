@@ -1,4 +1,5 @@
 'use strict'
+const { dataList } = require('src/helpers/dataList')
 const sorter = require('json-array-sorter')
 const getHTML = require('webimg').gear
 const { fetchPlayer, getGearParts, getImg, getOptValue, getPlayerAC, findUnit, replyButton } = require('src/helpers')
@@ -29,7 +30,7 @@ module.exports = async(obj = {}, opt = [])=>{
   }
   if(pUnit){
     msg2send.content = 'Error getting unit data'
-    if(gameData?.unitData) unitGear = gameData.unitData[uInfo.baseId]?.gearLvl
+    if(dataList?.gameData?.unitData) unitGear = dataList?.gameData.unitData[uInfo.baseId]?.gearLvl
   }
   if(unitGear && (gLevel == 13 || unitGear[gLevel])){
     msg2send.content = '**'+uInfo.nameKey+'** is already at gear '+(pUnit?.currentTier == 13 ? '13':gLevel)

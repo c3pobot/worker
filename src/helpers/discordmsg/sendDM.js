@@ -1,5 +1,5 @@
 'use strict'
-const SendBotMsg = require('./sendBotMsg')
+const sendBotMsg = require('./sendBotMsg')
 module.exports = async(dId, content)=>{
   try{
     let msg2send = content, files = []

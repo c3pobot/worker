@@ -1,12 +1,12 @@
 'use strict'
 const mongo = require('mongoclient')
-const { geOptValue, getUnitName } = require('src/helpers')
+const { getOptValue, getUnitName } = require('src/helpers')
 const { getUnitCheck, verifyUnit } = require('./helper')
 const swgohClient = require('src/swgohClient')
 
 module.exports = async(obj = {}, opt = [])=>{
   let allyCode, msg2send = {content: 'You did not provide an allyCode'}
-  allyCode = geOptValue(opt, 'allycode')
+  allyCode = getOptValue(opt, 'allycode')
   if(!allyCode) return msg2send
   allyCode = +(allyCode.trim().replace(/-/g, ''))
   msg2send.content = '**'+allyCode+'** is not a valid allyCode'

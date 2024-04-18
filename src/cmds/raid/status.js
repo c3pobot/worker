@@ -29,7 +29,7 @@ module.exports = async(obj = {}, opts = [])=>{
   let gObj = await swgohClient.oauth(obj, 'guild', dObj, {}, loginConfirm)
   if(gObj === 'GETTING_CONFIRMATION') return
   if(gObj?.error == 'invalid_grant'){
-    await HP.ReplyTokenError(obj, dObj.allyCode)
+    await replyTokenError(obj, dObj.allyCode)
     return;
   }
   if(!gObj?.data?.guild || !gObj?.data?.guild?.member || gObj?.data?.guild?.member?.length === 0) return { content: 'Error getting data'}

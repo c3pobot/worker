@@ -3,6 +3,7 @@ const log = require('logger')
 log.setLevel('debug');
 const redis = require('redisclient')
 const mongo = require('mongoclient')
+const mqtt = require('./helpers/mqtt')
 const swgohClient = require('./swgohClient')
 const saveSlashCmds = require('./saveSlashCmds')
 const createCmdMap = require('./helpers/createCmdMap')
@@ -11,6 +12,7 @@ const { botSettings } = require('./helpers/botSettings')
 const cmdQue = require('./cmdQue')
 let workerType = process.env.WORKER_TYPE || 'swgoh'
 const CheckRedis = ()=>{
+  log.info(`start up redis check...`)
   let status = redis.status()
   if(status){
     CheckMongo()
@@ -19,6 +21,7 @@ const CheckRedis = ()=>{
   setTimeout(CheckRedis, 5000)
 }
 const CheckMongo = ()=>{
+  log.info(`start up mongo check...`)
   let status = mongo.status()
   if(status){
     CheckApi()
@@ -28,6 +31,7 @@ const CheckMongo = ()=>{
 }
 const CheckApi = async()=>{
   try{
+    log.info(`start up api check...`)
     let obj = await swgohClient.post('metadata')
     if(obj?.latestGamedataVersion){
       log.info('API is ready...')
@@ -42,6 +46,7 @@ const CheckApi = async()=>{
 }
 const CheckGameData = async()=>{
   try{
+    log.info(`start up gameData check...`)
     if(dataList?.gameData?.unitData){
       CheckCmdMap()
       return
@@ -54,8 +59,9 @@ const CheckGameData = async()=>{
 }
 const CheckCmdMap = async()=>{
   try{
-    if(process.env.POD_NAME?.toString().endsWith("0")) await saveSlashCmds(baseDir+'/src/cmds', workerType)
-    let status = createCmdMap()
+    log.info(`start up cmdMap check...`)
+    if(process.env.POD_NAME?.toString().endsWith("0")) saveSlashCmds(baseDir+'/src/cmds', workerType)
+    let status = await createCmdMap()
     if(status){
       cmdQue.start()
       return
@@ -67,4 +73,4 @@ const CheckCmdMap = async()=>{
   }
 }
 
-CheckRedis()
+setTimeout(CheckRedis, 5000)

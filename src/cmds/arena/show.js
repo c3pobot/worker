@@ -1,5 +1,5 @@
 'use strict'
-const { getGuildName, replyMsg, replyButton } = require('src/helpers')
+const { getGuildName, replyMsg, replyButton, botRequest } = require('src/helpers')
 
 module.exports = async(obj = {}, patreon = {}, opt = [])=>{
   let msg2send = {content: 'You don\'t have any users or guilds registered'}, sendMethod = 'PATCH'
@@ -39,7 +39,7 @@ module.exports = async(obj = {}, patreon = {}, opt = [])=>{
         for(let p in tempArray){
           let usr
           let dObj = (await mongo.find('discordId', {'allyCodes.allyCode': tempArray[p].allyCode}))[0]
-          if(dObj) usr = await HP.BotRequest('getMember', {podName: 'bot-0', dId: dObj._id})
+          if(dObj) usr = await botRequest('getMember', {podName: 'bot-0', dId: dObj._id})
           usrMsg.description += tempArray[p].allyCode+' : '+tempArray[p].name+' : @'+(usr ? usr.tag:'unknown')+'\n'
         }
         usrMsg.description += '```'

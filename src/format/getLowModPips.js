@@ -1,4 +1,5 @@
 'use strict'
+const { dataList } = require('src/helpers/dataList')
 const getUnitName = require('src/helpers/getUnitName')
 const sorter = require('json-array-sorter')
 module.exports = (obj = {})=>{
@@ -7,11 +8,11 @@ module.exports = (obj = {})=>{
     value: '```autohotkey\n'
   }
   let unsortedArray = []
-  if(gameData && gameData.modDefData){
+  if(dataList?.gameData?.modDefData){
     for(let i in obj){
       if(obj[i].equippedStatMod.length > 0){
         let tempCount = 0
-        for(let m in obj[i].equippedStatMod) if(gameData.modDefData[obj[i].equippedStatMod[m].definitionId] && +gameData.modDefData[obj[i].equippedStatMod[m].definitionId].rarity < 5) tempCount++;
+        for(let m in obj[i].equippedStatMod) if(dataList.gameData.modDefData[obj[i].equippedStatMod[m].definitionId] && +dataList.gameData.modDefData[obj[i].equippedStatMod[m].definitionId].rarity < 5) tempCount++;
         if(tempCount > 0){
           let unitName = getUnitName(obj[i].definitionId.split(':')[0])
           unsortedArray.push({

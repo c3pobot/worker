@@ -5,7 +5,7 @@ const { checkShardAdmin, getOptValue } = require('src/helpers')
 
 module.exports = async(obj = {}, shard ={}, opt = [])=>{
   let auth = +shard.allowAll || 0, msg2send = {content: 'Editing players requires admin permissions'}, shardPlayer
-  if(!auth) auth = await HP.CheckShardAdmin(obj, shard)
+  if(!auth) auth = await checkShardAdmin(obj, shard)
   if(!auth) return msg2send
   msg2send.content = 'You did not provide the correct information'
   let allyCode = getOptValue(opt, 'allycode')

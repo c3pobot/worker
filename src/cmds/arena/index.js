@@ -28,7 +28,7 @@ module.exports = async(obj = {})=>{
       let auth = await CheckAuth(obj.member.user.id)
       if(auth) msg2send = await Cmds.notify(obj, opt)
     }
-    if(tempCmd && tempCmd !== notify && Cmds[tempCmd]){
+    if(tempCmd && tempCmd !== 'notify' && Cmds[tempCmd]){
       msg2send.content = 'This is only avaliable to patreons'
       if(patreon) msg2send = await Cmds[tempCmd](obj, patreon, opt)
     }

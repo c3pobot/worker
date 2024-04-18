@@ -1,4 +1,5 @@
 'use strict'
+const { dataList } = require('src/helpers/dataList')
 const getNeededGear = require('./getNeededGear')
 const getNeededRelicMats =  require('./getNeededRelicMats')
 const getRelicMats = (unit = {}, relicRecipe = [], res = {}, inventory = [])=>{
@@ -20,7 +21,7 @@ const getRelicMats = (unit = {}, relicRecipe = [], res = {}, inventory = [])=>{
 const getGear = async(unit, res, inventory = [])=>{
   let reqGear = 13
   if(unit.reqGear) reqGear = unit.reqGear
-  let neededGear = await getNeededGear([], unit.equipment, gameData.unitData[unit.baseId]?.gearLvl, unit.gear, reqGear)
+  let neededGear = await getNeededGear([], unit.equipment, dataList?.gameData?.unitData[unit.baseId]?.gearLvl, unit.gear, reqGear)
   for(let i in neededGear){
     if(neededGear[i]?.count > 0){
       if(!res[neededGear[i].id]){

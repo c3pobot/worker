@@ -14,7 +14,7 @@ module.exports = async(obj = {}, shard = [], opt = [])=>{
   if(unit){
     unit = unit.toString().trim()
     msg2send.content = 'Error find unit **'+unit+'**'
-    uInfo = await HP.FindUnit(obj, unit, null)
+    uInfo = await findUnit(obj, unit, null)
     if(uInfo === 'GETTING_CONFIRMATION') return
   }
   if(uInfo?.nameKey){

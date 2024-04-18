@@ -17,7 +17,7 @@ module.exports = async(payload = {}, opt = {}, cachGuildId = true)=>{
   await formatPlayer(data)
   if(!data?.gp) return
   playerCache.set(collection, data.playerId, JSON.stringify(data))
-  if(cachGuildId) guildIdCache.set(data?.playerId, +data?.allyCode, data?.guildId)
+  if(cachGuildId) guildIdCache.set(data?.playerId, +data?.allyCode, data)
   if(opt.projection) return dataProject(data, opt.projection)
   return data
 }

@@ -11,7 +11,6 @@ const processMsg = async(msg = {})=>{
     return await cmdProcessor(msg.body)
   }catch(e){
     log.error(e)
-    return 1
   }
 }
 const createWorker = async()=>{

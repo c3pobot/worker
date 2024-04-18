@@ -35,6 +35,6 @@ module.exports = async(obj = {}, opt = [])=>{
     msg2send.content = 'Error getting player info'
     pObj = await fetchPlayer({allyCode: allyCode.toString()})
   }
-  if(pObj?.allyCode) msg2send = await GetImg(uInfo, pObj, gLevel, rLevel, rarity);
+  if(pObj?.allyCode) msg2send = await getImg(uInfo, pObj, gLevel, rLevel, rarity);
   return msg2send
 }

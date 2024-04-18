@@ -26,6 +26,6 @@ module.exports = async(obj = {}, opt = [])=>{
     msg2send.content = 'Error getting player info'
     eObj = await swgohClient.post('fetchGAPlayer', {id: gaInfo.currentEnemy, opponent: dObj.allyCode}, null)
   }
-  if(eObj?.allyCode) msg2send = await GetImg(uInfo, eObj)
+  if(eObj?.allyCode) msg2send = await getImg(uInfo, eObj)
   return msg2send
 }

@@ -1,5 +1,6 @@
 'use strict'
-const { getOptValue, getGuildId, findUnit, replyButton, fetchGuild, truncateString } = require('src/helpers')
+const sorter = require('json-array-sorter')
+const { getPlayerAC, getOptValue, getGuildId, findUnit, replyButton, fetchGuild, truncateString } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
   let msg2send = {content: 'You do not have allyCode linked to discord'}, uInfo, guildId, gObj, gLevel = 0, rLevel = 0, dId = obj.member?.user?.id
@@ -13,7 +14,7 @@ module.exports = async(obj = {}, opt = [])=>{
   let allyObj = await getPlayerAC(obj, opt)
   if(allyObj?.mentionError) return {content: 'that user does not have allyCode linked to discordId'}
   if(allyObj?.allyCode){
-    msg2send.content = '**'+allyCode+'** is not a valid allyCode'
+    msg2send.content = '**'+allyObj.allyCode+'** is not a valid allyCode'
     let pObj = await getGuildId({}, {allyCode: allyObj?.allyCode}, opt)
     guildId = pObj?.guildId
   }

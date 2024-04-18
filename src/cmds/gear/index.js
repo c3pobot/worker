@@ -1,4 +1,5 @@
 'use strict'
+const { dataList } = require('src/helpers/dataList')
 const sorter = require('json-array-sorter')
 const getHTML = require('webimg').gear
 const { getOptValue, getGearParts, replyButton, replyError, getImg } = require('src/helpers')
@@ -20,7 +21,7 @@ module.exports = async(obj = {})=>{
       await replyButton(obj, 'Getting gear for **'+uInfo.nameKey+'** ...')
       gearInfo.nameKey = uInfo.nameKey
       msg2send.content = 'Error getting unit data'
-      if(gameData?.unitData) unitGear = gameData.unitData[uInfo.baseId]?.gearLvl
+      if(dataList?.gameData?.unitData) unitGear = dataList?.gameData.unitData[uInfo.baseId]?.gearLvl
     }
     if(unitGear && (gLevel == 13 || unitGear[gLevel])){
       msg2send.content = 'Error getting gear info'

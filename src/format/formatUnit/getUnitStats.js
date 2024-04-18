@@ -1,5 +1,5 @@
 'use strict'
-const { reqStats, gearColors, relicStats } = require('src/helpers/enum')
+const { reqStats, gearColors, relicStats, pct } = require('src/helpers/enum')
 const numeral = require('numeral')
 module.exports = (stats, combatType)=>{
   try{
@@ -25,7 +25,7 @@ module.exports = (stats, combatType)=>{
       if(i == 14 || i == 15){
         obj[i] = numeral((finalStat)*100).format('0.00')+(modsStat > 0 ? ' ('+numeral(modsStat*100).format('0.00')+')' : '')+'%'
       }else{
-        if(HP.enum.pct[i]){
+        if(pct[i]){
           obj[i] = numeral((finalStat)*100).format('0.0')+(modsStat > 0 ? ' ('+numeral(modsStat*100).format('0.0')+')' : '')+'%'
         }else{
           obj[i] = numeral(finalStat).format('0,0')+(modsStat > 0 ? ' ('+numeral(modsStat).format('0,0')+')' : '')

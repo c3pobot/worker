@@ -1,6 +1,6 @@
 'use strict'
 const { getGAInfo } = require('src/cmds/ga/helpers')
-const { getTopUnits, getDiscordAC, getOptValue, replyButton } = require('src/helpers')
+const { getTopUnits, getDiscordAC, getOptValue, replyButton, findFaction } = require('src/helpers')
 const getImg = require('src/cmds/faction/compare/getImg')
 const swgohClient = require('src/swgohClient')
 
@@ -20,7 +20,7 @@ module.exports = async(obj = {}, opt = [])=>{
   if(faction){
     faction = faction.toString().trim()
     msg2send.content = 'error finding faction **'+faction+'**'
-    fInfo = await HP.FindFaction(obj, faction)
+    fInfo = await findFaction(obj, faction)
     if(fInfo === 'GETTING_CONFIRMATION') return
     if(fInfo?.units) fInfo.units = fInfo.units.filter(x=>x.combatType === combatType);
   }

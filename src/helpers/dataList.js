@@ -33,31 +33,35 @@ const updateFactionList = async()=>{
   }
 }
 const update = async()=>{
-  try{
-    let obj = (await mongo.find('botSettings', {_id: 'gameData'}))[0]
-    if(obj?.data && (obj?.version === dataList?.gameVersion || !dataList?.gameVersion)){
-      let status = statCalc.setGameData(obj.data)
-      if(status) status = await updateUnitsList()
-      if(status) status = await updateFactionList()
-      if(status){
-        dataList.gameVersion = obj.version
-        dataList.gameData = obj.data
-        log.info(`gameData set to ${dataList?.gameVersion}`)
-        return
-      }
-      setTimeout(update, 5000)
+  let obj = (await mongo.find('botSettings', {_id: 'gameData'}))[0]
+  if(obj?.data && (obj?.version === dataList?.gameVersion || !dataList?.gameVersion)){
+    let status = statCalc.setGameData(obj.data)
+    if(status) status = await updateUnitsList()
+    if(status) status = await updateFactionList()
+    if(status){
+      dataList.gameVersion = obj.version
+      dataList.gameData = obj.data
+      log.info(`gameData set to ${dataList?.gameVersion}`)
+      return true
     }
-  }catch(e){
-    log.error(e)
-    setTimeout(update, 5000)
   }
 }
+const processMsg = async(data = {})=>{
+  try{
+    if(!data?.gameVersion) return
+    if(dataList.gameVersion !== data.gameVersion) await update()
+  }catch(e){
+    log.error(e)
+    setTimeout(()=>processMsg(data), 5000)
+  }
+}
+/*
 mqtt.on('message', (topic, msg)=>{
   if(!msg || topic !== dataTopic) return
   let data = JSON.parse(msg)
-  if(!data?.gameVersion) return
-  if(dataList.gameVersion !== data.gameVersion) update()
+  processMsg(data)
 })
+*/
 const checkMQTTStatus = async()=>{
   try{
     if(mqtt.connected){
@@ -70,5 +74,19 @@ const checkMQTTStatus = async()=>{
     setTimeout(checkMQTTStatus, 5000)
   }
 }
-checkMQTTStatus()
+const start = async()=>{
+  try{
+    let status = mongo.status()
+    if(status) status = await update()
+    if(status){
+      //checkMQTTStatus()
+      return
+    }
+    setTimeout(start, 5000)
+  }catch(e){
+    log.error(e)
+    setTimeout(start, 5000)
+  }
+}
+start()
 module.exports = { dataList }

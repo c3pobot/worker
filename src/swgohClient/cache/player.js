@@ -1,9 +1,15 @@
 'use strict'
+const log = require('logger')
 const mongo = require('mongoclient')
 
 module.exports.set = async(collection, playerId, data)=>{
-  if(!collection || !playerId || !data) return
-  return await mongo.set(collection, { _id: playerId }, JSON.parse(data))
+  try{
+    return
+    if(!collection || !playerId || !data) return
+    return await mongo.set(collection, { _id: playerId }, JSON.parse(data))
+  }catch(e){
+    log.error(e)
+  }
 }
 module.exports.get = async(collection, playerId, allyCode, projection)=>{
   if(!playerId && !allyCode) return;

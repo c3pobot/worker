@@ -2,7 +2,7 @@
 const mongo = require('mongoclient')
 const { getGAInfo } = require('src/cmds/ga/helpers')
 const showSettings = require('./show')
-const { getDiscordAC, replyButton, getOptValue } = require('src/helpers')
+const { getDiscordAC, replyButton, getOptValue, findUnit } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
   let msg2send = {content: 'You did not specify a unit'}, unit, uInfo, sendResponse = 1, guildId, gaInfo
@@ -17,7 +17,7 @@ module.exports = async(obj = {}, opt = [])=>{
   if(unit){
     if(unit) unit = unit.toString().trim()
     msg2send.content = 'error finding unit **'+unit+'**'
-    uInfo = await HP.FindUnit(obj, unit)
+    uInfo = await findUnit(obj, unit)
     if(uInfo === 'GETTING_CONFIRMATION') return
   }
   if(uInfo){

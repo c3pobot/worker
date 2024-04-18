@@ -5,7 +5,7 @@ module.exports = async(res)=>{
     if (res?.status?.toString().startsWith('5')) {
       throw('Bad status code '+res.status)
     }
-    let body
+    let body, headers = {}
 
     if (res?.status === 204) {
       body = null

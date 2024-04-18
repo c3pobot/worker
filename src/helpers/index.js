@@ -5,7 +5,7 @@ Cmds.adminNotAuth = require('./adminNotAuth')
 Cmds.addShardCmds = require('./addShardCmds')
 Cmds.arrayToObject = require('./arrayToObject')
 
-Cmds.botRequest = require('./botRequest')
+Cmds.botRequest = require('./discordmsg/sendBotMsg/sendRequest')
 Cmds.buttonPick = require('./buttonPick')
 
 Cmds.calcGuildStats = require('./calcGuildStats')
@@ -39,7 +39,6 @@ Cmds.getGearParts = require('./getGearParts')
 Cmds.getGuildId = require('./getGuildId')
 Cmds.getGuildName = require('./getGuildName')
 Cmds.getGuildMemberName = require('./getGuildMemberName')
-Cmds.getGuildShardId = require('./botRequest').getId
 Cmds.getLowTickets = require('./getLowTickets')
 Cmds.getImg = require('./getImg')
 Cmds.getPayouts = require('./getPayouts')

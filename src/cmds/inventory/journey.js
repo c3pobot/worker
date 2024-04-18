@@ -31,10 +31,10 @@ module.exports = async(obj = {}, opts = [], pObj = {})=>{
       includeInventory: true
     }
   }
-  let imgHtml = await GetHTML.journey(webData)
+  let imgHtml = await getHTML.journey(webData)
   if(!imgHtml) return { content: 'error getting HTML' }
 
-  let webImg = await HP.GetImg(imgHtml, obj.id, 640, false)
+  let webImg = await getImg(imgHtml, obj.id, 640, false)
   if(!webImg) return { content: 'Error getting image'}
 
   msg2send.content = null

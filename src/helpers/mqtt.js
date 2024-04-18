@@ -9,13 +9,14 @@ let connectOptions = {
   clientId: `${POD_NAME}`,
   clean: true,
   keepalive: 60,
-  connectTimeout: 4000,
+  connectTimeout: 30000,
   reconnectPeriod: 1000,
 }
 if(process.env.MQTT_USER && process.env.MQTT_PASS){
   connectOptions.username = process.env.MQTT_USER
   connectOptions.password = process.env.MQTT_PASS
 }
+
 const client = mqtt.connect(`mqtt://${MQTT_HOST}:${MQTT_PORT}`, connectOptions)
 client.on('connect', ()=>{
   clientReady = true
@@ -27,4 +28,5 @@ client.on('connect', ()=>{
 client.on('error', (err)=>{
   log.error(err)
 })
+
 module.exports = client

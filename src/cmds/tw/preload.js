@@ -10,18 +10,18 @@ const getBattles = require('./helper/getBattles')
 const getMapStatus = require('./helper/getMapStatus')
 const getChannelLogs = require('./helper/getChannelLogs')
 
-const { getDiscordAC, buttonPick } = require('src/helpers')
+const { getDiscordAC, buttonPick, replyButton } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
   let msg2send = {content: 'You do not have your google account linked to your discordId'}, method = 'PATCH'
   let loginConfirm = obj?.confirm?.response
   let zoneId = obj?.confirm?.zoneId
   if(obj?.confirm){
-    await HP.ReplyButton(obj, 'Here we go again ...')
+    await replyButton(obj, 'Here we go again ...')
     method = 'POST'
     if(loginConfirm === 'no') return { content: 'command canceled', components: []}
   }
-  let conflictStatus, squads, battleLog, zoneChannelId, preload, guild, mapStatus
+  let conflictStatus, squads, battleLog, zoneChannelId, preload, guild
 
 
   let dObj = await getDiscordAC(obj.member?.user?.id, opt)
@@ -57,6 +57,7 @@ module.exports = async(obj = {}, opt = [])=>{
     if(battleLog === 'GETTING_CONFIRMATION') return;
   }
   if(battleLog?.event?.length > 0){
+    log.info(`BATTLE LOGS have ${battleLog.event.length} events...`)
     msg2send.content = `Error updaing battle log for ${zoneMap[zoneId]?.nameKey}`
     msg2send.components = buttons
     for(let i in squads) getBattles(battleLog.event, squads[i])

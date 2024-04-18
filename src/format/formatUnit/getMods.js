@@ -1,4 +1,5 @@
 'use strict'
+const { dataList } = require('src/helpers/dataList')
 const removePct = (str)=>{
   str = str.replace("%", "")
   return str
@@ -9,7 +10,7 @@ const Enums = require('src/helpers/enum')
 module.exports = async(mods)=>{
   let res = []
   for(let i=0;i<mods.length;i++){
-    let modDef = gameData.modDefData[mods[i].definitionId]
+    let modDef = dataList?.gameData.modDefData[mods[i].definitionId]
     if(modDef){
       let tempObj = {
         slot: (+modDef.slot) - 1,

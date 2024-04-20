@@ -1,7 +1,7 @@
 'use strict'
 const Cmds = {}
 Cmds.syncguild = require('./syncguild')
-//Cmds.updatedata = require('./updatedata')
+Cmds.updatedata = require('./updatedata')
 Cmds.updateweather = require('./updateweather')
 const { checkBotOwner, replyError } = require('src/helpers')
 

@@ -138,16 +138,13 @@ module.exports = async(guildId, guildData)=>{
         }
         newpScore.gpDeployed = tempObj.gpDeployed
         tempObj.gpDeployed = tempObj.gpDeployed
-        tempObj.score = tempObj.score
-        tempObj.platoons = tempObj.platoons
+        newpScore.score = tempObj.score
+        newpScore.platoons = tempObj.platoons
         tempPscoreArray.push(newpScore)
         tbData.zoneData.push(tempObj)
       }
     }
     tbData.gpUndeployed = getTotalUndeployed(tbData.gp, guildData.currentStat?.find(x=>x.mapStatId === 'power_round_'+currentRound)?.playerStat)
-    tbData.gpCharUndepoyed = tbData.gpCharUndepoyed
-    tbData.gpShipUndeployed = tbData.gpShipUndeployed
-    tbData.gp = tbData.gp
     tbData.zoneData = sorter([{column: 'sort', order: 'ascending'}], tbData.zoneData)
     await mongo.set('tbCache', {_id: guildId}, {totalStarCount: tbData.totalStarCount})
     if(pScores.filter(x=>x.round === guildData.currentRound).length > 0){

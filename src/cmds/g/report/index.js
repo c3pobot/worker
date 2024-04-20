@@ -10,7 +10,7 @@ module.exports = async(obj = {}, opt = [])=>{
   let includeUnits = getOptValue(opt, 'units', false)
   let allyObj = await getPlayerAC(obj, opt)
   if(allyObj?.mentionError) msg2send.content = 'that user does not have allyCode linked to discordId'
-  if(allyObj?.allyCode) allyCode = allyObj.allyCode
+  let allyCode = allyObj?.allyCode
   let pObj = await getGuildId({dId: obj.member.user.id}, {}, opt)
   if(allyCode){
     msg2send.content = '**'+allyCode+'** is not a valid allyCode'

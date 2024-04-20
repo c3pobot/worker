@@ -40,7 +40,7 @@ const getMaxBattles = (obj)=>{
     return acc + a.squadCapacity
   },0))
 }
-module.exports = async(guildData, guildId)=>{
+module.exports = (guildData, guildId)=>{
   let twData = newObj(guildData)
   status = homeGuild(twData)
   status = awayGuild(twData)

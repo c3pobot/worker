@@ -20,7 +20,7 @@ module.exports = async(opt = {})=>{
   if(opt.projection) projection = {...defaultProjection,...opt.projection}
   let guildId = await getGuildId(opt)
   if(!guildId) return
-  let guild = await cache.get('guildCache', { _id: guildId })
+  let guild = await cache.get('guildCache', guildId)
   if(!guild){
     needsFormat = true
     let tempGuild = await queryGuild(guildId, true)

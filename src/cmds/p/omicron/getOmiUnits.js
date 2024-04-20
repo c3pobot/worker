@@ -13,7 +13,7 @@ module.exports = async(units = [], omiData = [])=>{
       if(tempSkill?.omiTier && +units[u].skill[i].tier + 2 >= tempSkill.omiTier) omiSkills.push(tempSkill)
     }
     if(omiSkills?.length > 0){
-      if(!res[omiSkills[0].omicronMode]) res[omiSkills[0].omicronMode] = {nameKey: enumOmicron[omiSkills[0].omicronMode], units: [], count: 0}
+      if(!res[omiSkills[0].omicronMode]) res[omiSkills[0].omicronMode] = {nameKey: omicron[omiSkills[0].omicronMode], units: [], count: 0}
       const uInfo = (await mongo.find('units', {_id: units[u].definitionId.split(':')[0]}))[0]
       if(uInfo){
         const tempUnit = await formatWebUnit(units[u], uInfo)

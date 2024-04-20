@@ -5,15 +5,17 @@ const { GetChannel } = require('src/helpers/discordmsg')
 const swgohClient = require('src/swgohClient')
 
 module.exports = async(obj = {}, patreon = {}, opt = [])=>{
-  let allyCode, channelPerm = 1, msg2send = {content: 'You did not provide the correct information'}, count = 0, pObj
+  let channelPerm = 1, msg2send = {content: 'You did not provide the correct information'}, count = 0, pObj
   if(patreon.users) count += +patreon.users.length
   if(patreon.guilds) count += +patreon.guilds.length * 50
   let usr = getOptValue(opt, 'user')
   let chId = getOptValue(opt, 'channel')
-  if(obj?.confirm?.allyCode) allyCode = +obj.confirm.allyCode
-  if(!usr && !allyCode) allyCode = getOptValue(opt, 'allyCode')
+  let allyCode = +obj.confirm?.allyCode
+  if(!usr && !allyCode) allyCode = getOptValue(opt, 'allycode')
+  if(!allyCode && !usr) return msg2send
+
   if(!allyCode && usr){
-    let dObj = (await mongo.find('discordId', {_id: opt.find(x=>x.name == 'user').value}))[0]
+    let dObj = (await mongo.find('discordId', {_id: usr}))[0]
     if(dObj?.allyCodes?.length === 0) msg2send.content = 'That user does not have allyCode linked to discordId'
     if(dObj?.allyCodes?.length === 1) allyCode = dObj.allyCodes[0].allyCode
     if(dObj?.allyCodes?.length > 1){

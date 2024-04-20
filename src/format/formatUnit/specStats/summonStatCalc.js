@@ -54,13 +54,7 @@ module.exports = async(unit = {})=>{
       stats[14] = Math.floor( (stats[14] || 0) + (stats[3] * 0.4) )
       stats[12] = (stats[12] || 1) + 23
       stats[13] = (stats[13] || 1) + 23
-      if(stats[16]){
-        if(stats[16] >=0){
-          stats[16] = stats[16]
-        }else{
-          stats[16] = 1.5
-        }
-      }
+      if(!(stats[16] >= 0)) stats[16] = 1.5;
       stats[18] = (stats[18] || 0) + 0.15
       for(let i in sData.scaler){
         let uBase = (uStats.base[i] || 0)

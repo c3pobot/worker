@@ -18,7 +18,7 @@ module.exports = async(obj = {}, opt = [])=>{
     await replyTokenError(obj, dObj.allyCode)
     return;
   }
-  if(!gObj?.data?.guild?.member || !gObj?.data?.guild?.member?.length === 0) return { content: 'Error getting guild data' }
+  if(!gObj?.data?.guild?.member || !gObj?.data?.guild?.member?.length == 0) return { content: 'Error getting guild data' }
 
   let members = [], joined = [], guildData, chartData = [], chartDefense
   if(gObj?.territoryWarStatus?.length > 0 && gObj.territoryWarStatus[0]?.instanceId){
@@ -57,7 +57,7 @@ module.exports = async(obj = {}, opt = [])=>{
   }
   if(gObj.territoryWarStatus?.length === 0){
     let cacheData = await mongo.find('twStats', {guildId: gObj?.profile?.id})
-    if(!cacheData || cacheData?.length === 0) return { content: 'There is not a TW in progress and there is no cached data in the database' }
+    if(!cacheData || cacheData?.length == 0) return { content: 'There is not a TW in progress and there is no cached data in the database' }
 
     let tempObj = cacheData[cacheData?.length - 1]
     if(tempObj?.chartData) chartData = tempObj.chartData

@@ -47,7 +47,9 @@ module.exports = async(obj = {}, opt = [])=>{
         title: gObj.data.guild.profile?.name+' players joined ('+memberJoined.length+')',
         description: '```\n'
       }
-      for(let i in memberJoined) joinEmbed.description += memberJoined[i].name+'\n'
+      for(let i in memberJoined){
+        if(memberJoined[i]) joinEmbed.description += memberJoined[i].name+'\n'
+      }
       joinEmbed.description += '```'
       msg2send.embeds.push(joinEmbed)
     }

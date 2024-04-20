@@ -4,7 +4,7 @@ const mongo = require('mongoclient')
 const numeral = require('numeral')
 const specUnits = require("./specUnits")
 const summonStatCalc = require("./summonStatCalc")
-const summonerList = []
+let summonerList = []
 
 const UpdateSummonerList = async()=>{
   try{

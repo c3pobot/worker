@@ -52,9 +52,9 @@ module.exports = async(obj = {}, opt = [])=>{
     let count = 0, unitCount = 0
     for(let i = 0;i<numStats;i++){
       embedMsg.description += units[i].value+'\n'
-      count++, unitCount++
+      count++, unitCount++;
       if((+i + 1) == numStats && count != 20) count = 20
-      if(count == 20){
+      if(count === 20){
         embedMsg.description += '```'
         embedMsg.description = embedMsg.description.replace('<UNITCOUNT>', unitCount)
         if(msg2send.embeds.length < 10) msg2send.embeds.push(JSON.parse(JSON.stringify(embedMsg)))

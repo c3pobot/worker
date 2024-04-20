@@ -1,5 +1,6 @@
 'use strict'
 const sorter = require('json-array-sorter')
+const numeral = require('numeral')
 const { getPlayerAC, getOptValue, getGuildId, findUnit, replyButton, fetchGuild, truncateString } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{

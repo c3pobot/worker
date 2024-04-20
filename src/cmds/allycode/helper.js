@@ -15,18 +15,10 @@ Cmds.getUnitCheck = (roster = [])=>{
 Cmds.verifyUnit = async(playerId, roster = [])=>{
   let auth = 0
   let vObj = (await mongo.find('acVerify', {_id: playerId}))[0]
-  if(!vObj) return
   let uObj = roster.find(x=>x.definitionId == vObj.defId)
-  if(!uObj) return
-  if(vObj.verify == 'add'){
-    if(uObj.equippedStatMod.length == 2){
-      for(let i in uObj.equippedStatMod){
-        if(uObj.equippedStatMod[i].primaryStat.stat.unitStatId === 48 || uObj.equippedStatMod[i].primaryStat.stat.unitStatId === 49) auth++
-      }
-    }
-  }else{
-    if(+vObj.mods.length - +uObj.equippedStatMod.length === 2) auth = 2
-  }
+  if(!uObj || !vObj) return
+  if(vObj.verify !== 'add' && +vObj.mods.length - +uObj.equippedStatMod.length === 2) auth = 2
+  if(vObj.verify == 'add' && uObj.equippedStatMod?.length == 2 && uObj.equippedStatMod.filter(x=>x.primaryStat?.stat?.unitStatId === 48 || x.primaryStat?.stat?.unitStatId === 49)?.length == 2) auth = 2
   return auth
 }
 module.exports = Cmds

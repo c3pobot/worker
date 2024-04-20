@@ -14,7 +14,7 @@ const deleteCachedPlayer = async(pId, count = 10)=>{
 }
 const { getOptValue, replyButton, confirmButton } = require('src/helpers')
 module.exports = async(obj = {}, shard = {}, opt = [], auth)=>{
-  let msg2send = {content: 'This command requires shard admin privileges'}
+  let msg2send = {content: 'This command requires shard admin privileges'}, players
   if(!auth) return msg2send
   msg2send.content = 'you did not provide the correct information'
   let cmdConfirm = obj.confirm?.response
@@ -22,7 +22,7 @@ module.exports = async(obj = {}, shard = {}, opt = [], auth)=>{
   let emoji = getOptValue(opt, 'emoji')
   if(!startRank) return { content: 'you did not provide a starting rank' }
   if(!cmdConfirm){
-    await confirmButton(obj, 'Are you sure you want to remove players '+(emoji ? 'with emoji '+emoji:'')+' at rank **'+startRank+'** and higher?'), players
+    await confirmButton(obj, 'Are you sure you want to remove players '+(emoji ? 'with emoji '+emoji:'')+' at rank **'+startRank+'** and higher?');
     return
   }
   if(cmdConfirm !== 'yes'){

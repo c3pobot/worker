@@ -3,6 +3,7 @@ const log = require('logger')
 log.setLevel('debug');
 const redis = require('redisclient')
 const mongo = require('mongoclient')
+const redisCache = require('src/helpers/redisCache')
 const mqtt = require('./helpers/mqtt')
 const swgohClient = require('./swgohClient')
 const saveSlashCmds = require('./saveSlashCmds')

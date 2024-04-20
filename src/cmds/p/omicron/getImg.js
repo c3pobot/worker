@@ -1,5 +1,6 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
 const sorter = require('json-array-sorter')
 const getOmiUnits = require('./getOmiUnits')
 const getHTML = require('webimg').omicron

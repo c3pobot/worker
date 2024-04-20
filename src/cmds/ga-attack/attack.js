@@ -37,7 +37,7 @@ module.exports = async(obj = {}, opt = [], mode = '5v5')=>{
     msg2send.content = 'No results found for **'+unitList[leader].name+'**'
     let pipeline = [], countPipeline = [], searchString = '^'+season+'-d.*a'+leader+'-'
     if(info?.units?.length > 0){
-      await info.units.sort()
+      await info.units.sort((a, b) => a.localeCompare(b))
       msg2send.content += ' with units'
       for(let i in info.units){
         searchString += '.*a'+info.units[i]+'-'

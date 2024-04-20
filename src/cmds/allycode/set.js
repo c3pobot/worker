@@ -1,16 +1,13 @@
 'use strict'
 const mongo = require('mongoclient')
-const { buttonPick } = require('src/helpers')
+const { buttonPick, replyButton } = require('src/helpers')
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You do not have an allyCode linked. use `/allycode` to link'}, allyCode, option
-  if(obj.confirm){
-    if(obj.confirm.opt) option = obj.confirm.opt
-    if(obj.confirm.allyCode) allyCode = +obj.confirm.allyCode
-  }
+  let msg2send = { content: 'You do not have an allyCode linked. use `/allycode` to link' }
+  if(obj.confirm) await replyButton(obj, 'Here we go again ...')
+  let option = obj.confirm?.opt
+  let allyCode = +obj?.confirm?.allyCode
   let dObj = (await mongo.find('discordId', {_id: obj.member.user.id}))[0]
-  if(1 >= dObj?.allyCodes?.length || !dObj.allyCodes){
-    return { content: 'You must have more than 1 allyCode linked to set a primary or alt' }
-  }
+  if(1 >= dObj?.allyCodes?.length || !dObj.allyCodes) return { content: 'You must have more than 1 allyCode linked to set a primary or alt' }
   if(!option){
     let embedMsg = {
       content: 'Set primary or alt allyCode?',

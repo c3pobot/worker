@@ -1,4 +1,5 @@
 'use strict'
+const { dataList } = require('../dataList')
 const formatWebUnit = require('src/format/formatWebUnit')
 const addRequirement = async(obj = {}, type, value)=>{
   if(type && value){
@@ -12,7 +13,8 @@ const addRequirement = async(obj = {}, type, value)=>{
 module.exports = (units = [], roster = [], combatType = 3, foundUnits = [], foundFactionUnits = [])=>{
   let res = []
   for(let i in units){
-    let uInfo = unitList[units[i].baseId]
+    let uInfo = dataList?.unitList[units[i].baseId]
+
     if(foundUnits.filter(x=>x.baseId === units[i].baseId).length == 0 && foundFactionUnits.filter(x=>x.baseId === units[i].baseId).length === 0){
       if(uInfo.name && (combatType === 3 || uInfo?.combatType === combatType)){
         const pUnit = roster.find(x=>x.definitionId.startsWith(uInfo.baseId+':'))

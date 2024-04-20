@@ -58,13 +58,15 @@ module.exports = async(obj = {}, opt = [])=>{
   if(battleLog?.event?.length > 0){
     log.info(`BATTLE LOGS have ${battleLog.event.length} events...`)
     msg2send.content = `Error updaing battle log for ${zoneMap[zoneId]?.nameKey}`
-    for(let i in squads) getBattles(battleLog.event, squads[i])
+    for(let i in squads){
+      if(squads && squads[i]) getBattles(battleLog.event, squads[i])
+    }
     squads = squads.filter(x=>x.log?.length > 0)
     if(squads?.length == 0) msg2send.content = `I could not find info for attackes in ${zoneMap[zoneId]?.nameKey} maybe no battles have happened yet`
   }
   if(squads?.length > 0){
     msg2send.content = 'error getting html'
-    guild.zone = zoneMap[zoneId]?.nameKey
+    guild?.zone = zoneMap[zoneId]?.nameKey
     webHTML = getHtml.battleLog({squads: squads, profile: guild})
   }
   if(webHTML){

@@ -1,5 +1,5 @@
 'use strict'
-const cache = require('../cache/guild')
+const cache = require('src/helpers/cache/guild')
 const getGuildId = require('./getGuildId')
 const getAllyCode = require('./getAllyCode')
 const getPlayerId = require('./getPlayerId')

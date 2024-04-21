@@ -1,6 +1,6 @@
 'use strict'
 const getPlayer = require('./getPlayer');
-const cache = require('../cache/player');
+const cache = require('src/helpers/cache/player');
 const maxRetry = 6
 
 const filterMembers = (all = [], found = [])=>{

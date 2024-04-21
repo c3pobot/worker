@@ -7,7 +7,7 @@ module.exports = async(obj, opt)=>{
   let faction = getOptValue(opt, 'faction')
   let faction2 = await getOptValue(opt, 'faction-2')
   if(faction2) faction2 = faction2.toString().trim()
-  let combatType = gGetOptValue(opt, 'option', 1)
+  let combatType = getOptValue(opt, 'option', 1)
   if(combatType) combatType = +combatType
   if(faction){
     faction = faction.toString().trim()

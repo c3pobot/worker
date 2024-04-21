@@ -1,5 +1,5 @@
 'use strict'
-const cache = require('../cache/player')
+const cache = require('src/helpers/cache/player')
 const queryArenaPlayer = require('./queryArenaPlayer')
 
 module.exports = async( opt = {} )=>{

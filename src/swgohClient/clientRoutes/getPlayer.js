@@ -3,11 +3,10 @@ const log = require('logger')
 const queryPlayer = require('./queryPlayer');
 const formatPlayer = require('src/format/formatPlayer');
 const calcRosterStats = require('src/helpers/calcRosterStats');
-const playerCache = require('../cache/player');
-const guildIdCache = require('../cache/guildId');
-const dataProject = require('./project');
+const playerCache = require('src/helpers/cache/player');
+const dataProject = require('src/helpers/cache/project');
 
-module.exports = async(payload = {}, opt = {}, cachGuildId = true)=>{
+module.exports = async(payload = {}, opt = {})=>{
   let collection = opt.collection || 'playerCache'
   let data = await queryPlayer(payload)
   if(!data?.rosterUnit || data.rosterUnit.length === 0) return
@@ -17,7 +16,7 @@ module.exports = async(payload = {}, opt = {}, cachGuildId = true)=>{
   await formatPlayer(data)
   if(!data?.gp) return
   playerCache.set(collection, data.playerId, JSON.stringify(data))
-  if(cachGuildId) guildIdCache.set(data?.playerId, +data?.allyCode, data)
+  //if(cachGuildId) guildIdCache.set(data?.playerId, +data?.allyCode, data)
   if(opt.projection) return dataProject(data, opt.projection)
   return data
 }

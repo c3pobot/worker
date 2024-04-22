@@ -10,7 +10,7 @@ module.exports = async(obj = {})=>{
     if(!cmdMap || !cmdMap[obj.data.name]) return
     //if(!Cmds[obj.data.name]) cmds[obj.data.name] = require(`src/cmds/${obj.data.name}`)
     let msg2send = await cmdMap[obj.data.name](obj)
-    if(msg2send) await replyMsg(obj, msg2send)
+    if(msg2send && obj.token) await replyMsg(obj, msg2send)
   }catch(e){
     log.error(e)
   }

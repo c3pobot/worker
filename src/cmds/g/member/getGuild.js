@@ -1,10 +1,16 @@
 'use strict'
-const mongo = require('mongoclient')
+const cache = require('src/helpers/cache')
 const swgohClient = require('src/swgohClient')
 
+const getMembersFromCache = async(memberIds = [])=>{
+  let i = memberIds?.length, array = []
+  while(i--) array.push(cache.player.get('playerCache', memberIds[i], null, { playerId: 1, name: 1, allyCode: 1}))
+  let res = await Promise.allSettled(array)
+  return res?.filter(x=>x.value?.playerId).map(x=>x.value)
+}
 module.exports = async(guildId)=>{
   let memberIds, members
-  let guild = (await mongo.find('guildCache', {_id: guildId}, { name: 1, member: { playerId: 1}}))[0]
+  let guild = await cache.guild.get('guildCache', guildId)
   if(!guild){
     guild = await swgohClient.post('guild', { guildId: guildId, includeRecentGuildActivityInfo: false} )
     if(guild.guild){
@@ -13,7 +19,7 @@ module.exports = async(guildId)=>{
     }
   }
   if(guild?.member?.length > 0) memberIds = guild.member.map(x=>x.playerId)
-  if(memberIds?.length > 0) members = await mongo.find('playerCache', {_id: {$in: memberIds}}, { playerId: 1, name: 1, allyCode: 1 })
+  if(memberIds?.length > 0) members = await getMembersFromCache(memberIds)
   if(memberIds?.length > 0 && members?.length >= 0 && members?.length != guild?.member?.length){
     let foundMembers = members.map(x=>x.playerId)
     let missingMembers = guild.member.filter(x=>!foundMembers.includes(x.playerId))

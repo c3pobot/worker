@@ -4,7 +4,7 @@ const mongo = require('mongoclient')
 const redis = require('./redis')
 const project = require('./project')
 
-const playerCache = require('./playerId')
+const playerIdCache = require('./playerId')
 const guildIdCache = require('./guildId')
 
 const updateIdCache = async(playerId, obj = {})=>{
@@ -18,14 +18,14 @@ const updateIdCache = async(playerId, obj = {})=>{
   }
 }
 const redisGet = async(playerId, allyCode, projection)=>{
-  let key = playerId || allyCode
-  let res = redis.getJSON(key)
+  let key = playerId || allyCode?.toString()
+  let res = await redis.getJSON(key)
   if(res && projection) return project(res, projection)
   return res
 }
 const redisSet = async(playerId, allyCode, data = {} )=>{
   try{
-    let res = await Promise.allSettled([redis.setJSON(playerId, data), redis.setJSON(allyCode, data)])
+    let res = await Promise.allSettled([redis.setJSONTTL(playerId, data), redis.setJSONTTL(allyCode?.toString(), data)])
     if(res?.filter(x=>x.value === 'OK').length === 2) return true
     return
   }catch(e){

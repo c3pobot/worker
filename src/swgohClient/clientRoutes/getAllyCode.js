@@ -1,9 +1,10 @@
 'use strict'
-const cache = require('src/helpers/cache/player')
+const playerIdCache = require('src/helpers/cache/playerId')
 const queryArenaPlayer = require('./queryArenaPlayer')
 
 module.exports = async( opt = {} )=>{
-  let data = await cache.get('playerCache', opt.playerId, null, { allyCode: 1 })
-  if(!data) data = await queryArenaPlayer({ playerId: opt.playerId }, true)
+  let data = await playerIdCache.get(opt.playerId)
+  if(data) return +data
+  data = await queryArenaPlayer({ playerId: opt.playerId }, true)
   if(data?.allyCode) return +data?.allyCode
 }

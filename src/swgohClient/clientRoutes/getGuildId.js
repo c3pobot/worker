@@ -1,17 +1,14 @@
 'use strict'
 const processAPIRequest = require('../processAPIRequest');
-const mongo = require('mongoclient')
+const guildIdCache = require('src/helpers/cache/guildId')
 
 module.exports = async(opt = {})=>{
   let guildId = opt.guildId, pObj
-  if(!guildId){
-    if(opt.id > 999999){
-      if(!opt.skipCache) pObj = (await mongo.find('guildIdCache', { allyCode: +opt.id }))[0]
-      if(!pObj?.guildId) pObj = await processAPIRequest('player', { allyCode: opt.id.toString() })
-      if(pObj.guildId) guildId = pObj.guildId
-    }else{
-      guildId = opt.id
-    }
+  if(opt.guildId) return opt.guildId
+  if(opt.id > 999999){
+    if(!opt.skipCache) pObj = await guildIdCache.get(null, opt.id)
+    if(!pObj?.guildId) pObj = await processAPIRequest('player', { allyCode: opt.id.toString() })
+    return pObj?.guildId
   }
-  return guildId
+  return opt.id
 }

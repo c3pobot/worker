@@ -35,17 +35,25 @@ startCluster()
 module.exports.status = ()=>{
   return clusterReady
 }
-module.exports.set = async(key, value, TTL = 600)=>{
+module.exports.setTTL = async(key, value, TTL = 600)=>{
   if(!key || !value || !clusterReady) return
   return await cluster.SET(key, value, { EX: TTL })
+}
+module.exports.set = async(key, value)=>{
+  if(!key || !value || !clusterReady) return
+  return await cluster.SET(key, value)
 }
 module.exports.get = async(key)=>{
   if(!key || !clusterReady) return
   return await cluster.GET(key)
 }
-module.exports.setJSON = async(key, value, TTL = 600)=>{
+module.exports.setJSONTTL = async(key, value, TTL = 600)=>{
   if(!key || !value || !clusterReady) return
   return await cluster.SET(key, JSON.stringify(value), { EX: TTL })
+}
+module.exports.setJSON = async(key, value)=>{
+  if(!key || !value || !clusterReady) return
+  return await cluster.SET(key, JSON.stringify(value))
 }
 module.exports.getJSON = async(key)=>{
   if(!key || !clusterReady) return

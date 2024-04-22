@@ -7,9 +7,10 @@ const { getDiscordAC, replyButton, replyTokenError, buttonPick, replyMsg } = req
 module.exports = async(obj = {}, opt = [])=>{
   let msg2send = {content: 'You do not have your google account linked to your discordId'}
   if(obj.confirm?.enemyName && obj.confirm?.enemyId){
-    await replyMsg(obj, { content: `Running tw report...\n${obj.confirm?.enemyName} swgoh.gg link\nhttps://swgoh.gg/g/${obj.confirm?.enemyId}/\n`, components: []} )
-    let reporMsg = await getReport(obj, opt)
-    return reportMsg
+    await replyMsg(obj, { content: `Running tw report...\n${obj.confirm?.enemyName} swgoh.gg link\nhttps://swgoh.gg/g/${obj.confirm?.enemyId}/\n` } )
+    let reportMsg = await getReport(obj, opt)
+    await replyMsg(obj, reportMsg, 'POST')
+    return
   }
   let loginConfirm = obj.confirm?.response
   if(obj.confirm) await replyButton(obj, 'Getting TW opponent....')
@@ -23,10 +24,11 @@ module.exports = async(obj = {}, opt = [])=>{
     await replyTokenError(obj, dObj.allyCode)
     return;
   }
+  if(gObj?.msg2send) return { content: gObj.msg2send }
   if(!gObj?.data?.guild) return { content: 'Error getting guild data...'}
   if(!gObj?.data?.guild?.territoryWarStatus || gObj?.data?.guild?.territoryWarStatus?.length === 0) return { content: 'There is not a TW in progress' }
 
-  let ememyId = gObj.data.guild.territoryWarStatus[0]?.awayGuild?.profile?.id, enemyName = gObj.data.guild.territoryWarStatus[0]?.awayGuild?.profile?.name
+  let enemyId = gObj.data.guild.territoryWarStatus[0]?.awayGuild?.profile?.id, enemyName = gObj.data.guild.territoryWarStatus[0]?.awayGuild?.profile?.name
   if(!enemyId) return { content: 'Error determining opponent...'}
 
   let joined = gObj.data.guild.territoryWarStatus[0].optedInMember.map(m => {
@@ -45,7 +47,7 @@ module.exports = async(obj = {}, opt = [])=>{
       type: 2,
       label: 'Run TW report',
       style: 3,
-      custom_id: JSON.stringify({enemyId: enemyId, qty: qty, enemyName: enemyName})
+      custom_id: JSON.stringify({id: obj.id, enemyId: enemyId, enemyName: enemyName})
     })
   await replyMsg(obj, {content: `Successfully set ${enemyName} as your TW opponent. swgoh.gg link\nhttps://swgoh.gg/g/${enemyId}/`})
   await buttonPick(obj, msg2send, 'POST')

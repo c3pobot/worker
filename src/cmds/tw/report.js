@@ -2,10 +2,11 @@
 const mongo = require('mongoclient')
 const sorter = require('json-array-sorter')
 const swgohClient = require('src/swgohClient')
-const { getOptValue, getGuildId, calcGuildStats, guildReport, getFaction, getUnit, dbProjection } = require('src/helpers')
+const { getOptValue, getGuildId, calcGuildStats, guildReport, getFaction, getUnit, dbProjection, replyButton } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
   let guildMsg = ''
+
   if(obj.confirm?.enemyName && obj.confirm?.enemyId) guildMsg = `${obj.confirm?.enemyName} swgoh.gg link\nhttps://swgoh.gg/g/${obj.confirm?.enemyId}/\n`
   let msg2send = {content: `${guildMsg}You do not have your allycode linked to discord id`}, glUnits = []
 
@@ -31,7 +32,7 @@ module.exports = async(obj = {}, opt = [])=>{
   if(shipUnits?.length > 0) shipUnits = sorter([{column: 'nameKey', order: 'ascending'}], shipUnits)
   await replyButton(obj, `${guildMsg}Getting guild data...`)
   let [ gObj, eObj] = await Promise.all([
-    swgohClient.post('fetchTWGuild', { id: pObj.guildId, projection: dbProjection.guildReport })
+    swgohClient.post('fetchTWGuild', { id: pObj.guildId, projection: dbProjection.guildReport }),
     swgohClient.post('fetchTWGuild', { id: enemyId, projection: dbProjection.guildReport})
   ])
 

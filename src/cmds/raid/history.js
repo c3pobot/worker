@@ -30,7 +30,7 @@ module.exports = async(obj = {}, opt=[])=>{
 
   let raidId = getOptValue(opt, 'raid')
   let pObj = await getGuildId({dId: null}, {allyCode: allyCode}, opt)
-  if(!pObj?.guildId) return { content: `player with allyCode **${allyCode}** is not in a guild`...}
+  if(!pObj?.guildId) return { content: `player with allyCode **${allyCode}** is not in a guild...` }
 
   let gObj = await getGuild(pObj.guildId)
   if(!gObj?.name) return { content: 'Error getting guild info...'}

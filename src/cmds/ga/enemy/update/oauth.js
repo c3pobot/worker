@@ -22,6 +22,7 @@ module.exports = async(obj = {}, opt = [])=>{
       return;
     }
     if(pObj === 'GETTING_CONFIRMATION') return
+    if(pObj?.msg2send) return { content: pObj.msg2send }
   }
   if(pObj?.data){
     msg2send.content = 'There is not a GAC in progress'
@@ -39,6 +40,7 @@ module.exports = async(obj = {}, opt = [])=>{
         return;
       }
       if(gaLB === 'GETTING_CONFIRMATION') return
+      if(gaLB?.msg2send) return { content: gaLB.msg2send }
     }
   }
   if(gaLB?.data?.player?.length > 0){

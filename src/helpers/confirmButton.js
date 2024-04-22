@@ -1,9 +1,9 @@
 'use strict'
 const redis = require('redisclient')
 const replyMsg = require('./replyMsg')
-module.exports = async(obj, msg)=>{
+module.exports = async(obj = {}, msg)=>{
   await redis.setTTL('button-'+obj.id, obj, 600)
-  await replyMsg(obj?.token, {
+  await replyMsg(obj, {
     content: msg,
     components: [{
       type: 1,

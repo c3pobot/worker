@@ -5,7 +5,7 @@ const sorter = require('json-array-sorter')
 const numeral = require('numeral')
 const { getGuildId } = require('src/helpers')
 
-module.exports = async(obj  {}, opt = [])=>{
+module.exports = async(obj = {}, opt = [])=>{
   let msg2send = {content: 'You do not have discordId linked to allyCode'}
   let pObj = await getGuildId({dId: obj.member.user.id}, {}, opt)
   if(!pObj?.guildId) return msg2send
@@ -13,7 +13,7 @@ module.exports = async(obj  {}, opt = [])=>{
   let guild = (await mongo.find('twStatus', {_id: pObj.guildId}))[0]
   if(!guild?.enemy) return { content: 'You do not have an opponent guild registered'}
 
-  let gObj = await swgohClient.post('fetchTWGuild', { token: obj.token, id: enemyId, projection: {playerId: 1, name: 1, quality: 1}})
+  let gObj = await swgohClient.post('fetchTWGuild', { token: obj.token, id: guild?.enemy, projection: {playerId: 1, name: 1, quality: 1}})
   if(!gObj?.member || gObj?.member?.length === 0) return { content: 'error getting opponent guild info' }
 
   let unsortedArray = []

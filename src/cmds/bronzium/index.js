@@ -7,7 +7,8 @@ const swgohClient = require('src/swgohClient')
 
 module.exports = async(obj = {})=>{
   try{
-    let msg2send = {content: 'You do not have google linked'}, packId, tObj
+    let msg2send = {content: 'You do not have google linked'}
+    if(obj?.confirm) await replyButton(obj, 'Pulling data ...')
     let opt = obj?.data?.options || []
     let loginConfirm = obj?.confirm?.response
     let qty = getOptValue(opt, 'quantity', 100)
@@ -21,7 +22,7 @@ module.exports = async(obj = {})=>{
     qty = +qty
     let dObj = await getDiscordAC(obj.member.user.id, opt)
     if(!dObj?.uId || !dObj?.type) return msg2send
-    await replyButton(obj, 'Pulling data ...')
+
     msg2send.content = 'Error getting data'
     let pObj = await swgohClient.oauth(obj, 'getInitialData', dObj, {}, loginConfirm)
     if(pObj === 'GETTING_CONFIRMATION') return
@@ -29,6 +30,7 @@ module.exports = async(obj = {})=>{
       await replyTokenError(obj, dObj.allyCode)
       return;
     }
+    if(pObj?.msg2send) return { content: pObj.msg2send }
     if(!pObj?.data?.inventory?.currencyItem) return msg2send
 
     msg2send.content = 'You do not have enough allypoints'
@@ -37,13 +39,19 @@ module.exports = async(obj = {})=>{
 
     socialTotal = +socialTotal
     msg2send.content = 'Error getting pack Id'
-    packId = getPackId(pObj.data)
+    let packId = getPackId(pObj.data)
     if(!packId) return msg2send
 
     msg2send.content = 'Error opening bronzium packs'
     let spendRequest = qty * 250
     if(spendRequest > socialTotal) qty = Math.floor(socialTotal / 250)
     let tObj = await swgohClient.oauth(obj, 'buyItem', dObj, {itemId: packId, paymentCurrency: 4, quantity: qty}, loginConfirm)
+    if(tObj === 'GETTING_CONFIRMATION') return
+    if(tObj?.error == 'invalid_grant'){
+      await replyTokenError(obj, dObj.allyCode)
+      return;
+    }
+    if(tObj?.msg2send) return { content: tObj.msg2send }
     if(!tObj?.data?.purchasedResult || tObj?.data?.purchasedResult?.length === 0) return msg2send
 
     let data = await formatItems(tObj.data.purchasedResult)

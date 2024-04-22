@@ -31,6 +31,12 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
   if(dObj?.uId && dObj?.type){
     msg2send.content = 'Could not get leaderboard info'
     lb = await swgohClient.oauth(obj, 'getLeaderboard', dObj, {leaderboardType: 2, combatType: (shard.type == 'char' ? 1:2)}, loginConfirm)
+    if(lb === 'GETTING_CONFIRMATION') return
+    if(lb?.error == 'invalid_grant'){
+      await replyTokenError(obj, dObj.allyCode)
+      return;
+    }
+    if(lb?.msg2send) return { content: lb.msg2send }
   }
   if(lb?.data){
     msg2send.content = 'No new players where added'

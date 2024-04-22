@@ -18,8 +18,8 @@ module.exports = async(obj = {}, opt = [])=>{
 
 
   let [ gObj, eObj ] = await Promise.all([
-    swgohClient.post('fetchTWGuild', {token: obj.token, id: pObj.guildId, projection: {playerId: 1, name: 1, rosterUnit: {definitionId: 1, skill: 1}}})
-    swgohClient.post('fetchTWGuild', {token: obj.token, id: enemyId, projection: {playerId: 1, name: 1, rosterUnit: {definitionId: 1, skill: 1}}})
+    swgohClient.post('fetchTWGuild', {id: pObj.guildId, projection: {playerId: 1, name: 1, rosterUnit: {definitionId: 1, skill: 1}}}),
+    swgohClient.post('fetchTWGuild', {id: enemyId, projection: {playerId: 1, name: 1, rosterUnit: {definitionId: 1, skill: 1}}})
   ])
   if(gObj?.member?.length > 0 && joined?.length > 0 && gObj.member.length > joined.length) gObj.member = gObj.member.filter(x=>joined.includes(x.playerId))
   if(!gObj?.member || !eObj?.member) return { content: 'Error getting guild info...'}

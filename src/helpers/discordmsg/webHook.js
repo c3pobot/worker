@@ -33,7 +33,7 @@ const sendMsg = async(token, msg2send, method = 'POST')=>{
   let uri = `${BASE_URI}/${token}`
   if(method === 'PATCH') uri += '/messages/@original'
   let obj = await discordFetch(uri, method, JSON.stringify(msg2send), {"Content-Type": "application/json"})
-  if((obj?.status !== 200 && obj?.status) || obj.error){
+  if((obj?.status !== 200 && obj?.status) || obj?.error){
     log.error(JSON.stringify(obj))
     if(obj?.status > 300 && (obj?.body?.embeds || obj?.body?.content)){
       await discordFetch(uri, method, JSON.stringify({content: 'Your command was successful. however there was an error displaying the results. It may be that there is too much data to display'}), {"Content-Type": "application/json"})

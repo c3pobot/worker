@@ -1,0 +1,48 @@
+{
+  "type": "public",
+  "worker": "swgoh",
+  "cmd": {
+    "name": "admin",
+    "description": "Bot admin commands",
+    "options": [
+      {
+        "type": 2,
+        "name": "role",
+        "description": "mange bot admin role",
+        "options": [
+          {
+            "type": 1,
+            "name": "add",
+            "description": "(requires bot admin) Add admin role to the bot",
+            "options": [
+              {
+                "type": 8,
+                "name": "role",
+                "description": "role to add as admin to the bot",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "remove",
+            "description": "(requires bot admin) remove admin role from the bot",
+            "options": [
+              {
+                "type": 8,
+                "name": "role",
+                "description": "role to remove as admin from the bot",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "show",
+        "description": "show bot admin info"
+      }
+    ]
+  }
+}

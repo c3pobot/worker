@@ -21,7 +21,7 @@ module.exports = async(obj = {}, opt = [])=>{
   if(uInfo === 'GETTING_CONFIRMATION') return
   if(!uInfo?.baseId) return { content: `Error finding unit **${unit}**`}
 
-  let gObj = await swgohClient.post('fetchTWGuild', {token: obj.token, id: enemyId, projection: {playerId: 1, name: 1, rosterUnit: {definitionId: 1, relic: 1, currentTier: 1, gp: 1, currentRarity: 1}}})
+  let gObj = await swgohClient.post('fetchTWGuild', { id: guild?.enemy, projection: {playerId: 1, name: 1, rosterUnit: {definitionId: 1, relic: 1, currentTier: 1, gp: 1, currentRarity: 1}}})
   if(!gObj?.member || gObj?.member?.length === 0) return { content: 'Error getting opponent guild information...'}
 
   let gType = getOptValue(opt, 'option')

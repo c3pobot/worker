@@ -1,7 +1,8 @@
 'use strict'
 const numeral = require('numeral')
+
 const { getPlayerAC, fetchPlayer, replyError } = require('src/helpers')
-const { getNoMods, getMissingMods, getIncModsets, getLowModPips } = require('src/format')
+const { getNoMods, getMissingMods, getIncModsets, getMissingModLevel, getLowModPips } = require('src/format')
 const modCount = (obj)=>{
   let count = 0
   for(let i in obj) count += (+obj[i].equippedStatMod.length || 0)
@@ -32,14 +33,14 @@ module.exports = async(obj = {})=>{
         value: '```autohotkey\n'
       }
       tempOver.value += pObj.rosterUnit.filter(x => x.combatType == 1).length + ' units\n'
-      tempOver.value += numeral(await modCount(pObj.rosterUnit)).format('0,0')+' equipped mods\n'
+      tempOver.value += numeral(modCount(pObj.rosterUnit)).format('0,0')+' equipped mods\n'
       tempOver.value += '```'
       embedMsg.fields.push(tempOver)
-      embedMsg.fields.push(await getNoMods(pObj.rosterUnit))
-      embedMsg.fields.push(await getMissingMods(pObj.rosterUnit))
-      embedMsg.fields.push(await getIncModsets(pObj.rosterUnit))
-      embedMsg.fields.push(await getMissingModLevel(pObj.rosterUnit))
-      embedMsg.fields.push(await getLowModPips(pObj.rosterUnit))
+      embedMsg.fields.push(getNoMods(pObj.rosterUnit))
+      embedMsg.fields.push(getMissingMods(pObj.rosterUnit))
+      embedMsg.fields.push(getIncModsets(pObj.rosterUnit))
+      embedMsg.fields.push(getMissingModLevel(pObj.rosterUnit))
+      embedMsg.fields.push(getLowModPips(pObj.rosterUnit))
       msg2send.content = null
       msg2send.embeds = [embedMsg]
     }

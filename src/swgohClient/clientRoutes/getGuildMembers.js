@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const getPlayer = require('./getPlayer');
 const cache = require('src/helpers/cache/player');
 const maxRetry = 6
@@ -22,7 +23,7 @@ const getMembers = async(members = [], projection)=>{
 }
 
 module.exports = async(members = [], projection)=>{
-  let count = 0, res = []
+  let count = 0, res = [], timeStart = Date.now()
   while(count < maxRetry){
     let tempMembers = filterMembers(members, res)
     let tempRes = await getMembers(tempMembers, projection)

@@ -5,7 +5,7 @@ const numeral = require('numeral')
 const { getOptValue, getDiscordAC, replyTokenError, truncateString } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You do not have your google account linked to your discordId'}, guildId, loginConfirm, gObj, sendResponse = 0, twData, defAvailable = [], joined = [], uInfo, memberSet = []
+  let msg2send = {content: 'You do not have your google account linked to your discordId'}
   if(obj.confirm) await replyButton(obj, 'Pulling guild data....')
   let loginConfirm = obj.confirm?.response
 
@@ -22,6 +22,7 @@ module.exports = async(obj = {}, opt = [])=>{
     await replyTokenError(obj, dObj.allyCode)
     return;
   }
+  if(guild?.msg2send) return { content: guild.msg2send }
   let guildId = guild?.data?.guild?.profile?.id
   if(!guildId) return { content: 'Error getting tw data...'}
   if(!guild?.data?.guild?.territoryWarStatus || guild?.data?.guild?.territoryWarStatus?.length === 0) return { content: 'There is not a TW in progress' }

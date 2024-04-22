@@ -4,7 +4,7 @@ const { getDiscordAC, replyButton, replyTokenError } = require('src/helpers')
 const sorter = require('json-array-sorter')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You do not have your google account linked to your discordId'}, loginConfirm, gObj, sendResponse = 0, member, joined, memberJoined, memberNotJoined
+  let msg2send = {content: 'You do not have your google account linked to your discordId'}
   let loginConfirm = obj?.confirm?.response
   if(obj.confirm) await replyButton(obj, 'pulling guild data...')
 
@@ -17,6 +17,7 @@ module.exports = async(obj = {}, opt = [])=>{
     await replyTokenError(obj, dObj.allyCode)
     return;
   }
+  if(gObj?.msg2send) return { content: gObj.msg2send }
   if(!gObj?.data?.guild?.profile) return { content: 'Error getting guild data'}
   if(!gObj?.data?.guild?.territoryWarStatus || gObj?.data?.guild?.territoryWarStatus?.length === 0) return { content: 'There is not a TW in progress' }
 

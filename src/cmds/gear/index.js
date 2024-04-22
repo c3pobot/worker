@@ -2,7 +2,7 @@
 const { dataList } = require('src/helpers/dataList')
 const sorter = require('json-array-sorter')
 const getHTML = require('webimg').gear
-const { getOptValue, getGearParts, replyButton, replyError, getImg } = require('src/helpers')
+const { getOptValue, getGearParts, replyButton, replyError, getImg, findUnit } = require('src/helpers')
 
 module.exports = async(obj = {})=>{
   try{

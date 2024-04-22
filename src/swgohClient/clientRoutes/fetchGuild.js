@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const formatGuild = require('src/format/formatGuild');
 const getGuildId = require('./getGuildId');
 const getGuildMembers = require('./getGuildMembers');
@@ -23,11 +24,13 @@ module.exports = async(opt = {})=>{
   let guild = await cache.get('guildCache', guildId)
   if(!guild){
     needsFormat = true
-    let tempGuild = await queryGuild(guildId, true)
-    if(tempGuild?.guild?.member?.length > 0) guild = tempGuild?.guild
+    guild = await queryGuild({ guildId: guildId, includeActivity: true })
     if(guild?.member?.length > 0) guild.member = guild.member.filter(x=>x.memberLevel > 1)
   }
+  let timeStart = Date.now()
   if(guild?.member?.length > 0) members = await getGuildMembers(guild.member, projection)
+  let timeEnd = Date.now()
+  log.debug(`guild pull took ${(timeEnd - timeStart) / 1000} seconds`)
   if(guild?.member?.length !== members?.length) return
   if(needsFormat){
     await formatGuild(guild, members)

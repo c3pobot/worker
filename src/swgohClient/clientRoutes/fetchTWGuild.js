@@ -22,11 +22,10 @@ module.exports = async(opt = {})=>{
   let guildId = await getGuildId(opt)
   if(!guildId) return
   let guild = await cache.get('twGuildCache', guildId)
-  if(!guild) guild = await guildCache.get('guildCache', { _id: guildId })
+  if(!guild) guild = await cache.get('guildCache', { _id: guildId })
   if(!guild){
     needsFormat = true
-    guild = await queryGuild(guildId, true)
-    if(guild?.guild?.member?.length > 0) guild = guild?.guild
+    guild = await queryGuild({ guildId: guildId, includeActivity: true})
     if(guild?.member?.length > 0) guild.member = guild.member.filter(x=>x.memberLevel > 1)
   }
   if(guild?.member?.length > 0) members = await getTWGuildMembers(guild.member, projection)

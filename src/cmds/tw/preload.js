@@ -21,9 +21,7 @@ module.exports = async(obj = {}, opt = [])=>{
     method = 'POST'
     if(loginConfirm === 'no') return { content: 'command canceled', components: []}
   }
-  let conflictStatus, squads, battleLog, zoneChannelId, preload, guild
-
-
+  
   let dObj = await getDiscordAC(obj.member?.user?.id, opt)
   if(!dObj?.uId && !dObj?.type) return msg2send
 

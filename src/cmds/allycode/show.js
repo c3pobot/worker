@@ -11,8 +11,8 @@ module.exports = async(obj = {}, opt = [])=>{
     if(!username) username = obj.data.resolved.users[dId]?.username || obj.data.resolved.members[dId]?.username
   }
   let dObj = (await mongo.find('discordId', {_id: dId}))[0]
-  if(!dObj?.allyCodes || dobj?.allyCodes?.length == 0 && dId === obj.member?.user?.id) return { content: 'you do not have allyCode linked to your discordId.' }
-  if(!dObj?.allyCodes || dobj?.allyCodes?.length == 0) return msg2send
+  if(!dObj?.allyCodes || dObj?.allyCodes?.length == 0 && dId === obj.member?.user?.id) return { content: 'you do not have allyCode linked to your discordId.' }
+  if(!dObj?.allyCodes || dObj?.allyCodes?.length == 0) return msg2send
   msg2send.content = (username ? '@'+username:'Requested')+' allyCode(s)\n```\n'
   for(let i in dObj.allyCodes) msg2send.content += dObj.allyCodes[i].allyCode+(dObj.allyCodes[i].opt ? ' : '+dObj.allyCodes[i].opt:'')+'\n'
   msg2send.content += '```'

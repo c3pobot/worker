@@ -2,12 +2,13 @@
 const log = require('logger')
 const fetch = require('node-fetch')
 const parseResponse = require('./parseResponse')
-const discordUrl = process.env.DISCORD_PROXY_URI || 'https://discord.com'
+const discordUrl = process.env.DISCORD_PROXY || 'https://discord.com'
+const BOT_TOKEN = process.env.BOT_TOKEN
 console.log('Discord Fetch Proxy : '+discordUrl)
-const discordRequest = async(uri, method, body, headers)=>{
+const discordRequest = async(uri, method, body, headers = {})=>{
   try{
     let res = await fetch(discordUrl+'/api'+uri, {
-      headers: headers,
+      headers: { 'Authorization': `Bot ${BOT_TOKEN}`,...headers },
       method: method,
       body: body,
       timeout: 30000,

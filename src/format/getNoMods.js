@@ -1,7 +1,7 @@
 'use strict'
 const getUnitName = require('src/helpers/getUnitName')
 const sorter = require('json-array-sorter')
-module.exports = async(obj = {})=>{
+module.exports = (obj = {})=>{
   let tempObj = {
     name: 'Units with 0 mods',
     value: '```autohotkey\n'

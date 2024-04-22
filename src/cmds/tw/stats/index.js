@@ -18,6 +18,7 @@ module.exports = async(obj = {}, opt = [])=>{
     await replyTokenError(obj, dObj.allyCode)
     return;
   }
+  if(gObj?.msg2send) return { content: gObj.msg2send }
   if(!gObj?.data?.guild?.member || !gObj?.data?.guild?.member?.length == 0) return { content: 'Error getting guild data' }
 
   let members = [], joined = [], guildData, chartData = [], chartDefense

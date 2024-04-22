@@ -16,5 +16,6 @@ module.exports = async(obj = {}, opt = [])=>{
     await replyTokenError(obj, dObj?.allyCode)
     return 'GETTING_CONFIRMATION';
   }
+  if(pObj?.msg2send) return { msg2send: pObj.msg2send }
   return { msg2send: msg2send, data: pObj?.data }
 }

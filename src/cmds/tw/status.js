@@ -18,6 +18,7 @@ module.exports = async(obj = {}, opt = [])=>{
     await replyTokenError(obj, dObj.allyCode)
     return;
   }
+  if(gObj?.msg2send) return { content: gObj.msg2send }
   if(!gObj?.data?.guild) return { content: 'Error getting guild data...'}
 
   if(!gObj?.data?.guild?.territoryWarStatus || gObj?.data?.guild?.territoryWarStatus?.length === 0) return { content: 'There is not a TW in progress'}
@@ -31,6 +32,7 @@ module.exports = async(obj = {}, opt = [])=>{
     await replyTokenError(obj, dObj.allyCode)
     return;
   }
+  if(battleStats?.msg2send) return { content: battleStats.msg2send }
 
   guildData.currentStat = battleStats.data.currentStat
   guildData.instanceInfo = gObj.data.guild.guildEvents.find(x=>x.id == guildData.instanceId.split(':')[0])

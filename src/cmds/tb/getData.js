@@ -14,17 +14,19 @@ module.exports = async(obj = {}, opt = [])=>{
     await replyTokenError(obj, dObj.allyCode, gObj.error)
     return 'GETTING_CONFIRMATION';
   }
+  if(gObj?.msg2send) return { content: gObj.msg2send }
   if(!gObj?.data?.guild) return { content: 'Error getting guild data'}
 
   gObj = gObj.data.guild
   if(!gObj?.territoryBattleStatus || gObj?.territoryBattleStatus.length === 0) return { content: 'tb not in progress'}
-  
+
   let battleStats = await swgohClient.oauth(obj, 'getMapStats', dObj, {territoryMapId: gObj.territoryBattleStatus[0].instanceId}, loginConfirm)
   if(battleStats === 'GETTING_CONFIRMATION') return battleStats
   if(battleStats?.error){
     await replyTokenError(obj, dObj.allyCode, gObj.error)
     return 'GETTING_CONFIRMATION';
   }
+  if(battleStats?.msg2send) return { content: battleStats.msg2send }
   if(!battleStats?.data?.currentStat) return { content: 'error getting battle stats'}
 
   let guildStats = await swgohClient.post('fetchGuild', { token: obj.token, id: gObj.profile.id, projection: {playerId: 1, name: 1, gp: 1, gpChar: 1, gpShip: 1, allyCode: 1}})

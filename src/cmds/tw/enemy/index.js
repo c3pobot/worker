@@ -2,7 +2,6 @@
 const Cmds = {}
 Cmds.quality = require('./quality')
 Cmds.member = require('./member')
-Cmds.squad = require('./squad')
 Cmds.unit = require('./unit')
 Cmds.update = require('./update')
 module.exports = async(obj = {}, opt = [])=>{

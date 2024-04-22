@@ -13,9 +13,7 @@ const getHtml = require('webimg').tw
 
 const { getDiscordAC, buttonPick, replyButton, getImg } = require('src/helpers')
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You do not have your google account linked to your discordId'}, loginConfirm, method = 'PATCH', zoneId
-  let conflictStatus, squads, battleLog, zoneChannelId, guild, mapStatus, webHTML, webImg
-
+  let msg2send = {content: 'You do not have your google account linked to your discordId'}, method = 'PATCH'
   let loginConfirm = obj?.confirm?.response
   let zoneId = obj?.confirm?.zoneId
   if(obj?.confirm){
@@ -27,7 +25,7 @@ module.exports = async(obj = {}, opt = [])=>{
   if(!dObj?.uId && !dObj?.type) return msg2send
 
 
-  let conflictStatus, squads, battleLog, zoneChannelId, preload, guild, mapStatus
+  let battleLog
 
   let mapStatus = await getMapStatus(obj, dObj, loginConfirm)
   if(mapStatus === 'GETTING_CONFIRMATION') return;
@@ -66,7 +64,7 @@ module.exports = async(obj = {}, opt = [])=>{
   }
   if(squads?.length > 0){
     msg2send.content = 'error getting html'
-    guild?.zone = zoneMap[zoneId]?.nameKey
+    guild.zone = zoneMap[zoneId]?.nameKey
     webHTML = getHtml.battleLog({squads: squads, profile: guild})
   }
   if(webHTML){

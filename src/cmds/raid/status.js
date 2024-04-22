@@ -1,5 +1,5 @@
 'use strict'
-const swgohClient = require('swgohClient')
+const swgohClient = require('src/swgohClient')
 const getMemberPrevious = require('./getMemberPrevious')
 const getMember = require('./getMember')
 const getHTML = require('webimg').raid
@@ -32,6 +32,7 @@ module.exports = async(obj = {}, opts = [])=>{
     await replyTokenError(obj, dObj.allyCode)
     return;
   }
+  if(gObj?.msg2send) return { content: gObj.msg2send }
   if(!gObj?.data?.guild || !gObj?.data?.guild?.member || gObj?.data?.guild?.member?.length === 0) return { content: 'Error getting data'}
 
   gObj = gObj.data.guild

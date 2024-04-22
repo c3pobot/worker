@@ -1,4 +1,5 @@
 'use strict'
+const { dataList } = require('src/helpers/dataList')
 const getUnitName = require('src/helpers/getUnitName')
 const sorter = require('json-array-sorter')
 module.exports = (obj = {})=>{
@@ -7,19 +8,19 @@ module.exports = (obj = {})=>{
     value: '```autohotkey\n'
   }
   let unsortedArray = []
-  if(gameData && gameData.modDefData && gameData.modSetData){
+  if(dataList?.gameData?.modDefData && dataList?.gameData?.modSetData){
     for(let i in obj){
       if(obj[i].equippedStatMod.length > 1){
         let tempCount = {}
         for(let m in obj[i].equippedStatMod){
-          if(gameData.modDefData[obj[i].equippedStatMod[m].definitionId] && +gameData.modDefData[obj[i].equippedStatMod[m].definitionId].setId){
-            if(!tempCount[gameData.modDefData[obj[i].equippedStatMod[m].definitionId].setId]){
-              tempCount[gameData.modDefData[obj[i].equippedStatMod[m].definitionId].setId] = {
+          if(dataList.gameData.modDefData[obj[i].equippedStatMod[m].definitionId] && +dataList.gameData.modDefData[obj[i].equippedStatMod[m].definitionId].setId){
+            if(!tempCount[dataList.gameData.modDefData[obj[i].equippedStatMod[m].definitionId].setId]){
+              tempCount[dataList.gameData.modDefData[obj[i].equippedStatMod[m].definitionId].setId] = {
                 count: 0,
-                setCount: +gameData.modSetData[gameData.modDefData[obj[i].equippedStatMod[m].definitionId].setId].count
+                setCount: +dataList.gameData.modSetData[dataList.gameData.modDefData[obj[i].equippedStatMod[m].definitionId].setId].count
               }
             }
-            if(tempCount[gameData.modDefData[obj[i].equippedStatMod[m].definitionId].setId]) tempCount[gameData.modDefData[obj[i].equippedStatMod[m].definitionId].setId].count++
+            if(tempCount[dataList.gameData.modDefData[obj[i].equippedStatMod[m].definitionId].setId]) tempCount[dataList.gameData.modDefData[obj[i].equippedStatMod[m].definitionId].setId].count++
           }
         }
         let countTemp = 0

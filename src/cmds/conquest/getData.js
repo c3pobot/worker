@@ -22,6 +22,7 @@ module.exports = async(obj = {}, opt = [])=>{
       await replyTokenError(obj, dObj?.allyCode, pObj.error)
       return 'GETTING_CONFIRMATION'
     }
+    if(pObj?.msg2send) return { msg2send: pObj.msg2send }
   }
   if(pObj?.data?.conquestStatus && pObj?.data?.gameEvent && pObj?.data?.challengeProgress){
     cqData = {

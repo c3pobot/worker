@@ -25,12 +25,12 @@ module.exports.get = async(collection, playerId, allyCode, projection)=>{
   }
   return (await mongo.find(collection, query, projection))[0]
 }
-module.exports.set = async(collection, playerId, data)=>{
+module.exports.set = async(collection, playerId, data, cacheId = true)=>{
   try{
     if(!collection || !playerId || !data) return
     let pObj = JSON.parse(data)
     if(!pObj?.allyCode) return
-    updateIdCache(playerId, pObj)
+    if(cacheId) updateIdCache(playerId, pObj)
     return await mongo.set(collection, { _id: playerId }, pObj)
   }catch(e){
     log.error(e)

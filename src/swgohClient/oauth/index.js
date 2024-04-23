@@ -76,10 +76,16 @@ module.exports = async(obj = {}, method, dObj = {}, payload)=>{
   if(identity?.error) return ({status: 'error', error: 'invalid_grant'})
   if(identity?.description) return({status: 'error', error: identity?.description})
   if(identity?.auth?.authId && identity?.auth?.authToken) data = await processAPIRequest(method, payload, identity)
+  if(loginConfirm !== 'no' && data?.code && reAuthCodes[data?.code]){
+    await confirmButton(obj, msg2send)
+    return 'GETTING_CONFIRMATION'
+  }
+  /*
   if((!data || (data?.code && reAuthCodes[data?.code])) && loginConfirm !== 'no'){
     await confirmButton(obj, msg2send)
     return 'GETTING_CONFIRMATION'
   }
+  */
   if(data){
     if(data.code){
       return ({status: status, error: data})

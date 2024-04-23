@@ -7,18 +7,25 @@ const { formatGAOverview, formatGAMods, formatGARelics, formatGAQuality } = requ
 const getUnits = require('./getUnits')
 
 module.exports = async(obj = {}, opt = [], dObj, gaInfo)=>{
-  let msg2send = {content: 'Error getting GAC info'}, eObj, charUnits = [], shipUnits = [], pObj
+  let msg2send = {content: 'Error getting GAC info'}, charUnits = [], shipUnits = []
   if(!dObj) dObj = await getDiscordAC(obj.member.user.id, opt)
-  if(dObj?.allyCode){
-    msg2send.content = 'Error getting GAC info'
-    pObj = await swgohClient.post('fetchGAPlayer', {id: +dObj.allyCode, opponent: dObj.allyCode}, null)
-    if(!gaInfo) gaInfo = await getGAInfo(dObj.allyCode)
-  }
-  if(gaInfo?.currentEnemy){
-    msg2send.content = 'Error getting GAC opponent info'
-    eObj = await swgohClient.post('fetchGAPlayer', {id: gaInfo.currentEnemy, opponent: dObj.allyCode}, null)
-  }
-  if(!eObj?.allyCode) return msg2send
+  if(!dObj?.allyCode) return { content: 'Your allyCode is not linked to your discord id' }
+
+  if(!gaInfo) gaInfo = await getGAInfo(dObj.allyCode)
+  if(!gaInfo.currentEnemy) return { content: 'you do not have an opponent set'}
+
+  if(!gaInfo?.playerId) gaInfo.playerId = dObj.playerId
+  if(!gaInfo?.playerId) gaInfo.playerId = await swgohClient.post('getPlayerId', { allyCode: dObj.allyCode })
+
+  let [ pObj, eObj ] = await Promise.allSettled([
+    swgohClient.post('fetchGAPlayer', { playerId: gaInfo.playerId, allyCode: dObj.allyCode, opponent: dObj.allyCode }),
+    swgohClient.post('fetchGAPlayer', { playerId: gaInfo.currentEnemy, opponent: dObj.allyCode})
+  ])
+  if(!pObj?.value?.playerId) return { content: 'error getting player info' }
+  if(!eObj?.value?.playerId) return { content: 'error getting opponent info' }
+
+  pObj = pObj.value, eObj = eObj.value
+
   msg2send.content = null
   msg2send.embeds = []
   let gaOverview = {

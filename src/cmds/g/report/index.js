@@ -120,7 +120,7 @@ module.exports = async(obj = {}, opt = [])=>{
               let gUnits = gObj.member.filter(x => x.rosterUnit.some(u =>u.definitionId.startsWith(uInfo.baseId+':'))).map(unit => {
                 return Object.assign({}, unit.rosterUnit.filter(x => x.definitionId.startsWith(uInfo.baseId+':'))[0])
               })
-              shipMsg.fields.push(await FT.FormatReportUnit(uInfo, gUnits, null))
+              shipMsg.fields.push(await formatReportUnit(uInfo, gUnits, null))
               count++
             }
           }

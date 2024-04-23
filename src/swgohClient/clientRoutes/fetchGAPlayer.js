@@ -1,21 +1,16 @@
 'use strict'
 const getPlayer = require('./getPlayer');
 const cache = require('src/helpers/cache/player');
+const getPlayerId = require('./getPlayerId')
 
 module.exports = async(opt = {})=>{
-  let payload = {}
-  if(opt.id > 999999){
-    payload.allyCode = +opt.id
-  }else{
-    payload.playerId = opt.id
-  }
-  let data = await cache.get('gaCache', `${opt.id}-${opt.opponent}`, null, opt.projection)
-  if(!data){
-    data = await getPlayer(payload, { collection: 'playerCache', projection: opt.projection })
-    if(data){
-      data.opponent = +opt.opponent
-      cache.set('gaCache', `${opt.id}-${opt.opponent}`, JSON.stringify(data))
-    }
+  let playerId = await getPlayerId(opt)
+  if(!playerId) return
+  let data = await cache.get('gaCache', `${playerId}-${opt.opponent}`, null, opt.projection)
+  if(!data) data = await getPlayer({ playerId: playerId })
+  if(data && !data.opponent){
+    data.opponent = +opt.opponent
+    cache.set('gaCache', `${playerId}-${opt.opponent}`, JSON.stringify(data), false)
   }
   return data
 }

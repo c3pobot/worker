@@ -1,6 +1,6 @@
 'use strict'
 const mongo = require('mongoclient')
-const { getGuildId, getOptValue, replyButton } = require('src/helpers')
+const { getGuildId, getOptValue, replyButton, findUnit } = require('src/helpers')
 
 module.exports = async(obj, opt = [])=>{
   let msg2send = {content: 'You allyCode is not linked to your discordId or you are not part of a guild'}, unit, uInfo, guildId

@@ -22,8 +22,8 @@ module.exports = async(obj = {}, opt = [])=>{
   }
   if(squad){
     msg2send.content = 'Error getting player data'
-    pObj = await swgohClient.post('fetchGAPlayer', {id: +allyObj.allyCode, opponent: dObj.allyCode}, null)
-    eObj = await swgohClient.post('fetchGAPlayer', {id: gaInfo.currentEnemy, opponent: dObj.allyCode}, null)
+    pObj = await swgohClient.post('fetchGAPlayer', { playerId: gaInfo.playerId, allyCode: +allyObj.allyCode, opponent: dObj.allyCode} )
+    eObj = await swgohClient.post('fetchGAPlayer', { playerId: gaInfo.currentEnemy, opponent: dObj.allyCode} )
   }
   if(pObj?.rosterUnit && eObj?.rosterUnit) msg2send = await getImg(squad, pObj, eObj)
   return msg2send

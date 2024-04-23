@@ -5,28 +5,30 @@ const { getOptValue, getDiscordAC, replyButton, findUnit } = require('src/helper
 const swgohClient = require('src/swgohClient')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'Your allyCode is not linked to your discord id'}, unit, uInfo, guildId, pObj, eObj, gaInfo
+  let msg2send = {content: 'Your allyCode is not linked to your discord id'}
+  if(obj.confirm) await replyButton(obj)
   let dObj = await getDiscordAC(obj.member.user.id, opt)
-  if(dObj?.allyCode){
-    msg2send.content = 'You do not have a GA opponent configured'
-    gaInfo = await getGAInfo(dObj.allyCode)
-  }
-  if(gaInfo?.currentEnemy){
-    msg2send.content = 'you did not specify a unit'
-    unit = getOptValue(opt, 'unit')
-  }
-  if(unit){
-    unit = unit.toString().trim()
-    msg2send.content = 'error finding unit **'+unit+'**'
-    uInfo = await findUnit(obj, unit)
-    if(uInfo === 'GETTING_CONFIRMATION') return
-  }
-  if(uInfo){
-    await replyButton(obj, 'Getting info for **'+uInfo.nameKey+'** ...')
-    msg2send.content = 'Error getting player info'
-    pObj = await swgohClient.post('fetchGAPlayer', {id: +dObj.allyCode, opponent: dObj.allyCode}, null)
-    eObj = await swgohClient.post('fetchGAPlayer', {id: gaInfo.currentEnemy, opponent: dObj.allyCode}, null)
-  }
-  if(pObj?.allyCode && eObj?.allyCode) msg2send = await getImg(uInfo, pObj, eObj)
+  if(!dObj?.allyCode) return msg2send
+
+  let gaInfo = await getGAInfo(dObj.allyCode)
+  if(!gaInfo?.currentEnemy) return { content: 'you do not have an opponent set' }
+
+  let unit = getOptValue(opt, 'unit')?.toString()?.trim()
+  if(!unit) return { content: 'you did not specify a unit' }
+
+  let uInfo = await findUnit(obj, unit)
+  if(uInfo === 'GETTING_CONFIRMATION') return
+  if(!uInfo.baseId) return { content: `Error finding **${unit}**` }
+
+  let [ pObj, eObj ] = await Promise.allSettled([
+    swgohClient.post('fetchGAPlayer', { playerId: gaInfo.playerId, allyCode: dObj.allyCode, opponent: dObj.allyCode }),
+    swgohClient.post('fetchGAPlayer', { playerId: gaInfo.currentEnemy, opponent: dObj.allyCode})
+  ])
+  if(!pObj?.value?.playerId) return { content: 'error getting player info' }
+  if(!eObj?.value?.playerId) return { content: 'error getting opponent info' }
+
+  pObj = pObj.value, eObj = eObj.value
+  msg2send = await getImg(uInfo, pObj, eObj)
+  
   return msg2send
 }

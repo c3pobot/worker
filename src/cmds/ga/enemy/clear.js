@@ -15,9 +15,8 @@ module.exports = async(obj, opt = [])=>{
   }
   if(gaInfo){
     msg2send.content = 'Your GA opponent data has been cleared'
-    await mongo.delMany('gaCache', {opponent: +dObj.allyCode});
-    await mongo.unset('ga', {_id: dObj.allyCode.toString()}, {currentEnemy: gaInfo.currentEnemy});
-    await mongo.set('ga', {_id: dObj.allyCode.toString()}, {enemies: []})
+    await mongo.delMany('gaCache', { opponent: +dObj.allyCode });
+    await mongo.set('ga', { _id: dObj.allyCode.toString()}, { enemies: [], currentEnemy: null })
   }
   return msg2send
 }

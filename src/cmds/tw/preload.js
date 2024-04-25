@@ -21,7 +21,7 @@ module.exports = async(obj = {}, opt = [])=>{
     method = 'POST'
     if(loginConfirm === 'no') return { content: 'command canceled', components: []}
   }
-  
+
   let dObj = await getDiscordAC(obj.member?.user?.id, opt)
   if(!dObj?.uId && !dObj?.type) return msg2send
 
@@ -55,7 +55,7 @@ module.exports = async(obj = {}, opt = [])=>{
     if(battleLog === 'GETTING_CONFIRMATION') return;
   }
   if(battleLog?.event?.length > 0){
-    log.info(`BATTLE LOGS have ${battleLog.event.length} events...`)
+    console.log(`BATTLE LOGS have ${battleLog.event.length} events...`)
     msg2send.content = `Error updaing battle log for ${zoneMap[zoneId]?.nameKey}`
     msg2send.components = buttons
     for(let i in squads) getBattles(battleLog.event, squads[i])

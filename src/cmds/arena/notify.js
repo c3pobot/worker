@@ -1,7 +1,7 @@
 'use strict'
 const mongo = require('mongoclient')
 const swgohClient = require('src/swgohClient')
-const { getDiscordAC } = require('src/helpers')
+const { getDiscordAC, getOptValue } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
   let msg2send = {content: 'Error getting player info'}, pObj

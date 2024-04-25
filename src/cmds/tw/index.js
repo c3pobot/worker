@@ -2,10 +2,7 @@
 const Cmds = {}
 Cmds['attack-log'] = require('./attack-log')
 Cmds.defense = require('./defense')
-Cmds.enemy = require('./enemy')
-Cmds.omicron = require('./omicron')
-Cmds.report = require('./report')
-Cmds['report-units'] = require('src/cmds/g/units')
+Cmds.opponent = require('./opponent')
 Cmds.member = require('./member')
 Cmds.preload = require('./preload')
 Cmds.status = require('./status')

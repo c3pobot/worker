@@ -4,7 +4,7 @@ const getOptValue = require('./getOptValue')
 
 module.exports = async(obj = {}, opt = [])=>{
   let res = { mentionError: 0 }
-  res.dId = getOptValue(opt, 'user', obj.member.user.id)
+  res.dId = getOptValue(opt, 'user', obj.member?.user?.id)
   res.allyCode = getOptValue(opt, 'allycode')
   if(!res.allyCode){
     let dObj = await getDiscordAC(res.dId, opt)

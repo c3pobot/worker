@@ -4,7 +4,7 @@ const { getOptValue, createIntialMessage } = require('src/helpers')
 const { GetChannel } = require('src/helpers/discordmsg')
 
 module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  let msg2send = {content: ""}, payload, payChannel
+  let msg2send = {content: ""}, payload, payChannel, rankChannel, logChannel, altChannel
   let poChId = getOptValue(opt, 'payouts')
   let ranksChId = getOptValue(opt, 'ranks')
   let logChId = getOptValue(opt, 'logs')

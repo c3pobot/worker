@@ -1,5 +1,5 @@
 'use strict'
-const twStats = require('./helper')
+const twStats = require('./helper/twStats')
 const getHtml = require('webimg').tw
 
 const { getDiscordAC, replyButton, replyTokenError, getImg } = require('src/helpers')

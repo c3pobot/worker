@@ -1,4 +1,5 @@
 'use strict'
+const { dataList } = require('src/helpers/dataList')
 module.exports = (conflictStatus = {})=>{
   let squads = conflictStatus?.warSquad?.map(x=>{
     return Object.assign({}, {
@@ -13,8 +14,8 @@ module.exports = (conflictStatus = {})=>{
   })
 
   for(let i in squads){
-    if(unitList[squads[i].leader]) squads[i].leader = unitList[squads[i].leader].name
+    if(dataList?.unitList[squads[i].leader]) squads[i].leader = dataList?.unitList[squads[i].leader].name
   }
-  
+
   return squads
 }

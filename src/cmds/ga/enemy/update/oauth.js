@@ -36,7 +36,7 @@ module.exports = async(obj = {}, opt = [])=>{
   }
   if(gaLB === 'GETTING_CONFIRMATION') return
   if(gaLB?.msg2send) return { content: gaLB.msg2send }
-  if(!gaLB?.data?.player || !gaLB?.data?.player?.length == 0) return { content: 'Error getting GAC leaderboard info' }
+  if(!gaLB?.data?.player || gaLB?.data?.player?.length == 0) return { content: 'Error getting GAC leaderboard info' }
 
   let enemies = await swgohClient.post('fetchGAPlayers', { players: gaLB.data.player.map(x=>x.id), opponent: dObj.allyCode })
   gaInfo.enemies = enemies?.map(x=>{
@@ -48,8 +48,9 @@ module.exports = async(obj = {}, opt = [])=>{
   })
   if(!gaInfo?.enemies || gaInfo?.enemies?.length !== gaLB?.data?.player?.length) return { content: 'Error getting ga opponents'}
 
-  let currentMatchIndex = pObj.data.territoryTournamentStatus[0].matchStatus.length > 0 ?  pObj.data.territoryTournamentStatus[0].matchStatus.length - 1 : 0;
-  gaInfo.currentEnemy = pObj.data.territoryTournamentStatus[0].matchStatus[currentMatchIndex].opponent.id;
+  let currentMatchIndex = pObj.territoryTournamentStatus[0].matchStatus.length > 0 ?  pObj.territoryTournamentStatus[0].matchStatus.length - 1 : 0;
+  gaInfo.currentEnemy = pObj.territoryTournamentStatus[0].matchStatus[currentMatchIndex].opponent.id;
+  gaInfo.enemies = gaInfo.enemies.filter(x=>x.playerId !== pObj.id);
   await mongo.set('ga', {_id: dObj.allyCode.toString()}, gaInfo);
 
   msg2send = await gaReport(obj, opt, dObj, gaInfo)

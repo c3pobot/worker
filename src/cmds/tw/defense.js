@@ -31,7 +31,7 @@ module.exports = async(obj = {}, opt = [])=>{
   if(!twData || !twData?.optedInMember) return { content: 'There is not a TW in progress' }
 
   let joined = twData.optedInMember?.map(m =>m.memberId)
-  let gObj = await swgohClient.post('fetchTWGuild', {token: obj.token, id: guildId, projection: {playerId: 1, name: 1, rosterUnit: {definitionId: 1, currentRarity: 1, currentTier: 1, relic: 1, gp: 1}}})
+  let gObj = await swgohClient.post('fetchGuild', { id: guildId, projection: {playerId: 1, name: 1, rosterUnit: {definitionId: 1, currentRarity: 1, currentTier: 1, relic: 1, gp: 1}} })
   if(!gObj?.member || gObj?.member?.length === 0) return { content: 'Error getting guild data'}
 
   if(gObj.member.length > joined?.length) gObj.member = gObj.member.filter(x=>joined?.includes(x.playerId))

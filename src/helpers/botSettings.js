@@ -6,7 +6,7 @@ const update = async()=>{
     let syncTime = 5
     if(!mongoReady) mongoReady = mongo.status()
     if(mongoReady){
-      let data = (await mongo.find('botSettings', {_id: 1}, {_id: 0, TTL: 0}))[0]
+      let data = (await mongo.find('botSettings', {_id: '1'}, {_id: 0, TTL: 0}))[0]
       if(data){
         for(let i in data) botSettings[i] = data[i]
         botSettings.ready = true

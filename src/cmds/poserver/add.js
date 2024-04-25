@@ -4,8 +4,8 @@ const { getOptValue, addShardCmds } = require('src/helpers')
 const { GetChannel } = require('src/helpers/discordmsg')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let channel, catId, sId = obj.guild_id, shardLimit = +process.env.SHARD_LIMIT || 100, shardCount = 99, shardId, msg2send = {content: "This channel is not part of a category"}
-  let shards = await mongo.find('payoutServers', {}, {type:1, _id: 1, shard: 1})
+  let channel, catId, sId = obj.guild_id, shardLimit = +process.env.SHARD_LIMIT || 100, shardCount = 99, shardId, msg2send = { content: "This channel is not part of a category" }
+  let shards = await mongo.find('payoutServers', {}, { type: 1, _id: 1, shard: 1 })
   let type = getOptValue(opt, 'type', 'char')
   let patreonId = getOptValue(opt, 'patreon')
   if(obj.channel_id) channel = await GetChannel(obj.channel_id)
@@ -29,8 +29,9 @@ module.exports = async(obj = {}, opt = [])=>{
       alt: type == 'char' ? 'ship' : 'char'
     })
 
-    await addShardCmds(sId)
+    let status = await addShardCmds(sId)
     msg2send.content = 'Added server as **'+type+'**'
+    if(status) msg2send.content += '\nshard commands have been added.'
   }
   return msg2send
 }

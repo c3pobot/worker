@@ -3,14 +3,16 @@ const log = require('logger')
 log.setLevel('debug');
 const redis = require('redisclient')
 const mongo = require('mongoclient')
-const redisCache = require('src/helpers/redisCache')
-const mqtt = require('./helpers/mqtt')
+
+const cmdQue = require('./cmdQue')
 const swgohClient = require('./swgohClient')
 const saveSlashCmds = require('./saveSlashCmds')
+const updateDataList = require('./helpers/updateDataList')
+const checkCmds = require('./checkCmds')
 const createCmdMap = require('./helpers/createCmdMap')
+
 const { dataList } = require('./helpers/dataList')
-const { botSettings } = require('./helpers/botSettings')
-const cmdQue = require('./cmdQue')
+
 let workerType = process.env.WORKER_TYPE || 'swgoh'
 const CheckRedis = ()=>{
   log.info(`start up redis check...`)
@@ -61,10 +63,14 @@ const CheckGameData = async()=>{
 const CheckCmdMap = async()=>{
   try{
     log.info(`start up cmdMap check...`)
-    if(process.env.POD_NAME?.toString().endsWith("0")) saveSlashCmds(baseDir+'/src/cmds', workerType)
+    if(process.env.POD_NAME?.toString().endsWith("0")){
+      saveSlashCmds(baseDir+'/src/cmds', workerType)
+      await checkCmds()
+    }
     let status = await createCmdMap()
     if(status){
       cmdQue.start()
+      require('./exchanges')
       return
     }
     setTimeout(CheckCmdMap, 5000)

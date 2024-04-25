@@ -20,7 +20,7 @@ module.exports = async(obj = {}, dObj, loginConfirm, channelId)=>{
     eventCount: 10000,
     channelEventRequest: [{
       channelId: channelId,
-      limit: 100000
+      limit: 10000
     }]
   }
   let logs = await swgohClient.post('getChannelEvents', payload, identity)

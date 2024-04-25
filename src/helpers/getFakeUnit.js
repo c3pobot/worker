@@ -1,67 +1,43 @@
 'use strict'
+const mongo = require('mongoclient')
 const enum_stars = require('./enumStars')
 const fakeMods = require('./fakeMods')
-const getUnitStats = require('./getUnitStats')
-module.exports = (uInfo = {}, gLevel = 0, rLevel = 0, rarity = 0, calcStats = true)=>{
-  if(uInfo?.baseId){
-    let useValues = {
-      char: {
-        rarity: rarity || 1,
-        gear: gLevel || 13,
-        relic: rLevel || 1,
-        equipped: []
-      }
-    }
-    if(uInfo.combatType === 2) useValues = {
-      ship: {
-        rarity: rarity || 1,
-      },
-      crew: {
-        rarity: rarity || 1,
-        gear: gLevel || 13,
-        relic: rLevel || 1,
-        equipped: [],
-        mods: JSON.parse(JSON.stringify(fakeMods))
-      }
-    }
-    let unit = getUnitStats(uInfo.baseId, uInfo.combatType, useValues)
-    if(!unit) return
-    let tempUnit = {
-      skill: [],
-      equipment: null,
-      equippedStatMod: null,
-      purchasedAbilityId: null,
-      definitionId: uInfo.baseId + ':'+(enum_stars[rarity] ? enum_stars[rarity]:'SEVEN_STAR'),
-      baseId: uInfo.baseId,
-      currentRarity: rarity || 1,
-      currentLevel: 85,
-      currentTier: 1,
-      relic: null,
-      combatType: uInfo.combatType,
-      stats: unit.stats,
-      gp: unit.gp,
-    }
-    for (let i in uInfo.skills) {
-      tempUnit.skill.push({
-        id: uInfo.skills[i].id,
-        tier: (uInfo.skills[i].maxTier - 2)
-      })
-    }
-    if(uInfo.combatType === 1){
-      tempUnit.relic = {currentTier: +rLevel}
-      tempUnit.currentTier = +gLevel || 13
-      tempUnit.equipment = []
-      tempUnit.equippedStatMod = []
-      tempUnit.purchasedAbilityId = []
-      for (let i in uInfo.ultimate) {
-        tempUnit.purchasedAbilityId.push(uInfo.ultimate[i].id)
-      }
-      if(tempUnit.purchasedAbilityId?.length > 0){
-        tempUnit.gp += (+tempUnit.purchasedAbilityId.length * 4978) * 1.5
-        tempUnit.gp = Math.floor(tempUnit.gp)
-      }
-      if(!calcStats) tempUnit.equippedStatMod = JSON.parse(JSON.stringify(FakeMods))
-    }
-    return tempUnit
+const { calcRosterStats } = require('statcalc')
+const getFakeUnit = async(uInfo = {}, gLevel = 0, rLevel = 0, rarity = 0, calcStats = true)=>{
+  if(!uInfo?.baseId) return
+  let unit = {
+    definitionId: `${uInfo.baseId}:${enum_stars[rarity] || 'SEVEN_STAR'}`,
+    baseId: uInfo.baseId,
+    equippedStatMod: [],
+    purchasedAbilityId: Object.values(uInfo.ultimate)?.map(x=>x.id) || [],
+    equipment: [],
+    currentLevel: 85,
+    currentRarity: rarity || 1,
+    currentTier: 1,
+    skill: Object.values(uInfo.skills)?.map(x=>{ return { id: x.id, tier: x.maxTier - 2 }; })
   }
+  if(uInfo.combatType === 1){
+    //add 6 pip mods for crew members
+    if(!calcStats) unit.equippedStatMod = JSON.parse(JSON.stringify(fakeMods))
+    unit.currentTier = gLevel || 13
+    unit.relic = { currentTier: rLevel || 1 }
+  }
+
+  if(!calcStats) return unit
+  let units = [unit]
+  if(uInfo.combatType === 2 && uInfo.crew?.length > 0){
+    let crewInfos = await mongo.find('units', {_id: {$in: uInfo.crew}})
+    for(let i in crewInfos){
+      let tempCrew = await getFakeUnit(crewInfos[i], gLevel, rLevel, rarity, false)
+      if(tempCrew) units.push(tempCrew)
+    }
+  }
+  calcRosterStats(units)
+  if(!units || units?.length == 0) return
+  let tempUnit = units.find(x=>x.baseId === uInfo.baseId)
+  if(!tempUnit) return
+  //add gp for max mods to char units.
+  if(uInfo.combatType === 1) tempUnit.gp += 2295
+  return tempUnit
 }
+module.exports = getFakeUnit

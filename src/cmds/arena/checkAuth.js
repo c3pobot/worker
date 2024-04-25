@@ -1,9 +1,10 @@
 'use strict'
-const { getdiscordAC, getGuildId } = require('src/helpers')
+const mongo = require('mongoclient')
+const { getDiscordAC, getGuildId } = require('src/helpers')
 
 module.exports = async(dId)=>{
   let guild, auth = 0, obj, allyCode
-  let dObj = await getdiscordAC(dId)
+  let dObj = await getDiscordAC(dId)
   if(dObj?.allyCode) obj = (await mongo.find('patreon', {'users.allyCode': +dObj.allyCode, status: 1}))[0]
   if(obj) auth++
   if(auth == 0){

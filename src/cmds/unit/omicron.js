@@ -26,13 +26,14 @@ const cleanDesc = (string)=>{
 const { getOptValue, replyComponent } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'error getting info'}, webData, screenShot, skillId
+  let msg2send = { content: 'error getting info' }, webData, screenShot, skillId
   if(obj?.select?.data[0]) skillId = obj.select.data[0]
   let omiType = getOptValue(opt, 'type')
   if(!omiType) return { content: 'you did not provide an omicron type'}
-  msg2send.content = 'there where no units with omicron for **'+omiType+'**'
+
   let skills = await mongo.find('omicronList', {type: omiType})
-  if(!skills || skills?.length === 0) return msg2send
+  if(!skills || skills?.length === 0) return { content: `There where no units with omicron for **${omiType}**` }
+
   skills = sorter([{order: 'ascending', column: 'unitNameKey'}], skills)
   msg2send.content = null
   let embedMsg = {

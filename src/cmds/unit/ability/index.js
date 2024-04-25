@@ -38,26 +38,27 @@ const enumSkill = {
 const { getOptValue, replyButton, buttonPick } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You did not provide the correct information'}, guildId, skills = [], skill
+  let msg2send = {content: 'You did not provide the correct information'}
+  if(obj.confirm) await replyButton(obj)
   let unit = getOptValue(opt, 'unit')?.toString()?.trim()
   if(!unit) return msg2send
+
   let skillType = getOptValue(opt, 'type')
   let skillIndex = obj.confirm?.skillIndex
-  msg2send.content = 'Error getting abilityInfo for unit **'+unit+'**'
-  let unitSkills = (await mongo.find('skills', {_id: unit}))[0]
-  if(!unitSkills) return msg2send
-  await replyButton(obj, 'Getting skill info for **'+unitSkills.nameKey+'** ...')
-  msg2send.content = 'Error getting skills for **'+unitSkills.nameKey+'**'
-  if(unitSkills.skills?.length > 0) skills = skills.concat(unitSkills.skills)
-  if(unitSkills.ultimate?.length > 0) skills = skills.concat(unitSkills.ultimate)
-  if(skills?.length > 0){
-    if(skillType) skills = skills?.filter(x=>x.skillId?.startsWith(skillType))
-    if(skills.length > 0) skills = sorter([{column: 'id', order: 'ascending'}], skills)
-    if(skillIndex >= 0 && skills[skillIndex]) skills = [skills[skillIndex]]
-  }
-  if(skills?.length > 1){
+  let uInfo = (await mongo.find('skills', { _id: unit }))[0]
+  if(!uInfo?.nameKey) return { content: `Error finding ability info for **${unit}**`}
+
+  let skills = uInfo.skills || [], skill
+  if(uInfo?.ultimate?.length > 0) skills = skills.concat(uInfo.ultimate)
+  if(skillType) skills = skills?.filter(x=>x.abilityId?.startsWith(skillType))
+  skills = sorter([{column: 'abilityId', order: 'ascending'}], skills || [])
+  if(!skills || skills?.length == 0) return { content: `Error getting skills for **${uInfo.nameKey}**` }
+
+  if(skills.length === 1) skill = skills[0]
+  if(!skill && skillIndex >= 0) skill = skills[skillIndex]
+  if(!skill && skills.length > 0){
     let pickMsg = {
-      content: 'Please Choose skill below for **'+unitSkills.nameKey+'**',
+      content: 'Please Choose skill below for **'+uInfo.nameKey+'**',
       components: []
     }
     let x = 0
@@ -71,35 +72,37 @@ module.exports = async(obj = {}, opt = [])=>{
         type: 2,
         label: skillLabel,
         style: 1,
-        custom_id: JSON.stringify({id: obj.id, baseId: unitSkills.baseId, skillIndex: +i})
+        custom_id: JSON.stringify({id: obj.id, baseId: uInfo.baseId, skillIndex: +i})
       })
       if(pickMsg.components[x].components.length == 5) x++;
     }
     await buttonPick(obj, pickMsg)
     return
   }
-  if(skills?.length === 1) skill = skills[0]
-  if(skill){
-    let aInfo = await getAbilityDamage(skill)
-    let msgTitle = enumSkill[skill.abilityId.charAt(0)]
-    if(skill.abilityId.startsWith('ult')) msgTitle = 'Ultimate'
-    msgTitle += ' - '+skill.nameKey
-    if(skill.omiTier){
-      msgTitle += ' (O)'
-    }else{
-      if(skill.zetaTier) msgTitle += ' (Z)'
-    }
-    let embedMsg = {
-      color: 15844367,
-      title: unitSkills.nameKey+'\n'+msgTitle,
-    }
-    embedMsg.description = await cleanDesc(skill.descKey)
-    if(aInfo && aInfo.length > 0){
-      embedMsg.description += '\n**Ability Multiper**\n'
-      for(let i in aInfo) embedMsg.description += aInfo[i].type+' x '+numeral(aInfo[i].multipler).format('0.000')+'\n'
-    }
-    msg2send.content = null
-    msg2send.embeds = [embedMsg]
+
+  if(!skill) return { content: `Error getting skill for **${uInfo.nameKey}**`}
+
+  msg2send.content = null
+  msg2send.embeds = []
+  let aInfo = await getAbilityDamage(skill)
+  let msgTitle = enumSkill[skill.abilityId.charAt(0)]
+  if(skill.abilityId.startsWith('ult')) msgTitle = 'Ultimate'
+  msgTitle += ' - '+skill.nameKey
+  if(skill.omiTier){
+    msgTitle += ' (O)'
+  }else{
+    if(skill.zetaTier) msgTitle += ' (Z)'
   }
+  let embedMsg = {
+    color: 15844367,
+    title: uInfo.nameKey+'\n'+msgTitle,
+  }
+  embedMsg.description = await cleanDesc(skill.descKey)
+  if(aInfo?.length > 0){
+    embedMsg.description += '\n**Ability Multiper**\n'
+    for(let i in aInfo) embedMsg.description += aInfo[i].type+' x '+numeral(aInfo[i].multipler).format('0.000')+'\n'
+  }
+  msg2send.embeds.push(embedMsg)
+
   return msg2send
 }

@@ -1,8 +1,27 @@
 'use strict'
-const { RESTHandler } = require('./discordmsg')
+const log = require('logger')
+const mongo = require('mongoclient')
+const { DeleteGuildCmds, GetGuildCmds } = require('./discordmsg')
+
 module.exports = async(sId)=>{
-  let cmds = [], count = 0, res = {status: 'error'}
-  let status = await RESTHandler('/applications/'+process.env.DISCORD_CLIENT_ID+'/guilds/'+sId+'/commands', 'PUT', JSON.stringify(cmds))
-  if(status?.status == 200) res.status = 'ok'
-  return res
+  try{
+    if(!sId) return
+    let slashCmds = (await mongo.find('slashCmds', { _id: 'swgoh' }))[0]
+    let cmds = slashCmds?.cmds?.filter(x=>x.type === 'shard')?.map(x=>x?.cmd?.name)
+    if(!cmds || cmds?.length == 0) return
+    let cmdSet = new Set(cmds)
+    let guildCmds = await GetGuildCmds(sId)
+    if(!guildCmds || guildCmds?.length == 0) return
+    let count = 0, success = 0
+    for(let i in guildCmds){
+      if(cmdSet?.has(guildCmds[i]?.name)){
+        count++
+        let status = await DeleteGuildCmds(sId, guildCmds[i].id)
+        if(status) success++
+      }
+    }
+    return { count: count, success: success }
+  }catch(e){
+    log.error(e)
+  }
 }

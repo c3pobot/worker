@@ -1,5 +1,6 @@
 'use strict'
 const { CalcUnitRarity } = require('./statCalc')
+const numeral = require('numeral')
 module.exports = (uInfo = {}, homeUnits = [], awayUnits)=>{
   let len = 7, str = ''
   const homeRarity = CalcUnitRarity(homeUnits, 5)

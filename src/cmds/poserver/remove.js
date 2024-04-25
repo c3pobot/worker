@@ -26,6 +26,7 @@ module.exports = async(obj = {}, opt = [])=>{
     await mongo.delMany('shardRankCache', {shardId: shardId})
     let cmdStatus = await removeShardCmds(shard.sId)
     msg2send.content = 'Payout Server with shardId **'+shardId+'** was removed.'
+    if(cmdStatus) msg2send.content += `\nRemoved ${cmdStatus?.success}/${cmdStatus?.count} shard commands.`
   }
   return msg2send
 }

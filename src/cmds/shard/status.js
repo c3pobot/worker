@@ -23,7 +23,6 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
   }
   basicField.value += 'ID         : '+shard._id+'\n'
   basicField.value += 'Players    : '+players.length+'\n'
-  basicField.value += 'Shard Num  : '+shard.shard+'\n'
   if(shard.patreonId) basicField.value += 'Patreon    : @'+(patreonUsername ? patreonUsername:'UNKNOWN')+'\n'
   basicField.value += 'PO Sort    : '+shard.poSort+'\n'
   basicField.value += 'Group Sort : '+shard.sort+'\n'

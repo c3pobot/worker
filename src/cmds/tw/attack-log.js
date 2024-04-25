@@ -1,4 +1,5 @@
 'use strict'
+const mongo = require('mongoclient')
 const zoneMap = require('./helper/zoneMap')
 const squadStatusMap = {
   "SQUADAVAILABLE": "Loss",
@@ -13,7 +14,7 @@ const getHtml = require('webimg').tw
 
 const { getDiscordAC, buttonPick, replyButton, getImg } = require('src/helpers')
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You do not have your google account linked to your discordId'}, method = 'PATCH'
+  let msg2send = {content: 'You do not have your google account linked to your discordId'}, method = 'PATCH', webHTML, webImg
   let loginConfirm = obj?.confirm?.response
   let zoneId = obj?.confirm?.zoneId
   if(obj?.confirm){
@@ -54,7 +55,8 @@ module.exports = async(obj = {}, opt = [])=>{
     if(battleLog === 'GETTING_CONFIRMATION') return;
   }
   if(battleLog?.event?.length > 0){
-    log.info(`BATTLE LOGS have ${battleLog.event.length} events...`)
+    console.log(`BATTLE LOGS have ${battleLog.event.length} events...`)
+    mongo.set('battleLogs', {}, { data: battleLog, zone: zoneId })
     msg2send.content = `Error updaing battle log for ${zoneMap[zoneId]?.nameKey}`
     for(let i in squads){
       if(squads && squads[i]) getBattles(battleLog.event, squads[i])

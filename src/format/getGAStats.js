@@ -1,5 +1,6 @@
 'use strict'
 const numeral = require('numeral')
+const { pct } = require('src/helpers/enum')
 module.exports = (obj = {}, stat)=>{
   let finalStat = 0, pctOveride = 0
   if(obj.base) finalStat = (obj.base[stat] || 0);
@@ -12,6 +13,6 @@ module.exports = (obj = {}, stat)=>{
       if(stat == 15) finalStat += (obj.mods[22] || 0)
     }
   }
-  if(statEnum.pct[stat] || pctOveride > 0) return numeral(finalStat * 100).format('0.0')
+  if(pct[stat] || pctOveride > 0) return numeral(finalStat * 100).format('0.0')
   return numeral(finalStat).format('0,0')
 }

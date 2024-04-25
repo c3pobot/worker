@@ -2,9 +2,10 @@
 const log = require('logger')
 const rabbitmq = require('src/helpers/rabbitmq')
 const cmdProcessor = require('./cmdProcessor')
-let queName = process.env.WORKER_QUE_PREFIX || 'worker', consumer, workerType = process.env.WORKER_TYPE || 'swgoh', POD_NAME = process.env.POD_NAME
-queName += `.${workerType}`
-if(process.env.PRIVATE_WORKER) queName += '.private'
+const publisher = require('./publisher')
+let QUE_NAME = process.env.WORKER_QUE_NAME_SPACE || 'default', WORKER_TYPE = process.env.WORKER_TYPE || 'swgoh', POD_NAME = process.env.POD_NAME || 'worker', consumer
+QUE_NAME += `.worker.${WORKER_TYPE}`
+if(process.env.PRIVATE_WORKER) QUE_NAME += '.private'
 const processMsg = async(msg = {})=>{
   try{
     if(!msg.body) return
@@ -16,26 +17,20 @@ const processMsg = async(msg = {})=>{
 const createWorker = async()=>{
   try{
     if(consumer) await consumer.close()
-    consumer = rabbitmq.createConsumer({ concurrency: 1, qos: { prefetchCount: 1 }, queue: queName, queueOptions: { durable: true, arguments: { 'x-queue-type': 'quorum' } } }, processMsg)
+    consumer = rabbitmq.createConsumer({ consumerTag: POD_NAME, concurrency: 1, qos: { prefetchCount: 1 }, queue: QUE_NAME, queueOptions: { durable: true, arguments: { 'x-queue-type': 'quorum', 'x-message-ttl': 600000 } } }, processMsg)
     consumer.on('error', (err)=>{
-      if(err?.code){
-        log.error(err.code)
-        log.error(err.message)
-        return
-      }
-      log.error(err)
+      log.info(err)
     })
-    log.info(`rabbitmq consumer started on ${POD_NAME}`)
+    consumer.on('ready', ()=>{
+      log.info(`${POD_NAME} ${WORKER_TYPE} consumer created...`)
+    })
     return true
   }catch(e){
     throw(e)
   }
 }
 module.exports.start = async() =>{
-  try{
-    let status = await createWorker()
-    return status
-  }catch(e){
-    throw(e)
-  }
+  let status = await createWorker()
+  if(status) status = await publisher.start()
+  return status
 }

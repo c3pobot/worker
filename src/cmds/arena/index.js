@@ -25,7 +25,7 @@ module.exports = async(obj = {})=>{
     let msg2send = {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')}
     if(tempCmd === 'notify'){
       msg2send.content = 'This is only available to patreons or those sponsored by a patreon'
-      let auth = await CheckAuth(obj.member.user.id)
+      let auth = await checkAuth(obj.member.user.id)
       if(auth) msg2send = await Cmds.notify(obj, opt)
     }
     if(tempCmd && tempCmd !== 'notify' && Cmds[tempCmd]){

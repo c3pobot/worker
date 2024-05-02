@@ -5,24 +5,14 @@ const { replyError } = require('src/helpers')
 const Cmds = {}
 Cmds.guild = require('./guild')
 Cmds.notify = require('./notify')
-Cmds.settings = require('./settings')
 Cmds.show = require('./show')
 Cmds.user = require('./user')
 
 module.exports = async(obj = {})=>{
   try{
-    let tempCmd, opt
-    if(obj.data && obj.data.options){
-      for(let i in obj.data.options){
-        if(Cmds[obj.data.options[i].name]){
-          tempCmd = obj.data.options[i].name
-          opt = obj.data.options[i].options
-          break;
-        }
-      }
-    }
-    let patreon = (await mongo.find('patreon', {_id: obj.member.user.id, status: 1}))[0]
-    let msg2send = {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')}
+    let tempCmd = obj.subCmdGroup || obj.subCmd, opt = obj.data?.options || {}
+    let patreon = (await mongo.find('patreon', {_id: obj.member?.user?.id, status: 1 }))[0]
+    let msg2send = { content: 'command not recongnized' }
     if(tempCmd === 'notify'){
       msg2send.content = 'This is only available to patreons or those sponsored by a patreon'
       let auth = await checkAuth(obj.member.user.id)

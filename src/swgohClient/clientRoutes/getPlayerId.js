@@ -2,9 +2,9 @@
 const playerIdCache = require('src/helpers/cache/playerId')
 const queryArenaPlayer = require('./queryArenaPlayer')
 
-module.exports = async( opt = {} )=>{
-  if(opt.playerId) return opt.playerId
-  let data = await playerIdCache.get(null, +opt.allyCode)
-  if(!data?.playerId) data = await queryArenaPlayer({ allyCode: opt.allyCode?.toString() }, true)
-  if(data?.playerId) return data?.playerId
+module.exports = async({playerId, allyCode})=>{
+  if(playerId) return playerId
+  let data = await playerIdCache.get(null, allyCode)
+  if(!data?.playerId) data = await queryArenaPlayer({ allyCode: allyCode?.toString() }, true)
+  return data?.playerId
 }

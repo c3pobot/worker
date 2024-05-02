@@ -9,7 +9,7 @@ module.exports = async({ allyCode, playerId })=>{
   if(!playerId && allyCode) playerId = await getPlayerId({ allyCode: allyCode })
   if(!allyCode && playerId) allyCode = await getAllyCode({ playerId: playerId })
   if(!playerId || !allyCode) return { level: 0 }
-  let guildId = await getGuildId({ id: +allyCode })
+  let guildId = await getGuildId({ allyCode: +allyCode })
   if(!guildId) return { level: 0 }
   let guild = await cache.get('guildCache', guildId, { member: { playerId: 1, memberLevel: 1} })
   if(!guild?.member){

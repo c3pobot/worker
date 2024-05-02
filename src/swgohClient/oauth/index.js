@@ -3,7 +3,8 @@ const processAPIRequest = require('../processAPIRequest');
 const mongo = require('mongoclient')
 const google = require('./google')
 const codeAuth = require('./codeAuth')
-const confirmButton = require('src/helpers/confirmButton')
+const returnConfirmMsg = require('./returnConfirmMsg')
+
 const reAuthCodes = {
   4: 'SESSIONEXPIRED',
   5: 'AUTHFAILED',
@@ -64,22 +65,20 @@ const getIdentity = async(uid, type, newIdentity = false)=>{
   }
   return await getAuthObj(uid, auth)
 }
+
 module.exports = async(obj = {}, method, dObj = {}, payload)=>{
-  let data, status = 'ok', forceNewIdentity = false, msg2send = 'Using this command will temporarly log you out of the game on your device.\n Are you sure you want to do this?'
+  let data, status = 'ok', forceNewIdentity = false
   let loginConfirm = obj.confirm?.response
-  if(loginConfirm === 'no') return { msg2send: 'Command Canceled' }
+  if(loginConfirm === 'no') return { msg2send: { content: 'Command Canceled' } }
   if(loginConfirm === 'yes'){
     forceNewIdentity =  true
     loginConfirm = 'no'
   }
   let identity = await getIdentity(dObj.uId, dObj.type, forceNewIdentity)
-  if(identity?.error) return ({status: 'error', error: 'invalid_grant'})
-  if(identity?.description) return({status: 'error', error: identity?.description})
+  if(identity?.error) return {status: 'error', error: 'invalid_grant'}
+  if(identity?.description) return {status: 'error', error: identity?.description}
   if(identity?.auth?.authId && identity?.auth?.authToken) data = await processAPIRequest(method, payload, identity)
-  if(loginConfirm !== 'no' && data?.code && reAuthCodes[data?.code]){
-    await confirmButton(obj, msg2send)
-    return 'GETTING_CONFIRMATION'
-  }
+  if(loginConfirm !== 'no' && data?.code && reAuthCodes[data?.code]) return await returnConfirmMsg(obj)
   /*
   if((!data || (data?.code && reAuthCodes[data?.code])) && loginConfirm !== 'no'){
     await confirmButton(obj, msg2send)

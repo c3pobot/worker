@@ -1,0 +1,67 @@
+{
+  "type": 2,
+  "name": "report-units",
+  "description": "manage units for guild report",
+  "options": [
+    {
+      "type": 1,
+      "name": "add",
+      "description": "add units for guild report",
+      "options": [
+        {
+          "type": 3,
+          "name": "unit",
+          "description": "unit to add",
+          "required":  true,
+          "autocomplete": true,
+          "focused": true
+        },
+        {
+          "type": 3,
+          "name": "allycode_option",
+          "description": "primary or alt allycode",
+          "choices": [
+            {
+              "name": "Primary",
+              "value": "primary"
+            },
+            {
+              "name": "Alt",
+              "value": "alt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": 1,
+      "name": "remove",
+      "description": "remove units for guild report",
+      "options": [
+        {
+          "type": 3,
+          "name": "unit",
+          "description": "unit to add",
+          "required":  true,
+          "autocomplete": true,
+          "focused": true
+        },
+        {
+          "type": 3,
+          "name": "allycode_option",
+          "description": "primary or alt allycode",
+          "choices": [
+            {
+              "name": "Primary",
+              "value": "primary"
+            },
+            {
+              "name": "Alt",
+              "value": "alt"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

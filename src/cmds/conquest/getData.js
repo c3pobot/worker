@@ -1,29 +1,27 @@
 'use strict'
 const mongo = require('mongoclient')
-const { getOptValue, replyButton, getDiscordAC, replyTokenError } = require('src/helpers')
+const { getDiscordAC, replyTokenError } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let cqData, pObj, msg2send = 'You must have you google or guest auth linked to your discordId'
+module.exports = async(obj = {}, opt = {})=>{
+  let cqData
   let dObj = await getDiscordAC(obj.member?.user?.id, opt)
-  if(!dObj?.uId || !dObj?.type) return { msg2send: msg2send }
-  let loginConfirm = obj?.confirm?.resposne
-  let getCache = getOptValue(opt, 'cache')
-  if(getCache === true){
+  if(!dObj?.uId || !dObj?.type) return { msg2send: { content: 'You must have you google or code auth linked to your discordId' } }
+
+  if(opt.cache?.value === true){
     msg2send = 'There was no cached data in the db'
     cqData = (await mongo.find('conquestCache', {_id: dObj?.allyCode}))[0]
+    if(!cqData) return { msg2send: { content: 'There was no cached data in the db' } }
+    return { data: cqData }
   }
-  if(!getCache){
-    await replyButton(obj, 'Getting info for conquest ...')
-    msg2send = 'Error Getting player data'
-    pObj = await swgohClient.oauth(obj, 'getInitialData', dObj, {}, loginConfirm);
-    if(pObj === 'GETTING_CONFIRMATION') return pObj
-    if(pObj?.error){
-      await replyTokenError(obj, dObj?.allyCode, pObj.error)
-      return 'GETTING_CONFIRMATION'
-    }
-    if(pObj?.msg2send) return { msg2send: pObj.msg2send }
+
+  let pObj = await swgohClient.oauth(obj, 'getInitialData', dObj, {});
+  if(pObj?.error){
+    await replyTokenError(obj, dObj?.allyCode, pObj.error)
+    return 'TOKEN_ERROR'
   }
+  if(pObj?.msg2send) return { msg2send: pObj.msg2send }
+
   if(pObj?.data?.conquestStatus && pObj?.data?.gameEvent && pObj?.data?.challengeProgress){
     cqData = {
       name: pObj.data.player?.name,
@@ -37,6 +35,7 @@ module.exports = async(obj = {}, opt = [])=>{
       updated: Date.now()
     }
     await mongo.set('conquestCache', {_id: dObj.allyCode}, cqData)
+    return { data: cqData }
   }
-  return { msg2send: msg2send, data: cqData }
+  return { msg2send: { content: 'error getting conquest data...'} }
 }

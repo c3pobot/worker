@@ -1,0 +1,112 @@
+{
+  "type": "bo-private",
+  "worker": "discord",
+  "cmd": {
+    "name": "gcr",
+    "description": "(bot owner only) Manage global custom reactions",
+    "options": [
+      {
+        "type": 1,
+        "name": "add",
+        "description": "(Bot Owner only) Add new global custom reaction",
+        "options":[
+          {
+              "type": 3,
+              "name": "trigger",
+              "description": "Trigger for the reaction",
+              "required": true
+          },
+          {
+              "type": 3,
+              "name": "response",
+              "description": "Response for the trigger",
+              "required": true
+          },
+          {
+              "type": 4,
+              "name": "anywhere",
+              "description": "Show response if trigger is anywhere in the message",
+              "required": false,
+              "choices": [
+                {
+                  "name": "no",
+                  "value": 0
+                },
+                {
+                  "name": "yes",
+                  "value": 1
+                }
+              ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "list",
+        "description": "(Bot Owner only) List global custom reactions",
+        "options": [
+          {
+            "type": 3,
+            "name": "query",
+            "description": "string to search reactions by",
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "edit",
+        "description": "(Bot Owner only) Edit global custom reaction",
+        "options":[
+          {
+            "type": 4,
+            "name": "id",
+            "description": "id of the custom reaction to edit",
+            "required": true
+          },
+          {
+              "type": 3,
+              "name": "trigger",
+              "description": "Trigger for the reaction (optional)",
+              "required": false
+          },
+          {
+              "type": 3,
+              "name": "response",
+              "description": "Response for the trigger  (optional)",
+              "required": false
+          },
+          {
+              "type": 4,
+              "name": "anywhere",
+              "description": "Show response if trigger is anywhere in the message  (optional)",
+              "required": false,
+              "choices": [
+                {
+                  "name": "no",
+                  "value": 0
+                },
+                {
+                  "name": "yes",
+                  "value": 1
+                }
+              ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "remove",
+        "description": "(Bot Owner only) delete a global custom reaction",
+        "options": [
+          {
+            "type": 4,
+            "name": "id",
+            "description": "id of the custom reaction to delete",
+            "required": true
+          }
+        ]
+      }
+    ]
+  }
+}

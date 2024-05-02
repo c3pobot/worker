@@ -1,7 +1,8 @@
 'use strict'
-const redis = require('redisclient')
+const mongo = require('mongoclient')
+const saveCmdOptions = require('./saveCmdOptions')
 const replyMsg = require('./replyMsg')
 module.exports = async(obj = {}, msg, method = 'PATCH')=>{
-  await redis.setTTL('button-'+obj.id, obj, 600)
+  await saveCmdOptions(obj)
   await replyMsg(obj, msg, method)
 }

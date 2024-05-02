@@ -23,7 +23,7 @@ module.exports = async(guildId)=>{
   if(memberIds?.length > 0 && members?.length >= 0 && members?.length != guild?.member?.length){
     let foundMembers = members.map(x=>x.playerId)
     let missingMembers = guild.member.filter(x=>!foundMembers.includes(x.playerId))
-    let tempMembers = await swgohClient.post('queryArenaPlayers', {players: missingMembers, detailsOnly: false})
+    let tempMembers = await swgohClient.post('queryArenaPlayers', { players: missingMembers, detailsOnly: false })
     if(tempMembers?.length > 0) members = members.concat(tempMembers)
   }
   if(guild?.member?.length > 0 && members?.length == guild.member.length){

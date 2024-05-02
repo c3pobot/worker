@@ -1,7 +1,6 @@
 'use strict'
 const swgohClient = require('src/swgohClient')
 const getMemberPrevious = require('./getMemberPrevious')
-const getMember = require('./getMember')
 const getHTML = require('webimg').raid
 
 const timeTillEnd = (endTime)=>{
@@ -16,23 +15,18 @@ const timeTillEnd = (endTime)=>{
     return 'Time left '+d?.toString()?.padStart('0', 2)+' Day(s) '+h?.toString()?.padStart('0', 2)+' Hour(s) '+m?.toString()?.padStart('0', 2)+' Minute(s)'
   }
 }
-const { replyButton, getDiscordAC, replyTokenError, getImg } = require('src/helpers')
+const { getDiscordAC, replyTokenError, getImg } = require('src/helpers')
 module.exports = async(obj = {}, opts = [])=>{
-  let loginConfirm, msg2send = {content: 'You do not have google or fb linked'}
+  if(obj.confirm?.response !== 'yes') return { content: 'command canceled' }
   let dObj = await getDiscordAC(obj.member?.user?.id, opts)
-  if(!dObj?.uId || !dObj?.type) return msg2send
+  if(!dObj?.uId || !dObj?.type) return { content: 'You do not have google or fb linked' }
 
-  if(obj?.confirm){
-    await replyButton(obj, null)
-    loginConfirm = obj.confirm.response
-  }
-  let gObj = await swgohClient.oauth(obj, 'guild', dObj, {}, loginConfirm)
-  if(gObj === 'GETTING_CONFIRMATION') return
+  let gObj = await swgohClient.oauth(obj, 'guild', dObj, {})
+  if(gObj?.msg2send) return gObj.msg2send
   if(gObj?.error == 'invalid_grant'){
     await replyTokenError(obj, dObj.allyCode)
     return;
   }
-  if(gObj?.msg2send) return { content: gObj.msg2send }
   if(!gObj?.data?.guild || !gObj?.data?.guild?.member || gObj?.data?.guild?.member?.length === 0) return { content: 'Error getting data'}
 
   gObj = gObj.data.guild
@@ -46,16 +40,14 @@ module.exports = async(obj = {}, opts = [])=>{
 
   let previousScores = getMemberPrevious(gObj.raidResult, raid.id)
 
-  msg2send.content = 'Error calculating data'
   let raidRewards = raidDef.mission.find(x=>x.id === raid?.mission)?.rewards
   raid.nameKey = raidDef.nameKey
   for(let i in gObj.raidStatus[0].raidMember){
-    let player = await getMember(gObj.raidStatus[0].raidMember[i].playerId, gObj.member)
-    if(player){
-      let tempObj = {name: player.playerName, previous: {low: 0, avg: 0, high: 0}}
-      if(previousScores && previousScores[player.playerId]) tempObj.previous = previousScores[player.playerId]
-      raid.leaderBoard.push({...gObj.raidStatus[0].raidMember[i],...tempObj})
-    }
+    let player = gObj.member.find(x=>x.playerId === gObj.raidStatus[0].raidMember[i].playerId)
+    if(!player?.playerName) continue
+    let tempObj = {name: player.playerName, previous: {low: 0, avg: 0, high: 0}}
+    if(previousScores && previousScores[player.playerId]) tempObj.previous = previousScores[player.playerId]
+    raid.leaderBoard.push({...gObj.raidStatus[0].raidMember[i],...tempObj})
   }
   if(raid.score > 0 && raidRewards?.length > 0){
     raid.reward.current = raidRewards?.find(x=>raid.score >= x.rankStart && (x.rankEnd > raid.score || x.rankEnd === 0))
@@ -68,14 +60,11 @@ module.exports = async(obj = {}, opts = [])=>{
   raid.footer = await timeTillEnd(raid.endTime)
   if(!raidData?.leaderBoard || raidData?.leaderBoard?.length === 0) return { content: 'error calculating data' }
 
-  let raidHTML = await getHTML.status(raid)
-  if(!raidHTML) return { content: 'Error getting HTML'}
+  let webHtml = await getHTML.status(raid)
+  if(!webHtml) return { content: 'Error getting HTML'}
 
-  let raidImg = await getImg(raidHTML, obj.id, 900, false)
-  if(!raidImg) return { content: 'Error getting image'}
+  let webImg = await getImg(webHtml, obj.id, 900, false)
+  if(!webImg) return { content: 'Error getting image'}
 
-  msg2send.content = null
-  msg2send.file = raidImg
-  msg2send.fileName = gObj?.profile?.name+'-'+raidDef?.id+'-raid.png'
-  return msg2send
+  return { content: null, file: webImg, fileName: gObj?.profile?.name+'-'+raidDef?.id+'-raid.png' }
 }

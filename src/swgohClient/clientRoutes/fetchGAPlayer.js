@@ -8,7 +8,7 @@ module.exports = async(opt = {})=>{
   if(!playerId) return
   let data = await cache.get('gaCache', `${playerId}-${opt.opponent}`, null, opt.projection)
   if(!data) data = await getPlayer({ playerId: playerId })
-  if(data && !data.opponent){
+  if(!data?.opponent){
     data.opponent = +opt.opponent
     cache.set('gaCache', `${playerId}-${opt.opponent}`, JSON.stringify(data), false)
   }

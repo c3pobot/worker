@@ -1,17 +1,10 @@
 'use strict'
 const mongo = require('mongoclient')
 const showRules = require('./status')
-const { getOptValue } = require('src/helpers')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  let option = getOptValue(opt, 'option', 'add')
-  let ruleStatus = getOptValue(opt, 'status')
-  let ruleNotify = getOptValue(opt, 'notify')
-  let ruleRole = getOptValue(opt, 'role')
-  let ruleEmoji = getOptValue(opt, 'emoji')
-  let ruleChId = getOptValue(opt, 'channel')
-  let ruleTop = getOptValue(opt, 'top-rank')
-  let ruleBottom = getOptValue(opt, 'bottom-rank')
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
+  let option = opt.option?.value || 'add', ruleStatus = opt.status?.value, ruleNotify = opt.notify?.value, ruleRole = opt.role?.value, ruleEmoji = opt.emoji?.value
+  let ruleChId = opt.channel?.value, ruleTop = opt['top-rank']?.value, ruleBottom = opt['bottom-rank']?.value
   if(!shard.rules) shard.rules = {
     enemy: [':rage:'],
     friend: []

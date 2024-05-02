@@ -1,0 +1,135 @@
+{
+  "type": "private",
+  "worker": "discord",
+  "cmd": {
+    "name": "cr",
+    "description": "Local Server Custom reactions",
+    "options": [
+      {
+        "type": 1,
+        "name": "add",
+        "description": "Add new custom reaction for this server",
+        "options": [
+          {
+              "type": 3,
+              "name": "trigger",
+              "description": "Trigger for the reaction",
+              "required": true
+          },
+          {
+              "type": 3,
+              "name": "response",
+              "description": "Response for the trigger",
+              "required": true
+          },
+          {
+              "type": 4,
+              "name": "anywhere",
+              "description": "Show response if trigger is anywhere in the message",
+              "required": false,
+              "choices": [
+                {
+                  "name": "no",
+                  "value": 0
+                },
+                {
+                  "name": "yes",
+                  "value": 1
+                }
+              ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "list",
+        "description": "List local server custom reactions",
+        "options": [
+          {
+            "type": 3,
+            "name": "query",
+            "description": "string to search reactions by",
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "edit",
+        "description": "Edit custom reaction for this server",
+        "options":[
+          {
+            "type": 4,
+            "name": "id",
+            "description": "id of the custom reaction to edit",
+            "required": true
+          },
+          {
+              "type": 3,
+              "name": "trigger",
+              "description": "Trigger for the reaction (optional)",
+              "required": false
+          },
+          {
+              "type": 3,
+              "name": "response",
+              "description": "Response for the trigger  (optional)",
+              "required": false
+          },
+          {
+              "type": 4,
+              "name": "anywhere",
+              "description": "Show response if trigger is anywhere in the message  (optional)",
+              "required": false,
+              "choices": [
+                {
+                  "name": "no",
+                  "value": 0
+                },
+                {
+                  "name": "yes",
+                  "value": 1
+                }
+              ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "remove",
+        "description": "delete a local custom reaction",
+        "options": [
+          {
+            "type": 4,
+            "name": "id",
+            "description": "id of the custom reaction to delete",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "clear",
+        "description": "clear all local custom reactions",
+        "options": [
+          {
+            "type": 3,
+            "name": "confirm",
+            "description": "confirm you want to clear",
+            "required": true,
+            "choices": [
+              {
+                "name": "just kidding",
+                "value": "no"
+              },
+              {
+                "name": "Yes",
+                "value": "yes"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

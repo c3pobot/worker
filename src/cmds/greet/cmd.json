@@ -1,0 +1,58 @@
+{
+  "type": "private",
+  "worker": "discord",
+  "cmd": {
+    "name": "greet",
+    "description": "Set up server greetings (Server Admin)",
+    "options": [
+      {
+        "type": 3,
+        "name": "type",
+        "description": "join, greet main, greet alt",
+        "required": true,
+        "choices": [
+          {
+            "name": "join",
+            "value": "join"
+          },
+          {
+            "name": "greet main",
+            "value": "main"
+          },
+          {
+            "name": "greet alt",
+            "value": "alt"
+          }
+        ]
+      },
+      {
+        "type": 7,
+        "name": "channel",
+        "description": "channel for message",
+        "required": false
+      },
+      {
+        "type": 3,
+        "name": "message",
+        "description": "message for greeting. use %user% to ping user in message",
+        "required": false
+      },
+      {
+        "type": 3,
+        "name": "status",
+        "description": "enable or disable",
+        "required": false,
+        "choices": [
+          {
+            "name": "enable",
+            "value": "enable"
+          },
+          {
+            "name": "disable",
+            "value": "disable"
+          }
+        ]
+      }
+    ]
+  }
+}

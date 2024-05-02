@@ -1,44 +1,49 @@
 'use strict'
 const mongo = require('mongoclient')
-const { buttonPick, getGuildName } = require('src/helpers')
+const { getGuildName } = require('src/helpers')
 
-module.exports = async(obj = {}, patreon = {}, opt = [])=>{
-  let guildId, gObj, msg2send = {content: 'You do not have any guilds configured'}, guilds = []
-  if(obj.confirm?.guildId) guildId = obj.confirm.guildId
-  if(patreon.guilds?.length > 0){
-    msg2send.content = 'Error getting guild Information'
-    for(let i in patreon.guilds){
-      if(!patreon.guilds[i].name){
-        let guild = await getGuildName(patreon.guilds[i].id)
-        if(guild && guild.guildName) patreon.guilds[i].name = guild.guildName
-      }
-      if(patreon.guilds[i].name) guilds.push(patreon.guilds[i])
-    }
+module.exports = async(obj = {}, patreon = {}, opt = {})=>{
+  if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
+
+  if(patreon.guilds?.length == 0) return { content: 'you do not have any guilds registered..' }
+  let guildId = obj.confirm?.guildId, guildName = obj.confirm?.guildName
+
+  if(!guildId && patreon?.guilds?.length == 1){
+    guildId = patreon.guilds[0]?.id
+    guildName = patreon.guilds[0]?.name
+    if(!guildName) guildName = await getGuildName(guildId)
   }
-  if(!guildId && guilds.length > 0){
-    let embedMsg = {
+
+  if(!guildId){
+    let x = 0, dataChange = false, msg2send = {
       content: 'Which guild do you want to remove?',
       components: [],
       flags: 64
     }
-    let x = 0
-    for(let i in guilds){
-      if(!embedMsg.components[x]) embedMsg.components[x] = { type:1, components: []}
-      embedMsg.components[x].components.push({
+    for(let i in patreon.guilds){
+      if(!patreon.guilds[i].name){
+        patreon.guilds[i].name = await getGuildName(patreon.guilds[i].id)
+        if(patreon.guilds[i].name) dataChange = true
+      }
+      if(!msg2send.components[x]) msg2send.components[x] = { type:1, components: [] }
+      msg2send.components[x].components.push({
         type: 2,
-        label: guilds[i].name,
+        label: patreon.guilds[i].name,
         style: 1,
-        custom_id: JSON.stringify({id: obj.id, guildId: guilds[i].id})
+        custom_id: JSON.stringify({ dId: obj.member?.user?.id, guildName: patreon.guilds[i].name, guildId: patreon.guilds[i].id })
       })
-      if(embedMsg.components[x].components.length == 5) x++;
+      if(msg2send.components[x].components.length == 5) x++;
     }
-    await buttonPick(obj, embedMsg)
-    return
+    msg2send.components[x].components.push({
+      type: 2,
+      label: 'Cancel',
+      style: 4,
+      custom_id: JSON.stringify({ dId: obj.member?.user?.id, cancel: true })
+    })
+    if(dataChange) await mongo.set('patreon', { _id: patreon._id }, { guild: patreon.guilds })
+    return msg2send
   }
-  if(guildId && guilds.find(x=>x.id == guildId)) gObj = guilds.find(x=>x.id == guildId)
-  if(gObj){
-    await mongo.pull('patreon', {_id: patreon._id}, {guilds: {id: gObj.id}})
-    msg2send.content = 'Guild '+(gObj.name ? '**'+gObj.name+'** ':'')+' was removed from your list.'
-  }
-  return msg2send
+
+  await mongo.set('patreon', { _id: patreon?._id}, { guilds: patreon.guilds.filter(x=>x.id !== guildId) })
+  return { content: `${guildName} was removed from your list...` }
 }

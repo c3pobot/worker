@@ -1,8 +1,9 @@
 'use strict'
+const mongo = require('mongoclient')
 const sorter = require('json-array-sorter')
 const timeTillPayout = require('../timeTillPayout')
 const getLeadName = require('./getLeadName')
-const mongo = require('mongoclient')
+
 module.exports = async(obj, players = [], auto = false) => {
   if(players.length == 0) players = await mongo.find('shardRankCache', {shardId: obj._id}, {name: 1, poOffSet: 1, rank: 1, emoji: 1, arena: 1, allyCode: 1})
   if(players?.length > 0 ){

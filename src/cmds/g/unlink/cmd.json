@@ -1,0 +1,22 @@
+{
+  "type": 1,
+  "name": "unlink",
+  "description": "unlink game guild from this discord server",
+  "options": [
+    {
+      "type": 3,
+      "name": "allycode_option",
+      "description": "primary or alt allycode",
+      "choices": [
+        {
+          "name": "Primary",
+          "value": "primary"
+        },
+        {
+          "name": "Alt",
+          "value": "alt"
+        }
+      ]
+    }
+  ]
+}

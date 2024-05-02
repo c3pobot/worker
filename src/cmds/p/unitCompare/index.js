@@ -1,11 +1,13 @@
 'use strict'
 const getImg = require('./getImg')
-const { getDiscordAC, getPlayerAC, getOptValue, replyButton, fetchPlayer, findUnit } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You do not have allyCode linked to discordId'}
+const { getDiscordAC, getPlayerAC, fetchPlayer, findUnit } = require('src/helpers')
+
+module.exports = async(obj = {}, opt = {})=>{
+  if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
+
   let dObj = await getDiscordAC(obj.member.user.id, opt)
-  if(!dObj?.allyCode) return msg2send
+  if(!dObj?.allyCode) return { content: 'You do not have allyCode linked to discordId' }
 
   let edObj = await getPlayerAC({}, opt)
   if(edObj?.mentionError) return { content: 'That user does not have allyCode linked to discordId' }
@@ -17,8 +19,8 @@ module.exports = async(obj = {}, opt = [])=>{
   if(!unit) return { content: 'you did not provide a unit for comparison'}
 
   let uInfo = await findUnit(obj, unit)
-  if(uInfo === 'GETTING_CONFIRMATION') return
-  if(!uInfo?.baseId) return { content: `Error finding unit **${unit}**`}
+  if(uInfo.msg2send) return uInfo.msg2send
+  if(!uInfo?.baseId) return { content: `Error finding **${unit}**` }
 
   let [ pObj, eObj ] = await Promise.all([
     fetchPlayer({ allyCode: dObj.allyCode?.toString(), projection: { playerId: 1, name: 1, updated: 1, rosterUnit: { $elemMatch: { baseId: uInfo.baseId } }} }),
@@ -26,6 +28,5 @@ module.exports = async(obj = {}, opt = [])=>{
   ])
   if(!pObj?.rosterUnit || !eObj?.rosterUnit) return { content: 'Error getting player data'}
 
-  msg2send = await getImg(uInfo, pObj, eObj)
-  return msg2send
+  return await getImg(uInfo, pObj, eObj)
 }

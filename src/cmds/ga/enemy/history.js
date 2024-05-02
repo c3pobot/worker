@@ -1,19 +1,14 @@
 'use strict'
-const { getGAInfo } = require('src/cmds/ga/helpers')
 const getImg = require('src/cmds/ga/history/getImg')
-const { getDiscordAC, getOptValue } = require('src/helpers')
+const { getDiscordAC } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let allyCode, msg2send = {content: 'Your allyCode is not linked to your discord id'}, gaInfo, enemyId
+module.exports = async(obj = {}, opt = {})=>{
   let dObj = await getDiscordAC(obj.member.user.id, opt)
-  if(dObj?.allyCode){
-    msg2send.content = 'You have no GA opponents registered'
-    gaInfo = await getGAInfo(dObj.allyCode)
-  }
-  if(gaInfo.currentEnemy && gaInfo.enemies){
-    msg2send.content = 'error getting ga opponent'
-    enemyId = gaInfo.currentEnemy
-  }
-  if(enemyId) msg2send = await getImg(enemyId, opt, obj)
-  return msg2send
+  let allyCode = dObj?.allyCode
+  if(!allyCode) return { content: 'Your allyCode is not linked to your discord id' }
+
+  let gaInfo = (await mongo.find('ga', {_id: allyCode.toString()}))[0]
+  if(!gaInfo?.currentEnemy) return { content: 'You do not have a GA opponent configured' }
+
+  return await getImg(obj, opt, gaInfo?.currentEnemy)
 }

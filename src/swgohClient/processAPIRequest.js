@@ -7,7 +7,8 @@ const reAuthCodes = {
   5: 'AUTHFAILED',
   11: 'UNAUTHORIZED',
   51: 'FORCECLIENTRESTART',
-  55: 'PRIORITYFORCECLIENTRESTART'
+  55: 'PRIORITYFORCECLIENTRESTART',
+  32: 'RECORDNOTFOUND'
 }
 let retryCount = +process.env.CLIENT_RETRY_COUNT || 6
 
@@ -35,7 +36,7 @@ const requestWithRetry = async(uri, opts = {}, count = 0)=>{
         count++
         return await requestWithRetry(uri, opts, count)
       }else{
-        throw(`tried request ${count} time(s) and errored with ${res?.body?.code} : ${res?.body?.message}`)
+        throw(`tried request ${count} time(s) and errored with code ${res?.body?.code} : ${res?.body?.message}`)
       }
     }
     return res

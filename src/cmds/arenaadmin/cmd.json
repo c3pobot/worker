@@ -1,61 +1,86 @@
 {
   "type": "bo-home",
   "cmd": {
-    "type": 1,
     "name": "arenaadmin",
     "description": "(Bot owner only) manage patreons for arena sync",
     "options": [
       {
-        "type": 3,
-        "name": "option",
-        "description": "add/edit/remove",
-        "required": true,
-        "choices": [
+        "type": 1,
+        "name": "add",
+        "description": "add patreon (bot owner only)",
+        "options": [
           {
-            "name": "add",
-            "value": "add"
+            "type": 6,
+            "name": "user",
+            "description": "@user to add",
+            "required": false
           },
           {
-            "name": "edit",
-            "value": "edit"
-          },
-          {
-            "name": "remove",
-            "value": "remove"
-          },
-          {
-            "name": "show",
-            "value": "show"
+            "type": 4,
+            "name": "num",
+            "description": "number of users",
+            "required": false
           }
         ]
       },
       {
-        "type": 6,
-        "name": "user",
-        "description": "@user to add",
-        "required": false
-      },
-      {
-        "type": 4,
-        "name": "num",
-        "description": "number of users",
-        "required": false
-      },
-      {
-        "type": 4,
-        "name": "status",
-        "description": "enable/disable",
-        "required": false,
-        "choices": [
+        "type": 1,
+        "name": "edit",
+        "description": "edit patreon (bot owner only)",
+        "options": [
           {
-            "name": "enable",
-            "value": 1
+            "type": 6,
+            "name": "user",
+            "description": "@user to edit",
+            "required": false
           },
           {
-            "name": "disable",
-            "value": 0
+            "type": 4,
+            "name": "num",
+            "description": "number of users",
+            "required": false
+          },
+          {
+            "type": 4,
+            "name": "status",
+            "description": "enable/disable",
+            "required": false,
+            "choices": [
+              {
+                "name": "enable",
+                "value": 1
+              },
+              {
+                "name": "disable",
+                "value": 0
+              }
+            ]
           }
         ]
+      },
+      {
+        "type": 1,
+        "name": "remove",
+        "description": "remove patreon (bot owner only)",
+        "options": [
+          {
+            "type": 6,
+            "name": "user",
+            "description": "@user to remove",
+            "required": false
+          },
+          {
+            "type": 3,
+            "name": "id",
+            "description": "id of user to remove",
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "show",
+        "description": "remove patreon (bot owner only)"
       }
     ]
   },

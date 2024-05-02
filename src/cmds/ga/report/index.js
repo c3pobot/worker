@@ -1,18 +1,18 @@
 'use strict'
 const sorter = require('json-array-sorter')
-const { getGAInfo } = require('src/cmds/ga/helpers')
 const swgohClient = require('src/swgohClient')
-const { getDiscordAC } = require('src/helpers')
-const { formatGAOverview, formatGAMods, formatGARelics, formatGAQuality } = require('src/format')
 const getUnits = require('./getUnits')
 
-module.exports = async(obj = {}, opt = [], dObj, gaInfo)=>{
-  let msg2send = {content: 'Error getting GAC info'}, charUnits = [], shipUnits = []
-  if(!dObj) dObj = await getDiscordAC(obj.member.user.id, opt)
-  if(!dObj?.allyCode) return { content: 'Your allyCode is not linked to your discord id' }
+const { getDiscordAC } = require('src/helpers')
+const { formatGAOverview, formatGAMods, formatGARelics, formatGAQuality } = require('src/format')
 
-  if(!gaInfo) gaInfo = await getGAInfo(dObj.allyCode)
-  if(!gaInfo.currentEnemy) return { content: 'you do not have an opponent set'}
+module.exports = async(obj = {}, opt = {}, dObj, gaInfo)=>{
+  if(!dObj) dObj = await getDiscordAC(obj.member.user.id, opt)
+  let allyCode = dObj?.allyCode
+  if(!allyCode) return { content: 'Your allyCode is not linked to your discord id' }
+
+  if(gaInfo) gaInfo = (await mongo.find('ga', {_id: allyCode.toString()}))[0]
+  if(!gaInfo?.currentEnemy) return { content: 'You do not have a GA opponent configured' }
 
   if(!gaInfo?.playerId) gaInfo.playerId = dObj.playerId
   if(!gaInfo?.playerId) gaInfo.playerId = await swgohClient.post('getPlayerId', { allyCode: dObj.allyCode })
@@ -25,9 +25,7 @@ module.exports = async(obj = {}, opt = [], dObj, gaInfo)=>{
   if(!eObj?.value?.playerId) return { content: 'error getting opponent info' }
 
   pObj = pObj.value, eObj = eObj.value
-
-  msg2send.content = null
-  msg2send.embeds = []
+  let msg2send = { content: null, embeds: [] }
   let gaOverview = {
     color: 15844367,
     timestamp: new Date(eObj.updated),

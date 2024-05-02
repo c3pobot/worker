@@ -3,7 +3,7 @@
   "worker": "oauth",
   "cmd": {
     "name": "conquest",
-    "description": "Show conquest info (requires google/fb link)",
+    "description": "Show conquest info (requires google/code auth link)",
     "options": []
   }
 }

@@ -1,0 +1,8 @@
+{
+  "type": "private",
+  "hidden": "true",
+  "worker": "discord",
+  "cmd": {
+    "name": "admin-report"
+  }
+}

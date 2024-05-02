@@ -1,13 +1,12 @@
 'use strict'
 const mongo = require('mongoclient')
-const getOptValue = require('./getOptValue')
-module.exports = async(dId, opt = [], useDefault = true)=>{
+
+module.exports = async(dId, opt = {}, useDefault = true)=>{
   let allyObj
-  let dObj = (await mongo.find('discordId', {_id: dId}))[0]
-  let allyOpt = getOptValue(opt, 'allycode_option')
-  if(!allyOpt) allyOpt = 'primary'
-  if(dObj && dObj.allyCodes && dObj.allyCodes.length > 0){
-    allyObj = dObj.allyCodes.find(x=>x.opt == allyOpt.trim().toLowerCase())
+  let dObj = (await mongo.find('discordId', { _id: dId }))[0]
+  let allyOpt = opt.allycode_option?.value?.trim()?.toLowerCase() || 'primary'
+  if(dObj?.allyCodes?.length > 0){
+    allyObj = dObj.allyCodes.find(x=>x.opt == allyOpt)
     if(!allyObj){
       if(allyOpt == 'primary'){
         let priAlly = dObj.allyCodes.filter(x=>x.opt != 'alt')

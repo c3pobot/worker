@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 const log = require('logger')
 const rabbitmq = require('./helpers/rabbitmq')
 
-const { setNumShards } = require('./helpers/discordmsg/sendBotMsg/botInfo')
+const { setNumShards } = require('./helpers/botRequest/botInfo')
 const updateDataList = require('./helpers/updateDataList')
 
 let POD_NAME = process.env.POD_NAME || 'bot', SET_NAME = process.env.SET_NAME || 'bot', NAME_SPACE = process.env.NAME_SPACE || 'default'

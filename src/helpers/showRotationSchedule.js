@@ -1,6 +1,7 @@
 const replyMsg = require('./replyMsg')
-const { GetRole, GetChannel } = require('./discordmsg')
 const timeTillPayout = require('./timeTillPayout')
+const { getRole, getChannel } = require('./discordmsg')
+
 module.exports = async(obj, rObj, shardObj, opt)=>{
   let msg2send, timeTillPO
   let playerArray = []
@@ -13,8 +14,8 @@ module.exports = async(obj, rObj, shardObj, opt)=>{
       }
     }
   }
-  let guildRole = await GetRole(shardObj.sId, rObj.roleId)
-  let guildChannel = await GetChannel(rObj.chId)
+  let guildRole = await getRole(shardObj.sId, rObj.roleId)
+  let guildChannel = await getChannel(rObj.chId)
   if(rObj.poOffSet || rObj.poOffSet == 0) timeTillPO = timeTillPayout(rObj.poOffSet, rObj.type)
   msg2send = '>>> **'+rObj.id+'** Rotation Schedule ('+rObj.players.length+')\n'
   msg2send += '```\n'

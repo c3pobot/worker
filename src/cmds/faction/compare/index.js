@@ -1,35 +1,45 @@
 'use strict'
 const getImg = require('./getImg')
-const { getOptValue, findFaction, replyButton, fetchPlayer, getPlayerAC, getDiscordAC } = require('src/helpers')
+const { findFaction, fetchPlayer, getPlayerAC, getDiscordAC } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You must provide another player to compare with'}, fInfo, fInfo2, allyObj, pObj, eObj
-  let faction = getOptValue(opt, 'faction')
-  if(faction) faction = faction.toString().trim()
-  let faction2 = await getOptValue(opt, 'faction-2')
-  if(faction2) faction2 = faction2.toString().trim()
-  let combatType = getOptValue(opt, 'option', 1)
-  if(combatType) combatType = +combatType
-  const eAlly = await getPlayerAC(obj, opt)
-  const pAlly = await getDiscordAC(obj.member.user.id, opt)
-  if(!pAlly) msg2send.content = 'You do not have allycode linked to discordId'
-  if(pAlly && eAlly && eAlly.mentionError) msg2send.content = 'that user does not have allyCode linked to discordId'
-  if(faction){
-    msg2send.content = 'Error finding faction **'+faction+'**'
-    fInfo = await findFaction(obj, faction)
-    if(fInfo === 'GETTING_CONFIRMATION') return
-    if(fInfo?.units) fInfo.units = fInfo.units.filter(x=>x.combatType === combatType);
-    if(faction2){
-      fInfo2 = (await mongo.find('factions', {_id: faction2}, {units: 1, nameKey: 1}))[0]
-      if(fInfo2?.units?.length > 0 && fInfo?.units) fInfo.units = fInfo.units.filter(x=>fInfo2.units.includes(x.baseId))
-    }
+module.exports = async(obj = {}, opt = {})=>{
+  if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
+
+  let pAlly = await getDiscordAC(obj.member?.user?.id, opt)
+  if(!pAlly?.allyCode) return { content: 'You do not have allycode linked to discordId' }
+
+  let eAlly = await getPlayerAC(obj, opt)
+  if(eAlly?.mentionError) return { content: 'that user does not have allyCode linked to discordId...' }
+  if(!eAlly?.allyCode) return { content: 'error getting allyCode to compare..'}
+
+  let faction = opt.faction?.value?.toString()?.trim(), faction2 = opt['faction-2']?.value?.toString()?.trim(), combatType = +(opt.option?.value || 1)
+  let msg2send = {content: 'Error with provided information'}
+  if(!faction || !combatType) return { content: 'error with provided information' }
+
+  let fInfo2, fInfo = await findFaction(obj, faction)
+  if(fInfo?.msg2send) return fInfo?.msg2send
+  if(!fInfo?.units || fInfo?.units?.length == 0) return { content: `Error finding faction **${faction}**` }
+
+  if(fInfo.units) fInfo.units = fInfo.units.filter(x=>x.combatType === combatType)
+  if(!fInfo?.units || fInfo?.units?.length == 0) return { content: `${fInfo.nameKey} has not units of type ${combatType}...` }
+
+  obj.data.options.faction = fInfo.baseId
+  if(faction2){
+    fInfo2 = await findFaction(obj, faction2)
+    if(fInfo2?.msg2send) return fInfo2?.msg2send
+    if(!fInfo2?.units || fInfo2?.units?.length == 0) return { content: `Error finding 2nd faction **${faction2}**` }
+
+    fInfo.units = fInfo.units.filter(x=>fInfo2.units.includes(x.baseId))
+    if(!fInfo?.units || fInfo?.units?.length == 0) return { content: `${fInfo.nameKey} has no units of type ${combatType} in common with ${fInfo2?.nameKey}` }
   }
-  if(fInfo && pAlly?.allyCode && eAlly?.allyCode && pAlly.allyCode != eAlly.allyCode){
-    await replyButton(obj, 'Getting info for faction **'+fInfo.nameKey+(fInfo2?.nameKey ? ' '+fInfo2.nameKey:'')+'** ...')
-    msg2send.content = 'Error pullling player info'
-    pObj = await fetchPlayer({allyCode: pAlly.allyCode.toString()})
-    eObj = await fetchPlayer({allyCode: eAlly.allyCode.toString()})
-  }
-  if(pObj?.allyCode && eObj?.allyCode) msg2send = await getImg(fInfo, pObj, eObj, fInfo2)
-  return msg2send
+
+  let [ pObj, eObj ] = await Promise.allSettled([
+    fetchPlayer({ allyCode: pAlly.allyCode?.toString() }),
+    fetchPlayer({ allyCode: eAlly.allyCode?.toString() })
+  ])
+
+  if(!pObj?.value?.allyCode) return { content: 'Error getting your data...' }
+  if(!eObj?.value?.allyCode) return { content: 'Error getting player data to compare...' }
+
+  return await getImg(fInfo, pObj, eObj, fInfo2)
 }

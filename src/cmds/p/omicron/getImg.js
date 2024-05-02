@@ -6,52 +6,42 @@ const getOmiUnits = require('./getOmiUnits')
 const getHTML = require('webimg').omicron
 const omiFilter = require('./omiFilter')
 const Enums = require('src/helpers/enum')
-const { getOptValue, getImg  } = require('src/helpers')
 
-module.exports = async(pObj = {}, opt = [])=>{
+const { getImg  } = require('src/helpers')
+
+module.exports = async(pObj = {}, opt = {})=>{
   try{
-    let res = {content: 'Error getting omi data from db'}, units, pUnits = [], omiFilter, webData, omicronImg
-    let omiType = getOptValue(opt, 'type', 0)
+    let omiType = +(opt.type?.value || 0), omiFilter
     if(omiType){
       omiFilter = (x=>x.omicronMode === omiType)
       if(OmiFilter[omiType]?.filter) omiFilter = OmiFilter[omiType]?.filter
     }
     let omiData = await mongo.find('omicronList', {})
-    if(omiFilter){
-      res.content = 'There are no **'+Enums?.omicron[omiType]+'** omicron(s) stored in the DB'
-      omiData = omiData.filter(omiFilter)
-    }
-    if(omiData?.length > 0){
-      res.content = 'Player has no units with '+(omiType ? '**'+enumOmicron[omiType]+'**':'')+' omicron(s)'
-      let unitFilter = omiData.map(x=>x.unitBaseId)
-      pUnits = pObj.rosterUnit.filter(x=> unitFilter.includes(x.definitionId.split(':')[0]))
-    }
-    if(pUnits?.length > 0){
-      res.content = 'Error checking for omis'
-      units = await getOmiUnits(pUnits, omiData)
-      if(units?.length == 0){
-        msg2send.content = 'Player has no '+(omiType ? '**'+enumOmicron[omiType]+'**':'')+' omicron(s)'
-      }
-    }
-    if(units?.length > 0){
-      units = sorter([{order: 'descending', column: 'count'}], units)
-      res.content = 'Error getting HTML'
-      webData = await getHTML?.player(units, {
-        player: pObj.name,
-        footer: 'Data updated ' + (new Date(pObj.updated)).toLocaleString('en-US', {timeZone: 'America/New_York'})
-      })
-    }
-    if(webData?.html){
-      res.content = 'Error getting image'
-      let windowWidth = 50
-      omicronImg = await getImg(webData.html, null, windowWidth, false)
-    }
-    if(omicronImg){
-      res.content = null
-      res.file = omicronImg
-      res.fileName = 'omicron.png'
-    }
-    return res
+    if(!omiData || omiData?.length == 0) return { content: 'error getting omicrons from db' }
+
+    'There are no **'+Enums?.omicron[omiType]+'** omicron(s) stored in the db'
+    if(omiFilter) omiData = omiData.filter(omiFilter)
+    if(!omiData || omiData?.length == 0) return { content: 'There are no **'+Enums?.omicron[omiType]+'** omicron(s) stored in the db' }
+
+    let unitFilter = omiData.map(x=>x.unitBaseId)
+    let pUnits = pObj.rosterUnit.filter(x=> unitFilter.includes(x.definitionId.split(':')[0]))
+    if(!pUnits || pUnits?.length == 0) return { content: 'Player has no units with '+(omiType ? '**'+Enums?.omicron[omiType]+'**':'')+' omicron(s)' }
+
+    let units = await getOmiUnits(pUnits, omiData)
+    if(!units) return { content: 'Error checking for omis' }
+    if(units.length == 0) return { content: 'Player has no '+(omiType ? '**'+Enums?.omicro[omiType]+'**':'')+' omicron(s)' }
+
+    units = sorter([{order: 'descending', column: 'count'}], units)
+    let webData = await getHTML?.player(units, {
+      player: pObj.name,
+      footer: 'Data updated ' + (new Date(pObj.updated)).toLocaleString('en-US', {timeZone: 'America/New_York'})
+    })
+    if(!webData?.html) return { content: 'error getting html' }
+
+    let webImg = await getImg(webData.html, null, 50, false)
+    if(!webImg) return { content: 'error getting image' }
+
+    return { content: null, file: webImg, fileName: 'omicron.png' }
   }catch(e){
     log.error(e);
     return {content: 'error getting image'}

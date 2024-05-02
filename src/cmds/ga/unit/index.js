@@ -1,24 +1,26 @@
 'use strict'
-const { getGAInfo } = require('src/cmds/ga/helpers')
-const getImg = require('src/cmds/p/unitCompare/getImg')
-const { getOptValue, getDiscordAC, replyButton, findUnit } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
+const getImg = require('src/cmds/p/unitCompare/getImg')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'Your allyCode is not linked to your discord id'}
-  if(obj.confirm) await replyButton(obj)
+const { getDiscordAC, findUnit } = require('src/helpers')
+
+
+module.exports = async(obj = {}, opt = {})=>{
+  if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
+
   let dObj = await getDiscordAC(obj.member.user.id, opt)
-  if(!dObj?.allyCode) return msg2send
+  let allyCode = dObj?.allyCode
+  if(!allyCode) return { content: 'Your allyCode is not linked to your discord id' }
 
-  let gaInfo = await getGAInfo(dObj.allyCode)
-  if(!gaInfo?.currentEnemy) return { content: 'you do not have an opponent set' }
+  let gaInfo = (await mongo.find('ga', {_id: allyCode.toString()}))[0]
+  if(!gaInfo?.currentEnemy) return { content: 'You do not have a GA opponent configured' }
 
-  let unit = getOptValue(opt, 'unit')?.toString()?.trim()
-  if(!unit) return { content: 'you did not specify a unit' }
+  let unit = opt.unit?.value?.toString()?.trim()
+  if(!unit) return { content: 'you did not provide a unit' }
 
   let uInfo = await findUnit(obj, unit)
-  if(uInfo === 'GETTING_CONFIRMATION') return
-  if(!uInfo.baseId) return { content: `Error finding **${unit}**` }
+  if(uInfo?.msg2send) return uInfo.msg2send
+  if(!uInfo?.baseId) return { content: `error finding ${unit}`}
 
   let [ pObj, eObj ] = await Promise.allSettled([
     swgohClient.post('fetchGAPlayer', { playerId: gaInfo.playerId, allyCode: dObj.allyCode, opponent: dObj.allyCode }),
@@ -27,8 +29,5 @@ module.exports = async(obj = {}, opt = [])=>{
   if(!pObj?.value?.playerId) return { content: 'error getting player info' }
   if(!eObj?.value?.playerId) return { content: 'error getting opponent info' }
 
-  pObj = pObj.value, eObj = eObj.value
-  msg2send = await getImg(uInfo, pObj, eObj)
-  
-  return msg2send
+  return await getImg(uInfo, pObj.value, eObj.value)
 }

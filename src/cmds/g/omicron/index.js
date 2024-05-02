@@ -9,54 +9,59 @@ const enumSkill = {
   u: 'Unique'
 }
 const getHTML = require('webimg').omicron
-const { buttonPick, getGuildId, getImg, fetchGuild, getOptValue, getPlayerAC, replyButton, findUnit } = require('src/helpers')
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'Error getting data'}
-  if(obj.confirm) await replyButton(obj, 'Getting omicron info ...')
-  let skillId = obj.confirm?.skillId
-  let unit = getOptValue(opt, 'unit')?.toString()?.trim()
-  if(!unit) return { content: 'you did not provide a unit...'}
-
-  let uInfo = await findUnit(obj, unit)
-  if(uInfo === 'GETTING_CONFIRMATION') return
-  if(!uInfo?.baseId) return { content: `Error finding **${unit}**...`}
-
-  let skills = Object.values(uInfo.skills)?.filter(x=>x.omiTier)
-  if(!skills || skills?.length == 0) return { content: `**${uInfo.nameKey}** does not have any omicron abilities...`}
-
-  if(!skillId && skills?.length === 1) skillId = skills[0].id
-  
-  if(!skillId){
-    let pickMsg = { content: 'Please Choose skill below for **'+uInfo.nameKey+'**', components: [] }
-    for(let i in skills){
-      if(!skills[i].omiTier) continue
-      let skillLabel = skills[i]?.id?.charAt(0).toUpperCase()
-      if(skillLabel == 'h') skillLabel = 'R'
-      if(skills[i]?.id?.startsWith('ult')) skillLabel = 'Ult'
-      skillLabel += ' - '+skills[i].nameKey
-      if(pickMsg.components?.length == 0) pickMsg.components.push({ type:1, components: []})
-      pickMsg.components[0].components.push({
-        type: 2,
-        label: skillLabel,
-        style: 1,
-        custom_id: JSON.stringify({id: obj.id, unit: uInfo.baseId, skillId: skills[i].id})
-      })
-    }
-    await buttonPick(obj, pickMsg)
-    return
-  }
-  let skillInfo = uInfo.skills[skillId?.trim()]
-  if(!skillInfo?.omiTier) return { content: `error getting omicron skill **${skillId}** for **${uInfo.nameKey}**`}
+const { getGuildId, getImg, fetchGuild, getPlayerAC, findUnit, saveCmdOptions } = require('src/helpers')
+module.exports = async(obj = {}, opt = {})=>{
+  if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
 
   let allyObj = await getPlayerAC(obj, opt)
   if(allyObj?.mentionError) return { content: 'that user does not have allyCode linked to discordId' }
   let allyCode = allyObj?.allyCode
   if(!allyCode) return { content: 'You do not have allyCode linked to discord' }
 
+  let skillId = obj.confirm?.skillId, unit = opt.unit.value?.toString()?.trim()
+  if(!unit) return { content: 'you did not provide a unit...'}
+
+  let uInfo = await findUnit(obj, unit)
+  if(uInfo?.msg2send) return uInfo.msg2send
+  if(!uInfo?.baseId) return { content: `Error finding **${unit}**...`}
+
+  let skills = Object.values(uInfo.skills)?.filter(x=>x.omiTier)
+  if(!skills || skills?.length == 0) return { content: `**${uInfo.nameKey}** does not have any omicron abilities...`}
+
+  if(!skillId && skills?.length === 1) skillId = skills[0].id
+
+  if(!skillId){
+    let msg2send = { content: 'Please Choose skill below for **'+uInfo.nameKey+'**', components: [] }
+    for(let i in skills){
+      if(!skills[i].omiTier) continue
+      let skillLabel = skills[i]?.id?.charAt(0).toUpperCase()
+      if(skillLabel == 'h') skillLabel = 'R'
+      if(skills[i]?.id?.startsWith('ult')) skillLabel = 'Ult'
+      skillLabel += ' - '+skills[i].nameKey
+      if(msg2send.components?.length == 0) msg2send.components.push({ type:1, components: []})
+      msg2send.components[0].components.push({
+        type: 2,
+        label: skillLabel,
+        style: 1,
+        custom_id: JSON.stringify({id: obj.id, dId: obj.members?.user?.id, unit: uInfo.baseId, skillId: skills[i].id})
+      })
+    }
+    msg2send.components[x].components.push({
+      type: 2,
+      label: 'Cancel',
+      style: 4,
+      custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
+    })
+    await saveCmdOptions(obj)
+    return msg2send
+  }
+  let skillInfo = uInfo.skills[skillId?.trim()]
+  if(!skillInfo?.omiTier) return { content: `error getting omicron skill **${skillId}** for **${uInfo.nameKey}**`}
+
   let pObj = await getGuildId({}, {allyCode: allyCode}, [])
   if(!pObj?.guildId) return { content: 'error getting player info...'}
 
-  let gObj = await fetchGuild({id: pObj.guildId, projection: { playerId: 1, name: 1, rosterUnit: { $elemMatch: { baseId: uInfo.baseId } }}})
+  let gObj = await fetchGuild({ guildId: pObj.guildId, projection: { playerId: 1, name: 1, rosterUnit: { $elemMatch: { baseId: uInfo.baseId } } } })
   if(!gObj?.member || gObj?.member?.length == 0) return { content: 'Error getting guild info...'}
 
   let skillLabel = skillId?.charAt(0).toUpperCase()
@@ -80,15 +85,11 @@ module.exports = async(obj = {}, opt = [])=>{
     uInfo: uInfo,
     skillInfo: skillInfo
   }
-  let imgHTML = await getHTML.guild(webData)
-  if(!imgHTML) return { content: 'Error getting HTML' }
+  let webHTML = await getHTML.guild(webData)
+  if(!webHTML) return { content: 'Error getting HTML' }
 
-  let omiImg = await getImg(imgHTML, obj.id, 600, false)
-  if(!omiImg) return { content: 'Error getting Image' }
+  let webImg = await getImg(imgHTML, obj.id, 600, false)
+  if(!webImg) return { content: 'Error getting Image' }
 
-  msg2send.content = null
-  msg2send.components = []
-  msg2send.file = omiImg
-  msg2send.fileName = gObj?.profile?.name+'-omicrons.png'
-  return msg2send
+  return { content: null, file: webImg, fileName: gObj?.profile?.name+'-omicrons.png' }
 }

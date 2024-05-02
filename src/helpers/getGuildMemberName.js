@@ -1,11 +1,8 @@
 'use strict'
-const { GetGuildMember } = require('./discordmsg')
+const { getGuildMember } = require('./discordmsg')
 module.exports = async(sId, dId)=>{
   let usrname
-  let usr = await GetGuildMember(sId, dId)
-  if(usr && usr.user){
-    usrname = usr.user.username
-    if(usr.nick) usrname = usr.nick
-  }
+  let usr = await getGuildMember(sId, dId)
+  if(usr?.user) usrname = usr.nick || usr.user.username
   return usrname
 }

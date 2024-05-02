@@ -1,7 +1,7 @@
 'use strict'
 const mongo = require('mongoclient')
 const swgohClient = require('src/swgohClient')
-const { checkGuildAdmin, getGuildId, sendmessages, getLowTickets } = require('src/helpers')
+const { checkGuildAdmin, getGuildId, sendMessages, getLowTickets } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
   let msg2send = {content: 'This command is only available to guild admins'}, redisCache = 0, embedMsg, mongoCache = 0
@@ -33,7 +33,7 @@ module.exports = async(obj = {}, opt = [])=>{
   }
   msg2send.content = 'You are only allowed to send reminders thru the bot every 10 minutes'
   if(guild?.auto?.sent && (+timeNow - +guild.auto.sent) > 600000){
-    await sendMessages({chId: obj.channel_id}, gObj)
+    await sendMessages({sId: obj.guild_id, chId: obj.channel_id}, gObj)
     msg2send.content = 'Low ticket messages sent'
   }else{
     embedMsg = await getLowTickets(gObj, ticketCount)

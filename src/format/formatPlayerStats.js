@@ -5,7 +5,7 @@ module.exports = async(roster = [], statInfo = {}, sort = 'mod')=>{
   let res = []
   for(let i in roster){
     if(roster[i]?.stats){
-      const tempObj = await formatPlayerStat(roster[i], statInfo, sort)
+      let tempObj = await formatPlayerStat(roster[i], statInfo, sort)
       if(tempObj) res.push(tempObj)
     }
   }

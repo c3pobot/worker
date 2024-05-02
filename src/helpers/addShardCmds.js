@@ -1,8 +1,10 @@
 'use strict'
-const { botSettings } = require('src/helpers/botSettings')
 const mongo = require('mongoclient')
 const BOT_OWNER_ID = process.env.BOT_OWNER_ID
-const { AddGuildCmd } = require('./discordmsg')
+
+const { botSettings } = require('src/helpers/botSettings')
+const { addGuildCmd } = require('./discordmsg')
+
 module.exports = async(sId)=>{
   if(!sId) return
   let slashCmds = (await mongo.find('slashCmds', { _id: 'swgoh' }))[0]
@@ -11,7 +13,7 @@ module.exports = async(sId)=>{
 
   let count = 0
   for(let i in cmds){
-    let status = await AddGuildCmd(sId, cmds[i], 'POST')
+    let status = await addGuildCmd(sId, cmds[i], 'POST')
     if(status?.id) count++
   }
   if(count > 0 && +cmds?.length == count) return true

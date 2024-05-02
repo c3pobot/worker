@@ -1,10 +1,9 @@
 'use strict'
-const { GetGuild } = require('src/helpers/discordmsg')
+const { getGuild } = require('src/helpers/discordmsg')
 const { getRole } = require('src/helpers')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  let msg2send = {content: 'There are no shard rules set up'}
-  if(!shard.rules) return msg2send
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
+  if(!shard.rules) return { content: 'There are no shard rules set up' }
   let guild = await GetGuild(shard.sId)
   let embedMsg = {
     color: 15844367,
@@ -68,8 +67,5 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
     if(shard.rules['bottom-rank']) enemySkips.value += '# of Ranks > old rank to check        : '+shard.rules['bottom-rank']+'\n'
   }
   embedMsg.fields.push(enemySkips)
-  msg2send.content = null
-  msg2send.embeds = [embedMsg]
-
-  return msg2send
+  return { content: null, embeds: [embedMsg] }
 }

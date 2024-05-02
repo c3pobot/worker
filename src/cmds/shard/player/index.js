@@ -12,16 +12,8 @@ Cmds.rotation = require('./rotation')
 Cmds.status = require('./status')
 Cmds.unwatch = require('./unwatch')
 Cmds.watch = require('./watch')
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  let tempCmd, opts
-  for(let i in opt){
-    if(Cmds[opt[i].name]){
-      tempCmd = opt[i].name
-      opts = opt[i].options
-      break;
-    }
-  }
-  let msg2send = {content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided')}
-  if(tempCmd) msg2send = await Cmds[tempCmd](obj, shard, opts)
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
+  let tempCmd = obj.subCmd, msg2send = { content: 'command not recongnized' }
+  if(tempCmd && Cmds[tempCmd]) msg2send = await Cmds[tempCmd](obj, shard, opts)
   return msg2send
 }

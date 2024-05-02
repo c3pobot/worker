@@ -1,15 +1,10 @@
 'use strict'
 const mongo = require('mongoclient')
 const showRules = require('./status')
-const { getOptValue } = require('src/helpers')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  let option = getOptValue(opt, 'option', 'add')
-  let ruleStatus = getOptValue(opt, 'status')
-  let ruleNotify = getOptValue(opt, 'notify')
-  let ruleRole = getOptValue(opt, 'role')
-  let ruleEmoji = getOptValue(opt, 'emoji')
-  let ruleChId = getOptValue(opt, 'channel')
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
+  let option = opt?.option?.value || 'add', ruleStatus = opt.status?.value, ruleRole = opt.role?.value
+  let ruleNotify = opt.notify?.value, ruleEmoji = opt.emoji?.value, ruleChId = opt?.channel?.value
   if(!shard.rules) shard.rules = {
     enemy: [':rage:'],
     friend: []
@@ -31,6 +26,6 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
     if(ruleEmoji) shard.rules.enemy = shard.rules.enemy.filter(x=>x !== ruleEmoji)
     if(ruleChId) shard.rules.enemyHits.chId = shard.logChannel
   }
-  await mongo.set('payoutServers', {_id: shard._id}, {rules: shard.rules})
+  await mongo.set('payoutServers', { _id: shard._id }, { rules: shard.rules })
   return await showRules(obj, shard, opt)
 }

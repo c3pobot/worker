@@ -1,19 +1,15 @@
 'use strict'
 const mongo = require('mongoclient')
-const { getOptValue } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let patreon, msg2send = {content: 'You did not provide the correct information'}
-  let usr = getOptValue(opt, 'user')
-  let maxAllyCodes = getOptValue(opt, 'num')
-  let usrStatus = getOptValue(opt, 'status')
-  if(usr){
-    msg2send.content = 'Could not find that patreon'
-    patreon = (await mongo.find('patreon', {_id: opt.find(x=>x.name == 'user').value}))[0]
-  }
-  if(patreon){
-    if(maxAllyCodes >= 0) mongo.set('patreon', {_id: patreon._id}, {maxAllyCodes: maxAllyCodes})
-    if(userStatus >= 0) mongo.set('patreon', {_id: patreon._id}, {status: userStatus})
-  }
-  return msg2send
+module.exports = async(obj = {}, opt = {})=>{
+  let usr = opt.user?.data, maxAllyCodes = opt.num?.value, usrStatus = opt.status?.value
+  if(!usr) return { content: 'you did not provide a user...' }
+
+  let patreon = (await mongo.find('patreon', { _id: usr.id }, { _id: 0, TTL: 0 }))[0]
+  if(!patreon) return { content: `**@${usr.nick || usr.username}** is not in the patreon list...` }
+
+  if(maxAllyCodes >= 0) patreon.maxAllyCodes = maxAllyCodes
+  if(usrStatus >= 0 ) patreon.status = usrStatus
+  await mongo.set('patreon', { _id: usr.id }, patreon)
+  return { content: `**@${usr.nick || usr.username}** updated with status ${patreon.status} and ${patreon.maxAllyCodes}` }
 }

@@ -1,21 +1,16 @@
 'use strict'
-const { getDiscordAC, replyTokenError, replyButton } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = 'You must have you google auth linked to your discordId'
-  let loginConfirm = obj.confirm.response
-  if(obj?.confirm) await replyButton(obj, 'Getting player data ...')
-  let dObj = await getDiscordAC(obj.member?.user?.id, opt)
-  if(!dObj?.uId || !dObj?.type) return { msg2send: msg2send }
+const { getDiscordAC, replyTokenError } = require('src/helpers')
 
-  msg2send = 'Error Getting player data'
-  let pObj = await swgohClient.oauth(obj, 'getInitialData', dObj, {}, loginConfirm);
-  if(pObj === 'GETTING_CONFIRMATION') return pObj
-  if(pObj?.error === 'invalid_grant'){
-    await replyTokenError(obj, dObj?.allyCode)
-    return 'GETTING_CONFIRMATION';
+module.exports = async(obj = {}, opt = {})=>{
+  let dObj = await getDiscordAC(obj.member.user?.id, opt)
+  if(!dObj?.uId || !dObj?.type) return { msg2send: { content: 'You must have you google auth linked to your discordId' } }
+
+  let pObj = await swgohClient.oauth(obj, 'getInitialData', dObj, {});
+  if(pObj?.error){
+    await replyTokenError(obj, dObj?.allyCode, pObj.error)
+    return 'TOKEN_ERROR'
   }
-  if(pObj?.msg2send) return { msg2send: pObj.msg2send }
-  return { msg2send: msg2send, data: pObj?.data }
+  return pObj
 }

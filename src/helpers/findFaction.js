@@ -1,8 +1,9 @@
 'use strict'
+const saveCmdOptions = require('./saveCmdOptions')
 const sorter = require('json-array-sorter')
 const getFaction = require('./getFaction')
 const { dataList } = require('./dataList')
-const buttonPick = require('./buttonPick')
+
 module.exports = async(obj = {}, param)=>{
   let baseId, faction
   if(param) faction = param.toString().trim().toLowerCase()
@@ -26,12 +27,18 @@ module.exports = async(obj = {}, param)=>{
           type: 2,
           label: factList[i].name,
           style: 1,
-          custom_id: JSON.stringify({id: obj.id, baseId: factList[i].value})
+          custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, baseId: factList[i].value })
         })
         if(embedMsg.components[x].components.length == 5) x++;
       }
-      await buttonPick(obj, embedMsg)
-      return 'GETTING_CONFIRMATION';
+      embedMsg.components[x].components.push({
+        type: 2,
+        label: 'Cancel',
+        style: 4,
+        custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
+      })
+      await saveCmdOptions(obj)
+      return { msg2send: embedMsg };
     }
   }
   if(baseId) return await getFaction(baseId, true)

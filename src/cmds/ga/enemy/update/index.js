@@ -4,9 +4,8 @@ Cmds.oauth = require('./oauth')
 Cmds.manual = require('./manual')
 const { getOptValue } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let allyCodes = getOptValue(opt, 'allycodes')
+module.exports = async(obj = {}, opt = {})=>{
   let tempCmd = 'oauth'
-  if(allyCodes) tempCmd = 'manual'
+  if(opt.allycodes?.value) tempCmd = 'manual'
   return await Cmds[tempCmd](obj, opt)
 }

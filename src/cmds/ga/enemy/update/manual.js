@@ -1,9 +1,9 @@
 'use strict'
 const mongo = require('mongoclient')
-const gaReport = require('src/cmds/ga/report')
-const { getOptValue, getDiscordAC  } = require('src/helpers')
-const { getGAInfo } = require('src/cmds/ga/helpers')
 const swgohClient = require('src/swgohClient')
+const gaReport = require('src/cmds/ga/report')
+
+const { getDiscordAC  } = require('src/helpers')
 
 const getPlayerId = async(allyCode)=>{
   if(!allyCode) return
@@ -17,17 +17,18 @@ const getPlayerIds = async(allyCodes = [])=>{
   let res = await Promise.allSettled(array)
   return res?.filter(x=>x?.value?.playerId)?.map(x=>x.value.playerId)
 }
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'Your allyCode is not linked to your discord id'}
-  let allyCodes = getOptValue(opt, 'allycodes')?.toString()?.trim().replace(/-/g, '')?.split(' ')
-  if(!allyCodes || allyCodes?.length == 0) return { content: 'You did not provide a list of allyCodes '}
-
+module.exports = async(obj = {}, opt = {})=>{
   let dObj = await getDiscordAC(obj.member.user.id, opt)
-  if(!dObj?.allyCode) return msg2send
+  let allyCode = dObj?.allyCode
+  if(!allyCode) return { content: 'Your allyCode is not linked to your discord id' }
 
-  let gaInfo = await getGAInfo(dObj.allyCode)
-  if(!gaInfo?.playerId) gaInfo.playerId = dObj.playerId
-  if(!gaInfo?.playerId) gaInfo.playerId = await swgohClient.post('getPlayerId', { allyCode: dObj.allyCode })
+  let gaInfo = (await mongo.find('ga', {_id: allyCode.toString()}))[0]
+  if(!gaInfo) gaInfo = { units: [], enemies: [] }
+  if(!gaInfo.units) gaInfo.units = [];
+  if(!gaInfo.enemies) gaInfo.enemies = [];
+  if(!gaInfo.playerId && pObj.id) gaInfo.playerId = pObj.id
+  let allyCodes = opt.allycodes?.value?.toString()?.trim()?.replace(/-/g, '')?.split(' ')
+  if(!allyCodes || allyCodes?.length == 0) return { content: `you did not provide any opponent allyCodes` }
 
   let availableSpace = 7 - +gaInfo?.enemies?.length
   if(availableSpace == 0 || allyCodes?.length > availableSpace) return { content: `You can only have 7 opponents registered. You currently have **${gaInfo.enemies.length}** and tried to add **${allyCodes.length}**` }
@@ -47,6 +48,5 @@ module.exports = async(obj = {}, opt = [])=>{
 
   gaInfo.currentEnemy = gaInfo.enemies[(gaInfo.enemies.length - 1)].playerId;
   await mongo.set('ga', {_id: dObj.allyCode.toString()}, gaInfo);
-  msg2send = await gaReport(obj, opt, dObj, gaInfo)
-  return msg2send
+  return await gaReport(obj, opt, dObj, gaInfo)
 }

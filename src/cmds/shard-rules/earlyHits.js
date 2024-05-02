@@ -1,19 +1,10 @@
 'use strict'
 const mongo = require('mongoclient')
 const showRules = require('./status')
-const { getOptValue } = require('src/helpers')
 
 module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  let option = getOptValue(opt, 'option', 'add')
-  let ruleStatus = getOptValue(opt, 'status')
-  let ruleNotify = getOptValue(opt, 'notify')
-  let ruleCloser = getOptValue(opt, 'closer')
-  let ruleRole = getOptValue(opt, 'role')
-  let ruleEmoji = getOptValue(opt, 'emoji')
-  let ruleChId = getOptValue(opt, 'channel')
-  let ruleHour = getOptValue(opt, 'hour')
-  let ruleTop = getOptValue(opt, 'top-rank')
-  let ruleBottom = getOptValue(opt, 'bottom-rank')
+  let option = opt.option?.value || 'add', ruleStatus = opt.status?.value, ruleNotify = opt.notify?.value, ruleRole = opt.role?.value, ruleEmoji = opt.emoji?.value
+  let ruleChId = opt.channel?.value, ruleTop = opt['top-rank']?.value, ruleBottom = opt['bottom-rank']?.value, ruleCloser = opt.closer?.value, ruleHour = opt.hour?.value
   if(!shard.rules) shard.rules = {
     enemy: [':rage:'],
     friend: []
@@ -43,6 +34,6 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
     if(ruleTop >= 0) shard.rules['top-rank'] = 2
     if(ruleBottom >=0 ) shard.rules['bottom-rank'] = null
   }
-  await mongo.set('payoutServers', {_id: shard._id}, {rules: shard.rules})
+  await mongo.set('payoutServers', { _id: shard._id }, { rules: shard.rules })
   return await showRules(obj, shard, opt)
 }

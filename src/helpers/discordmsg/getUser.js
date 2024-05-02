@@ -1,14 +1,7 @@
 'use strict'
-const DiscordFetch = require('./discordFetch')
-const ReportError = require('./reportError')
+const discordFetch = require('./discordFetch')
 module.exports = async(dId)=>{
-  try{
-    if(+dId > 999999){
-      const res = await DiscordFetch('/users/'+dId, 'GET', null, {"Content-Type": "application/json"})
-      ReportError(res, 'GetUser', {dId: dId})
-      return res?.body
-    }
-  }catch(e){
-    console.error(e)
-  }
+  if(!dId) return
+  let res = await discordFetch('/users/'+dId, 'GET', null, {"Content-Type": "application/json"})
+  return res?.body
 }

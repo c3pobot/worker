@@ -1,4 +1,4 @@
 'use strict'
-module.exports = async(obj = {}, opts = [])=>{
+module.exports = async(obj = {}, opts = {})=>{
   return { content: 'Coming soon (tm)'}
 }

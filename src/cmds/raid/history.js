@@ -18,18 +18,16 @@ const getGuild = async(guildId)=>{
   }
   return guild
 }
-const { getOptValue, getPlayerAC, getGuildId, getImg } = require('src/helpers')
+const { getPlayerAC, getGuildId, getImg } = require('src/helpers')
 
-module.exports = async(obj = {}, opt=[])=>{
-  let msg2send = { content: 'you do not have discord linked to allycode' }
+module.exports = async(obj = {}, opt= {})=>{
   let allyObj = await getPlayerAC(obj, opt)
-  if(allyObj?.mentionError) return { content: 'that user does not have allyCode linked to discordId' }
-
   let allyCode = allyObj?.allyCode
-  if(!allyCode) return msg2send
+  if(allyObj?.mentionError) return { content: 'that user does not have allyCode linked to discordId' }
+  if(!allyCode) return { content: 'you do not have discord linked to allycode' }
 
-  let raidId = getOptValue(opt, 'raid')
-  let pObj = await getGuildId({dId: null}, {allyCode: allyCode}, opt)
+
+  let pObj = await getGuildId( {}, {allyCode: allyCode}, opt)
   if(!pObj?.guildId) return { content: `player with allyCode **${allyCode}** is not in a guild...` }
 
   let gObj = await getGuild(pObj.guildId)
@@ -39,7 +37,7 @@ module.exports = async(obj = {}, opt=[])=>{
   let raids = sorter([{column: 'endTime', order: 'descending'}], gObj.recentRaidResult)
   if(!raids || raids?.length === 0) return { content: `I could not find any raid results for **${gObj.name}**...`}
 
-  if(!raidId) raidId = raids[0].raidId
+  let raidId = opt.value?.raid || raids[0].raidId
   let raidDef = (await mongo.find('raidDef', {_id: raidId}))[0]
   if(!raidDef?.nameKey) return { content: 'Error getting raid definition' }
 
@@ -64,14 +62,11 @@ module.exports = async(obj = {}, opt=[])=>{
   }
   if(!raidData?.leaderBoard || raidData?.leaderBoard?.length === 0) return { content: 'error calculating data' }
 
-  let raidHTML = await getHTML.history(raidData)
-  if(!raidHTML) return { content: 'Error getting html' }
+  let webHtml = await getHTML.history(raidData)
+  if(!webHtml) return { content: 'Error getting html' }
 
-  let raidImg = await getImg(raidHTML, obj.id, 100, false)
-  if(!raidImg) return { content: 'error getting image' }
+  let webImg = await getImg(webHtml, obj.id, 100, false)
+  if(!webImg) return { content: 'error getting image' }
 
-  msg2send.content = null
-  msg2send.file = raidImg
-  msg2send.fileName = gObj?.name+'-'+raidId+'-raid.png'
-  return msg2send
+  return { content: null, file: webImg, fileName: gObj?.name+'-'+raidId+'-raid.png' }
 }

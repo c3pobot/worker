@@ -8,21 +8,14 @@ const { replyError } = require('src/helpers')
 
 module.exports = async(obj = {})=>{
   try{
-    let sendMsg = true, tempCmd, opt = [], msg2send = {content: 'command not found'}
-    if(obj.data?.options){
-      for(let i in obj.data.options){
-        if(Cmds[obj.data.options[i].name]){
-          tempCmd = obj.data.options[i].name
-          if(obj.data.options[i].options) opt = obj.data.options[i].options
-        }
-      }
-    }
+    if(obj.confirm?.resposne == 'no') return { content: 'command canceled...' }
+    
+    let tempCmd = obj.subCmdGroup || obj.subCmd, opt = obj.data?.options || {}, msg2send = { content: 'command not recongnized' }
     let pObj = await GetData(obj, opt)
-    if(pObj === 'GETTING_CONFIRMATION') return
-    if(pObj?.msg2send) msg2send.content = cqData.msg2send
-    if(!pObj?.data) return msg2send
-    msg2send.content = 'command not found'
-    if(tempCmd) msg2send = await Cmds[tempCmd](obj, opt, pObj.data)
+    if(cqData === 'TOKEN_ERROR') return
+    if(pObj?.msg2send) return pObj.msg2send
+    if(!pObj?.data) return { content: 'You must have you google or code auth linked to your discordId' }
+    if(tempCmd && Cmds[temp]) msg2send = await Cmds[tempCmd](obj, opt, pObj.data)
     return msg2send
   }catch(e){
     replyError(obj)

@@ -1,7 +1,7 @@
 'use strict'
 const log = require('logger')
 const mongo = require('mongoclient')
-const { DeleteGuildCmds, GetGuildCmds } = require('./discordmsg')
+const { deleteGuildCmds, getGuildCmds } = require('./discordmsg')
 
 module.exports = async(sId)=>{
   try{
@@ -10,13 +10,13 @@ module.exports = async(sId)=>{
     let cmds = slashCmds?.cmds?.filter(x=>x.type === 'shard')?.map(x=>x?.cmd?.name)
     if(!cmds || cmds?.length == 0) return
     let cmdSet = new Set(cmds)
-    let guildCmds = await GetGuildCmds(sId)
+    let guildCmds = await getGuildCmds(sId)
     if(!guildCmds || guildCmds?.length == 0) return
     let count = 0, success = 0
     for(let i in guildCmds){
       if(cmdSet?.has(guildCmds[i]?.name)){
         count++
-        let status = await DeleteGuildCmds(sId, guildCmds[i].id)
+        let status = await deleteGuildCmds(sId, guildCmds[i].id)
         if(status) success++
       }
     }

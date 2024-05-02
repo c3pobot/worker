@@ -1,7 +1,8 @@
 'use strict'
-const { dataList } = require('src/helpers/dataList')
 const getNeededGear = require('./getNeededGear')
 const getNeededRelicMats =  require('./getNeededRelicMats')
+const { dataList } = require('src/helpers/dataList')
+
 const getRelicMats = (unit = {}, relicRecipe = [], res = {}, inventory = [])=>{
   let neededRelicMats = getNeededRelicMats([], relicRecipe.filter(x=>(unit.reqRelic - 2) >= x.tier), (unit.relic - 2) || 0, unit.reqRelic - 2)
   for(let i in neededRelicMats){

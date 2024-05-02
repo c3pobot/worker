@@ -1,12 +1,13 @@
 'use strict'
 const mongo = require('mongoclient')
 const getHTML = require('webimg').inventory
-const { getOptValue, checkGuide, checkUnitMats, getImg } = require('src/helpers')
+const { checkGuide, checkUnitMats, getImg } = require('src/helpers')
 
-module.exports = async(obj = {}, opts = [], pObj = {})=>{
-  let msg2send = { content: 'You did not provide a journey guide to look up'}
-  let guideId = getOptValue(opts, 'journey')
-  if(!guideId) return msg2send
+module.exports = async(obj = {}, opts = {}, pObj = {})=>{
+  if(!dataList?.gameData?.unitData) return { content: 'gameData list is empty.' }
+
+  let guideId = opt.journey?.value
+  if(!guideId) return { content: 'You did not provide a journey guide to look up' }
 
   let relicRecipe = await mongo.find('recipe', {type: 'relic'})
   if(!relicRecipe || relicRecipe?.length === 0) return { content: 'Error getting relic info from db' }
@@ -37,8 +38,5 @@ module.exports = async(obj = {}, opts = [], pObj = {})=>{
   let webImg = await getImg(imgHtml, obj.id, 640, false)
   if(!webImg) return { content: 'Error getting image'}
 
-  msg2send.content = null
-  msg2send.file = webImg
-  msg2send.fileName = 'journey-guide-gear.png'
-  return msg2send
+  return { content: null, file: webImg, fileName: 'journey-guide-gear.png' }
 }

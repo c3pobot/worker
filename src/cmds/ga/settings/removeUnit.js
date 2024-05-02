@@ -1,30 +1,31 @@
 'use strict'
 const mongo = require('mongoclient')
-const { getGAInfo } = require('src/cmds/ga/helpers')
 const showSettings = require('./show')
-const { getDiscordAC, replyButton, getOptValue, findUnit } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You did not specify a unit'}, unit, uInfo, sendResponse = 1, guildId, gaInfo
-  if(opt.find(x=>x.name == 'unit')) unit = opt.find(x=>x.name == 'unit').value.toString().toLowerCase().trim()
+const { getDiscordAC, findUnit } = require('src/helpers')
+
+module.exports = async(obj = {}, opt = {})=>{
+  if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
+
   let dObj = await getDiscordAC(obj.member.user.id, opt)
-  if(dObj?.allyCode){
-    gaInfo = await GetGAInfo(dObj.allyCode)
-    if(!gaInfo) gaInfo = {units: [], enemies: []}
-    msg2send.content = 'you did not specify a unit'
-    unit = getOptValue(opt, 'unit')
-  }
-  if(unit){
-    if(unit) unit = unit.toString().trim()
-    msg2send.content = 'error finding unit **'+unit+'**'
-    uInfo = await findUnit(obj, unit)
-    if(uInfo === 'GETTING_CONFIRMATION') return
-  }
-  if(uInfo){
-    await replyButton(obj, 'Removing **'+uInfo.nameKey+'**...')
-    gaInfo.units = gaInfo.units.filter(x=>x.baseId != uInfo.baseId)
-    await mongo.pull('ga', {_id: dObj.allyCode.toString()}, {units: {baseId: uInfo.baseId}})
-    msg2send = await showSettings(obj, opt, dObj, gaInfo)
-  }
-  return msg2send
+  let allyCode = dObj?.allyCode
+  if(!allyCode) return { content: 'Your allyCode is not linked to your discord id' }
+
+  let unit = opt.unit?.value?.toString()?.trim()
+  if(!unit) return { content: 'you did not specify a unit' }
+
+  let uInfo = await findUnit(obj, unit)
+  if(uInfo?.msg2send) return uInfo.msg2send
+  if(!uInfo?.baseId) return { content: `Error finding **${unit}**`}
+
+  let gaInfo = (await mongo.find('ga', {_id: allyCode.toString()}))[0]
+  if(!gaInfo) gaInfo = { units: [], enemies: [] }
+  if(!gaInfo.units) gaInfo.units = [];
+  if(!gaInfo.enemies) gaInfo.enemies = [];
+  if(!gaInfo.playerId && pObj.id) gaInfo.playerId = pObj.id
+  if(gaInfo.units.filter(x=>x.baseId == uInfo.baseId).length == 0) return { content: `${uInfo.nameKey} is not in your ga unit list` }
+
+  gaInfo.units = gaInfo.units.filter(x=>x.baseId !== uInfo.baseId)
+  await mongo.set('ga', { _id: allyCode?.toString() }, gaInfo)
+  return await showSettings(obj, opt, dObj, gaInfo)
 }

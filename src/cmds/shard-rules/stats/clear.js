@@ -1,10 +1,8 @@
 'use strict'
 const mongo = require('mongoclient')
-const { getOptValue } = require('src/helpers')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  let remove = getOptValue(opt, 'stat', 'all')
-  let msg2send = {content: remove+' stats have been cleared'}
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
+  let remove = opt.stat?.value || 'all'
   if(remove === 'all'){
     await mongo.delMany('shardHitList', {shardId: shard._id})
   }else{
@@ -12,5 +10,5 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
     if(remove === 'hits') await mongo.setMany('shardHitList', {shardId: shard._id}, {enemy: 0})
     if(remove === 'early') await mongo.setMany('shardHitList', {shardId: shard._id}, {early: 0})
   }
-  return msg2send
+  return { content: remove+' stats have been cleared' }
 }

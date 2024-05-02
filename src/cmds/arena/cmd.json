@@ -109,100 +109,141 @@
         ]
       },
       {
-        "type": 1,
+        "type": 2,
         "name": "user",
         "description": "add/remove user to non-shard arena sync list (patreon only)",
         "options": [
           {
-            "type": 3,
-            "name": "option",
-            "description": "add or remove",
-            "required": true,
-            "choices": [
+            "type": 1,
+            "name": "add",
+            "description": "add user to non-shard arena sync list (patreon only)",
+            "options": [
               {
-                "name": "add",
-                "value": "add"
+                "type": 6,
+                "name": "user",
+                "description": "@user to add",
+                "required": false
               },
               {
-                "name": "remove",
-                "value": "remove"
+                "type": 3,
+                "name": "allycode",
+                "description": "allyCode of player to add",
+                "required": false
               }
             ]
           },
           {
-            "type": 6,
-            "name": "user",
-            "description": "@user to add",
-            "required": false
+            "type": 1,
+            "name": "remove",
+            "description": "remove user to non-shard arena sync list (patreon only)",
+            "options": [
+              {
+                "type": 6,
+                "name": "user",
+                "description": "@user to add",
+                "required": false
+              },
+              {
+                "type": 3,
+                "name": "allycode",
+                "description": "allyCode of player to add",
+                "required": false
+              }
+            ]
           },
           {
-            "type": 3,
-            "name": "allycode",
-            "description": "allyCode of player to add",
-            "required": false
+            "type": 1,
+            "name": "channel",
+            "description": "set channel for arena logs for member not added as part of a guild",
+            "options": [
+              {
+                "type": 7,
+                "name": "channel",
+                "description": "channel for arena logs (leave blank to remove)",
+                "required": false
+              }
+            ]
           }
         ]
       },
       {
-        "type": 1,
+        "type": 2,
         "name": "guild",
-        "description": "add/remove/edit guild to non-shard arena sync list (patreon only)",
+        "description": "add/remove/edit guild for non-shard arena sync list (patreon only)",
         "options": [
           {
-            "type": 3,
-            "name": "option",
-            "description": "add or remove (for add need to supply @user or allyCode)",
-            "required": true,
-            "choices": [
+            "type": 1,
+            "name": "add",
+            "description": "add guild to non-shard arena sync list (patreon only)",
+            "options": [
               {
-                "name": "add",
-                "value": "add"
+                "type": 6,
+                "name": "user",
+                "description": "@user in guild to add (only needed for add)",
+                "required": false
               },
               {
-                "name": "edit",
-                "value": "edit"
+                "type": 3,
+                "name": "allycode",
+                "description": "allyCode of player in guild to add (only needed for add)",
+                "required": false
               },
               {
-                "name": "remove",
-                "value": "remove"
+                "type": 7,
+                "name": "channel",
+                "description": "channel for guild arena logs",
+                "required": false
               }
             ]
           },
           {
-            "type": 6,
-            "name": "user",
-            "description": "@user in guild to add (only needed for add)",
-            "required": false
+            "type": 1,
+            "name": "edit",
+            "description": "edit guild for non-shard arena sync list (patreon only)",
+            "options": [
+              {
+                "type": 7,
+                "name": "channel",
+                "description": "channel for guild arena logs",
+                "required": false
+              }
+            ]
           },
           {
-            "type": 3,
-            "name": "allycode",
-            "description": "allyCode of player in guild to add (only needed for add)",
-            "required": false
-          },
-          {
-            "type": 7,
-            "name": "channel",
-            "description": "channel for guild arena logs",
-            "required": false
+            "type": 1,
+            "name": "remove",
+            "description": "remove guild from non-shard arena sync list (patreon only)",
+            "options": [
+              {
+                "type": 6,
+                "name": "user",
+                "description": "@user in guild to add (only needed for add)",
+                "required": false
+              },
+              {
+                "type": 3,
+                "name": "allycode",
+                "description": "allyCode of player in guild to add (only needed for add)",
+                "required": false
+              }
+            ]
           }
         ]
       },
       {
-        "type": 1,
+        "type": 2,
         "name": "show",
-        "description": "DM you a list of currently configured users and guilds (patreon only)"
-      },
-      {
-        "type": 1,
-        "name": "settings",
-        "description": "non-shard arena sync settings (patreon only)",
+        "description": "show configured guilds/users for arena sync",
         "options": [
           {
-            "type": 7,
-            "name": "channel",
-            "description": "channel for arena logs for member not added as part of a guild",
-            "required": false
+            "type": 1,
+            "name": "users",
+            "description": "show configured users for arena sync"
+          },
+          {
+            "type": 1,
+            "name": "guilds",
+            "description": "show configured guild for arena sync"
           }
         ]
       }

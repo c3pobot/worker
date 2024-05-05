@@ -3,13 +3,13 @@ const mongo = require('mongoclient')
 const numeral = require('numeral')
 const { getMissingGP } = require('./helper')
 const getData = require('../getData')
+const memberLimit = 20
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = { content: 'You do not have google auth linked to your discordId' }
+module.exports = async(obj = {}, opt = {})=>{
   let tbObj = await getData(obj, opt)
   if(tbObj === 'GETTING_CONFIRMATION') return
-  if(tbObj?.content) msg2send.content = tbObj.content
-  if(!tbObj?.data) return msg2send
+  if(tbObj?.content) return { content: tbObj.content }
+  if(!tbObj?.data) return { content: 'You do not have google auth linked to your discordId' }
 
   let gObj = (await mongo.find('tbCache', {_id: tbObj.data.guildId}))[0]
   if(!gObj?.currentStat) return { content: 'Error getting data from db' }
@@ -27,12 +27,12 @@ module.exports = async(obj = {}, opt = [])=>{
     if(deployedGP && deployedGP.score){
       if(+deployedGP.score < gObj.member[i].gp && gObj.member[i].gp - (+deployedGP.score) > 100000){
         missingDeployment += (gObj.member[i].gp - (+deployedGP.score) || 0)
-        if(memberCount < 26) embedMsg.fields.push(getMissingGP(gObj.member[i], deployedGP.score))
+        if(memberCount < memberLimit) embedMsg.fields.push(getMissingGP(gObj.member[i], deployedGP.score))
         memberCount++
       }
     }else{
       missingDeployment += (gObj.member[i].gp || 0)
-      if(memberCount < 26) embedMsg.fields.push(getMissingGP(gObj.member[i], '0'));
+      if(memberCount < memberLimit) embedMsg.fields.push(getMissingGP(gObj.member[i], '0'));
       memberCount++
     }
   }
@@ -43,9 +43,7 @@ module.exports = async(obj = {}, opt = [])=>{
     })
   }
   embedMsg.description = '```autohotkey\nTotal missing Deployent : '+numeral(missingDeployment).format('0,0')+'\nThere is '+memberCount+' with Deployment issues\n'
-  if(memberCount > 25) embedMsg.description += 'Below is 25 of them\n'
+  if(memberCount > memberLimit) embedMsg.description += 'Below is '+embedMsg.fields.length+' of them\n'
   embedMsg.description += '```'
-  msg2send.content = null
-  msg2send.embeds = [embedMsg]
-  return msg2send
+  return { content: null, embeds: [embedMsg] }
 }

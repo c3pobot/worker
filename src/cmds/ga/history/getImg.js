@@ -5,7 +5,7 @@ const getHTML = require('webimg').ga
 const pipeline = require('./mongoPipeline')
 const sortOption = [{column: 'startTime', order: 'ascending'}]
 
-const { getImg, replyMsg, saveCmdOptions } = require('src/helpers')
+const { getImg, replyMsg, replyComponent } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {}, playerId)=>{
   if(!playerId) return { content: `playerId not provided..` }
@@ -62,6 +62,5 @@ module.exports = async(obj = {}, opt = {}, playerId)=>{
   if(!webImg) return { content: 'error getting image' }
 
   msg2send.file = webImg, msg2send.fileName = 'ga-history.png'
-  await saveCmdOptions(obj)
-  await replyMsg(obj, msg2send, 'POST')
+  await replyComponent(obj, msg2send, 'POST')
 }

@@ -17,14 +17,14 @@ const deleteCachedPlayer = async(pId, count = 10)=>{
 }
 
 module.exports = async(obj = {}, shard = {}, opt = {}, auth)=>{
-  if(!auth) return {content: 'This command requires shard admin privileges' }
+  if(obj.confirm && obj.confirm?.response !== 'yes') return { content: 'Command Canceled' }
+  if(!auth) return { content: 'This command requires shard admin privileges' }
   let startRank = opt.rank?.value, emoji = opt.emoji?.value
   if(!startRank) return { content: 'you did not provide a starting rank' }
   if(!obj.confirm){
     await confirmButton(obj, 'Are you sure you want to remove players '+(emoji ? 'with emoji '+emoji:'')+' at rank **'+startRank+'** and higher?');
     return
   }
-  if(obj.confirm?.response !== 'yes') return { content: 'Command Canceled' }
   if(obj.confirm?.response === 'yes'){
     let players = await mongo.find('shardRankCache', { shardId: shard._id })
     if(!players || players?.length  == 0) return { content: 'error getting players' }

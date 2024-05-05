@@ -7,13 +7,11 @@ const getSquadNum = require('./getSquadNum')
 const pointsSort = [{column: 'points', order: 'descending'}]
 const relicSort = [{column: 'relicTier', order: 'ascending'}]
 const gpSort = [{column: 'gp', order: 'ascending'}]
-const { getOptValue } = require('src/helpers')
 
-module.exports = (guild = [], pDef, opt=[])=>{
-  let phase = getOptValue(opt, 'phase', 'all')
-  let conflict = getOptValue(opt, 'conflict', 'all')
-  let fillSquad = getOptValue(opt, 'fill_squad', true)
-  
+module.exports = (guild = [], pDef, opt={})=>{
+  let phase = opt.phase?.value || 'all', conflict = opt.conflict?.value || 'all', fillSquad = opt.fill_squad?.value
+  if(fill_squad !== false) fill_squad = true
+
   let units = {}, platoons = [], res = {}
   if(phase !== 'all') pDef.platoons = pDef.platoons.filter(x=>x.phase === phase)
   if(conflict !== 'all') pDef.platoons = pDef.platoons.filter(x=>x.conflict === conflict)

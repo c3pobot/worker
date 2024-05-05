@@ -2,6 +2,7 @@
 const mongo = require('mongoclient')
 const sorter = require('json-array-sorter')
 const { botSettings } = require('src/helpers/botSettings')
+
 const getComponentOptions = (array, type, start = 0, end)=>{
   let res = []
   if(start !== 0) res.push({
@@ -13,7 +14,7 @@ const getComponentOptions = (array, type, start = 0, end)=>{
   if(end > +array.length) end = +array.length
   for(let i = start;i < end;i++) res.push({
     label: array[i].nameKey+' ('+(array[i].units? array[i].units.length+' units':array[i].squads.length+' squads')+')',
-    value: JSON.stringify([{name: 'squadId', value: array[i]._id}]),
+    value: JSON.stringify({ squadId: array[i]._id }),
     description: type+' Squad '+array[i].nameKey
   })
   if(array.length > end) res.push({
@@ -28,33 +29,23 @@ const checkOption = (string)=>{
 }
 
 const checkSquad = require('./check')
-const { replyButton, getOptValue, getGuildId } = require('src/helpers')
+const { replyComponent, getGuildId } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'Error getting squads', components: []}, guildSquads = [], startIndex = {global: 0, player: 0, server: 0, guild: 0}, parentId
-  let dId = getOptValue(opt, 'user', obj.member?.user?.id)
+module.exports = async(obj = {}, opt = {})=>{
+  let dId = opt.user?.value || obj.member?.user?.id, parentId, startIndex = { global: 0, player: 0, server: 0, guild: 0 }, guildSquads = []
   if(botSettings?.squadLink) parentId = botSettings?.squadLink[obj?.guild_id]
-  let usr = obj.member?.nick || obj.member?.user?.username
-  if(obj.data?.resolved?.users[dId]?.username) usr = obj.data.resolved.users[dId].username
-  if(obj.data?.resolved?.members[dId]?.nick) usr = obj.data.resolved.members[dId].nick
-  let tempIndex = checkOption(obj?.select?.data[0])
-  let search = getOptValue(opt, 'search')?.toString()?.trim()?.toLowerCase()
+  let usr = opt.user?.data || obj.member, search = opt.search?.value?.toString()?.trim()?.toLowerCase(), tempIndex = checkOption(obj.selectValues[0]) || {}
+
   if(tempIndex?.type && startIndex[tempIndex.type] >= 0) startIndex[tempIndex.type] = +tempIndex.index
-  if(Array.isArray(tempIndex)){
-    await replyButton(obj, 'Getting Squad **'+tempIndex[0]?.value+'**...')
-    for(let i in opt) tempIndex.push(opt[i]);
-    msg2send = await checkSquad(obj, tempIndex)
-    return msg2send
-  }
-  let globalSquads = await mongo.find('squadTemplate', {id: 'global'})
-  let playerSquads = await mongo.find('squadTemplate', {id: dId})
-  let serverSquads = await mongo.find('squadTemplate', {id: obj.guild_id})
-  let gObj = await getGuildId({dId: dId})
-  if(gObj?.guildId){
-    guildSquads = await mongo.find('squadTemplate', {id: gObj.guildId})
-  }
+  if(tempIndex.squadId) return await checkSquad(obj, { ...opt,...tempIndex })
+
+  let globalSquads = await mongo.find('squadTemplate', { id: 'global' })
+  let playerSquads = await mongo.find('squadTemplate', { id: dId })
+  let serverSquads = await mongo.find('squadTemplate', { id: obj.guild_id })
+  let gObj = await getGuildId( {dId: dId} )
+  if(gObj?.guildId) guildSquads = await mongo.find('squadTemplate', { id: gObj.guildId })
   if(parentId){
-    let parentSquads = await mongo.find('squadTemplate', {id: parentId})
+    let parentSquads = await mongo.find('squadTemplate', { id: parentId })
     if(parentSquads?.length > 0){
       if(!serverSquads) serverSquads = []
       serverSquads = serverSquads.concat(parentSquads)
@@ -63,7 +54,7 @@ module.exports = async(obj = {}, opt = [])=>{
   if(playerSquads?.length > 0){
     if(search) playerSquads = playerSquads.filter(x=>x.nameKey.includes(search))
     playerSquads = sorter([{column: 'nameKey', order: 'ascending'}], playerSquads)
-    let component = {type: 1, components: [{type: 3, custom_id: JSON.stringify({id: obj.id, type: 'p'}), options: [], placeholder: 'Choose a player squad ('+playerSquads.length+')'}]}
+    let component = { type: 1, components: [{type: 3, custom_id: JSON.stringify({id: obj.id, type: 'p'}), options: [], placeholder: 'Choose a player squad ('+playerSquads.length+')'}]}
     component.components[0].options = getComponentOptions(playerSquads, 'Player', +startIndex.player, 23)
     if(component.components[0].options?.length > 0) msg2send.components.push(component)
   }

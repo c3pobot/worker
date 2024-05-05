@@ -18,7 +18,7 @@ const sendFile = async(token, msg2send, method = 'POST')=>{
     form.append('payload_json', JSON.stringify(tempObj))
 
     let obj = await discordFetch(uri, method, form, {})
-    if((obj?.status !== 200 && obj?.status) || obj.error){
+    if((obj?.status !== 200 && obj?.status) || obj?.error){
       log.error(JSON.stringify(obj))
       return
     }

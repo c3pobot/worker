@@ -1,9 +1,9 @@
 'use strict'
-const { WebHookFile, WebHookMsg} = require('./discordmsg')
+const { webHookFile, webHookMsg} = require('./discordmsg')
 module.exports = async(obj = {}, content, method = 'PATCH')=>{
   if(content?.file || content?.files){
-    await WebHookFile(obj?.token, content, method)
+    await webHookFile(obj?.token, content, method)
   }else{
-    await WebHookMsg(obj?.token, content, method)
+    await webHookMsg(obj?.token, content, method)
   }
 }

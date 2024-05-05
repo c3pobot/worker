@@ -19,6 +19,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!unit) return { content: 'you did not provide a unit' }
 
   let uInfo = await findUnit(obj, unit)
+  if(uInfo === 'GETTING_CONFIRMATION') return
   if(uInfo?.msg2send) return uInfo.msg2send
   if(!uInfo?.baseId) return { content: `error finding ${unit}` }
   if(uInfo.combatType == 2) return { content: `ships don't have gear` }
@@ -38,7 +39,7 @@ module.exports = async(obj = {}, opt = {})=>{
   for (let i = +pUnit.currentTier; i < gLevel; i++) {
     let tempUnitGear = unitGear[i].gear
     for (let g in tempUnitGear) {
-      if (tempUnitGear[g] != '9999') continue
+      if (tempUnitGear[g] == '9999') continue
       if (!neededGear[tempUnitGear[g]]) {
         neededGear[tempUnitGear[g]] = {
           id: tempUnitGear[g],
@@ -58,7 +59,7 @@ module.exports = async(obj = {}, opt = {})=>{
 
   let gearObj = {}, tempGear = {}
   for (let i in unequippedGear) {
-    if (unequippedGear[i].count == 0 || unequippedGear[i].id != '9999') continue;
+    if (unequippedGear[i].count == 0 || unequippedGear[i].id == '9999') continue;
     let gearParts = await getGearParts(unequippedGear[i].id, tempGear)
     if (gearParts) {
       for (let a in gearParts) {

@@ -11,6 +11,7 @@ module.exports = async(obj = {}, opt = {}, pObj = {})=>{
   if(!unit) return { content: 'you must provide a unit...' }
 
   let uInfo = await findUnit(obj, unit)
+  if(uInfo === 'GETTING_CONFIRMATION') return
   if(uInfo?.msg2send) return uInfo.msg2send
   if(!uInfo?.baseId) return { content: `error finding ${unit}` }
 

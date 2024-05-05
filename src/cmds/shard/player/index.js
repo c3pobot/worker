@@ -14,6 +14,6 @@ Cmds.unwatch = require('./unwatch')
 Cmds.watch = require('./watch')
 module.exports = async(obj = {}, shard = {}, opt = {})=>{
   let tempCmd = obj.subCmd, msg2send = { content: 'command not recongnized' }
-  if(tempCmd && Cmds[tempCmd]) msg2send = await Cmds[tempCmd](obj, shard, opts)
+  if(tempCmd && Cmds[tempCmd]) msg2send = await Cmds[tempCmd](obj, shard, opt)
   return msg2send
 }

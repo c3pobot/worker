@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const mongo = require('mongoclient')
 let mapInProgress = {}
 const mapPlatoons = async(tbData = {})=>{
@@ -26,17 +27,15 @@ const mapPlatoons = async(tbData = {})=>{
 }
 module.exports = async(tbData = {})=>{
   try{
-    if(!mapInProgress[tbData.definitionId]){
-      mapInProgress[tbData.definitionId] = 1
-      if(tbData.reconZoneStatus.filter(x=>x.platoon.length > 0).length === tbData.reconZoneStatus.length){
-        let pDef = (await mongo.find('tbPlatoons', {_id: tbData.definitionId}))[0]
-        if(!pDef){
-          await MapPlatoons(tbData)
-        }
-      }
-      delete mapInProgress[tbData.definitionId]
-    }
+    if(mapInProgress[tbData.definitionId]) return
+
+    mapInProgress[tbData.definitionId] = 1
+    if(tbData.reconZoneStatus.filter(x=>x.platoon.length > 0).length !== tbData.reconZoneStatus.length) return
+
+    let pDef = (await mongo.find('tbPlatoons', {_id: tbData.definitionId}))[0]
+    if(!pDef) await MapPlatoons(tbData)
+    delete mapInProgress[tbData.definitionId]
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }

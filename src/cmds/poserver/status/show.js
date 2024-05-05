@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 const botInfo = require('src/helpers/botRequest/botInfo')
 
 const { getGuild, getUser, getRoles } = require('src/helpers/discordmsg')
-const { saveCmdOptions } = require('src/helpers')
+const { replyComponent } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {}, shard)=>{
   let id = opt.id?.value, patreon = opt.patreon?.value, patreonId = opt.patreonId?.value
@@ -108,6 +108,5 @@ module.exports = async(obj = {}, opt = {}, shard)=>{
     custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, subCmd: 'channel', ch: 'altChannel' })
   })
   components.push(chRow)
-  await saveCmdOptions(obj)
-  return { content: null, embeds: [embedMsg], components: components || [] }
+  await replyComponent(obj, { content: null, embeds: [embedMsg], components: components || [] })
 }

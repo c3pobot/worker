@@ -4,9 +4,11 @@ const numeral = require('numeral')
 const getUnitCount = require('./getUnitCount')
 const getUnits = require('./getUnits')
 const getSquadNum = require('./getSquadNum')
+
 const pointsSort = [{column: 'points', order: 'descending'}]
 const relicSort = [{column: 'relicTier', order: 'ascending'}]
 const gpSort = [{column: 'sort', order: 'ascending'}]
+
 const getSquadConfig = (platoonIds = [], platoonId, squadNum)=>{
   let res = {}
   let tempPlatoon = platoonIds.find(x=>x.id === platoonId)
@@ -24,12 +26,11 @@ module.exports = (guild = [], pDefinition = [], platoonIds = [], tbDay = 1)=>{
   if(platoonIds?.length > 0){
     for(let i in platoonIds){
       let tempObj = pDefinition.find(x=>x.id === platoonIds[i].id)
-      if(tempObj){
-        tempObj = JSON.parse(JSON.stringify(tempObj))
-        tempObj.exclude = platoonIds[i].exclude
-        tempObj.prefilled = platoonIds[i].prefilled
-        pDef.push(tempObj)
-      }
+      if(!tempObj) continue
+      tempObj = JSON.parse(JSON.stringify(tempObj))
+      tempObj.exclude = platoonIds[i].exclude
+      tempObj.prefilled = platoonIds[i].prefilled
+      pDef.push(tempObj)
     }
   }else{
     let tempObj = pDefinition.filter(x=>x.phase === 'P'+tbDay)
@@ -60,51 +61,47 @@ module.exports = (guild = [], pDefinition = [], platoonIds = [], tbDay = 1)=>{
         let squadConfig = getSquadConfig(platoonIds, pDef[i].id, squads[s].num)
         if(squadConfig) tempSquad = {...tempSquad, ...squadConfig}
         //console.log(platoonIds?.filter(x=>x.id === pDef[i].id)?.fliter(x=>x.squads.filter(s=>s.id === squads[s].num && s.exclude)).length)
-        if(!tempSquad.exclude && !tempSquad.prefilled){
-          let unitCounts = getUnitCount(squads[s].units)
-          for(let u in unitCounts){
-            requireUnit += unitCounts[u].count
-            if(unitCounts[u].rarity > tempPlatoon.rarity) tempPlatoon.rarity = unitCounts[u].rarity
-            if(unitCounts[u].unitRelicTier > tempPlatoon.relicTier) tempPlatoon.relicTier = unitCounts[u].unitRelicTier
-            if(!units[unitCounts[u].baseId]) units[unitCounts[u].baseId] = getUnits(unitCounts[u].baseId, guild, playerUnitCount, tempPlatoon.maxUnit)
-            // && x.rarity >= unitCounts[u].rarity && x.tier >= unitCounts[u].tier && x.relicTier >= unitCounts[u].unitRelicTier
-            let avaliableUnits = units[unitCounts[u].baseId].filter(x=>x.rarity >= unitCounts[u].rarity && (x.combatType === 2 || x.relicTier >= unitCounts[u].unitRelicTier))
-            //if(unitCounts[u].combatType === 1) avaliableUnits = avaliableUnits?.filter(x=>x.tier >= unitCounts[u].tier && x.relicTier >= unitCounts[u].unitRelicTier)
-            if(avaliableUnits?.length > 0) avaliableUnits = sorter(gpSort, avaliableUnits)
-            let prefilled = tempSquad.unitConfig?.find(x=>x.baseId === unitCounts[u].baseId && x.prefilled > 0)
-            if(prefilled?.baseId){
-              for(let m = 0;m<prefilled.prefilled;m++){
-                providedUnit++
-                tempSquad.units.push({nameKey: unitCounts[u].nameKey, player: 'Prefilled', baseId: unitCounts[u].baseId})
-                unitCounts[u].count--
-              }
-            }
-            if(unitCounts[u].count < 0) unitCounts[u].count = 0
-            if(unitCounts[u].count > 0 && +avaliableUnits?.length > 0 && +avaliableUnits?.length >= unitCounts[u].count){
-              for(let m = 0;m<unitCounts[u].count;m++){
-                if(avaliableUnits[m]){
-                  providedUnit++
-                  avaliableUnits[m].nameKey = unitCounts[u].nameKey
-                  tempSquad.units.push(avaliableUnits[m])
-                  units[unitCounts[u].baseId] = units[unitCounts[u].baseId].filter(x=>x.playerId !== avaliableUnits[m].playerId)
-                  if(!playerUnitCount[avaliableUnits[m].playerId]) playerUnitCount[avaliableUnits[m].playerId] = 0
-                  playerUnitCount[avaliableUnits[m].playerId] += 1
-                }
-              }
-            }else{
-              for(let m = 0;m<unitCounts[u].count;m++){
-                tempSquad.units.push({nameKey: unitCounts[u].nameKey, baseId: unitCounts[u].baseId, available: +avaliableUnits?.length, count: getNumUnits(guild, unitCounts[u].baseId, unitCounts[u].unitRelicTier, unitCounts[u].rarity)})
-              }
+        if(tempSquad.exclude || tempSquad.prefilled) continue
+        let unitCounts = getUnitCount(squads[s].units)
+        for(let u in unitCounts){
+          requireUnit += unitCounts[u].count
+          if(unitCounts[u].rarity > tempPlatoon.rarity) tempPlatoon.rarity = unitCounts[u].rarity
+          if(unitCounts[u].unitRelicTier > tempPlatoon.relicTier) tempPlatoon.relicTier = unitCounts[u].unitRelicTier
+          if(!units[unitCounts[u].baseId]) units[unitCounts[u].baseId] = getUnits(unitCounts[u].baseId, guild, playerUnitCount, tempPlatoon.maxUnit)
+          // && x.rarity >= unitCounts[u].rarity && x.tier >= unitCounts[u].tier && x.relicTier >= unitCounts[u].unitRelicTier
+          let avaliableUnits = units[unitCounts[u].baseId].filter(x=>x.rarity >= unitCounts[u].rarity && (x.combatType === 2 || x.relicTier >= unitCounts[u].unitRelicTier))
+          //if(unitCounts[u].combatType === 1) avaliableUnits = avaliableUnits?.filter(x=>x.tier >= unitCounts[u].tier && x.relicTier >= unitCounts[u].unitRelicTier)
+          if(avaliableUnits?.length > 0) avaliableUnits = sorter(gpSort, avaliableUnits)
+          let prefilled = tempSquad.unitConfig?.find(x=>x.baseId === unitCounts[u].baseId && x.prefilled > 0)
+          if(prefilled?.baseId){
+            for(let m = 0;m<prefilled.prefilled;m++){
+              providedUnit++
+              tempSquad.units.push({nameKey: unitCounts[u].nameKey, player: 'Prefilled', baseId: unitCounts[u].baseId})
+              unitCounts[u].count--
             }
           }
-          if(tempSquad?.units?.length > 0){
-            if(requireUnit === providedUnit){
-              tempPlatoon.points += squads[s].points || 0
-              tempSquad.points = squads[s].points
+          if(unitCounts[u].count < 0) unitCounts[u].count = 0
+          if(unitCounts[u].count > 0 && +avaliableUnits?.length > 0 && +avaliableUnits?.length >= unitCounts[u].count){
+            for(let m = 0;m<unitCounts[u].count;m++){
+              if(!avaliableUnits[m]) continue;
+              providedUnit++
+              avaliableUnits[m].nameKey = unitCounts[u].nameKey
+              tempSquad.units.push(avaliableUnits[m])
+              units[unitCounts[u].baseId] = units[unitCounts[u].baseId].filter(x=>x.playerId !== avaliableUnits[m].playerId)
+              if(!playerUnitCount[avaliableUnits[m].playerId]) playerUnitCount[avaliableUnits[m].playerId] = 0
+              playerUnitCount[avaliableUnits[m].playerId] += 1
+            }
+          }else{
+            for(let m = 0;m<unitCounts[u].count;m++){
+              tempSquad.units.push({nameKey: unitCounts[u].nameKey, baseId: unitCounts[u].baseId, available: +avaliableUnits?.length, count: getNumUnits(guild, unitCounts[u].baseId, unitCounts[u].unitRelicTier, unitCounts[u].rarity)})
             }
           }
-          tempPlatoon.squads.push(tempSquad)
         }
+        if(tempSquad?.units?.length > 0 && requireUnit === providedUnit){
+          tempPlatoon.points += squads[s].points || 0
+          tempSquad.points = squads[s].points
+        }
+        tempPlatoon.squads.push(tempSquad)
       }
       if(tempPlatoon.squads?.length > 0){
         tempPlatoon.squads = sorter([{column: 'num', order: 'ascending'}], tempPlatoon.squads)

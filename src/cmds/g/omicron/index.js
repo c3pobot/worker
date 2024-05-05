@@ -9,7 +9,7 @@ const enumSkill = {
   u: 'Unique'
 }
 const getHTML = require('webimg').omicron
-const { getGuildId, getImg, fetchGuild, getPlayerAC, findUnit, saveCmdOptions } = require('src/helpers')
+const { getGuildId, getImg, fetchGuild, getPlayerAC, findUnit, replyComponent } = require('src/helpers')
 module.exports = async(obj = {}, opt = {})=>{
   if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
 
@@ -22,6 +22,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!unit) return { content: 'you did not provide a unit...'}
 
   let uInfo = await findUnit(obj, unit)
+  if(uInfo === 'GETTING_CONFIRMATION') return
   if(uInfo?.msg2send) return uInfo.msg2send
   if(!uInfo?.baseId) return { content: `Error finding **${unit}**...`}
 
@@ -52,8 +53,8 @@ module.exports = async(obj = {}, opt = {})=>{
       style: 4,
       custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
     })
-    await saveCmdOptions(obj)
-    return msg2send
+    await replyComponent(obj, msg2send)
+    return
   }
   let skillInfo = uInfo.skills[skillId?.trim()]
   if(!skillInfo?.omiTier) return { content: `error getting omicron skill **${skillId}** for **${uInfo.nameKey}**`}

@@ -16,9 +16,10 @@ module.exports = async(obj = {}, opt = {})=>{
   }
 
   let pObj = await swgohClient.oauth(obj, 'getInitialData', dObj, {});
+  if(pObj === 'GETTING_CONFIRMATION') return pObj
   if(pObj?.error){
     await replyTokenError(obj, dObj?.allyCode, pObj.error)
-    return 'TOKEN_ERROR'
+    return 'GETTING_CONFIRMATION'
   }
   if(pObj?.msg2send) return { msg2send: pObj.msg2send }
 

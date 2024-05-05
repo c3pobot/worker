@@ -1,6 +1,6 @@
 'use strict'
 const mongo = require('mongoclient')
-const { checkBotPerms, getGuildName, saveCmdOptions } = require('src/helpers')
+const { checkBotPerms, getGuildName, replyComponent } = require('src/helpers')
 
 module.exports = async(obj = {}, patreon = {}, opt = {})=>{
   if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
@@ -44,8 +44,8 @@ module.exports = async(obj = {}, patreon = {}, opt = {})=>{
       custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
     })
     if(dataChange) await mongo.set('patreon', { _id: patreon._id }, { guild: patreon.guilds })
-    await saveCmdOptions(obj)
-    return msg2send
+    await replayComponent(obj, msg2send)
+    return
   }
 
   let guildIndex = patreon.guilds.findIndex(x=>x.id == guildId)

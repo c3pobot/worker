@@ -21,13 +21,10 @@ const enumCombatType = {
   1: 'Char',
   2: 'Ship'
 }
-const { getOptValue } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = [])=>{
+module.exports = async(obj = {}, opt = {})=>{
   let msg2send = { content: 'Error running command' }
-  let tbId = await getOptValue(opt, 'tb-name', 't05D')
-  if(!tbId) return { content: 'you did not specify a tb...'}
-
+  let tbId = opt['tb-name']?.value || 't05D'
   let tbDef = (await mongo.find('tbDefinition', {_id: tbId}))[0]
   if(!tbDef) return { content: `Error getting tb definition for **${tbId}**` }
 
@@ -46,7 +43,5 @@ module.exports = async(obj = {}, opt = [])=>{
     tempObj.value += '```'
     embedMsg.fields.push(tempObj)
   }
-  msg2send.embeds = [embedMsg]
-  msg2send.content = null
-  return msg2send
+  return { content: null, embeds: [embedMsg] }
 }

@@ -3,7 +3,7 @@ const processAPIRequest = require('../processAPIRequest');
 const mongo = require('mongoclient')
 const google = require('./google')
 const codeAuth = require('./codeAuth')
-const returnConfirmMsg = require('./returnConfirmMsg')
+const confirmButton = require('src/helpers/confirmButton')
 
 const reAuthCodes = {
   4: 'SESSIONEXPIRED',
@@ -78,7 +78,7 @@ module.exports = async(obj = {}, method, dObj = {}, payload)=>{
   if(identity?.error) return {status: 'error', error: 'invalid_grant'}
   if(identity?.description) return {status: 'error', error: identity?.description}
   if(identity?.auth?.authId && identity?.auth?.authToken) data = await processAPIRequest(method, payload, identity)
-  if(loginConfirm !== 'no' && data?.code && reAuthCodes[data?.code]) return await returnConfirmMsg(obj)
+  if(loginConfirm !== 'no' && data?.code && reAuthCodes[data?.code]) return await confirmButton(obj, 'Using this command will temporarly log you out of the game on your device.\n Are you sure you want to do this?')
   /*
   if((!data || (data?.code && reAuthCodes[data?.code])) && loginConfirm !== 'no'){
     await confirmButton(obj, msg2send)

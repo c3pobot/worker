@@ -4,7 +4,7 @@ const botInfo = require('src/helpers/botRequest/botInfo')
 const showStatus = require('./show')
 
 const { getGuild } = require('src/helpers/discordmsg')
-const { saveCmdOptions } = require('src/helpers')
+const { replyComponent } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {})=>{
   let id = opt.id?.value, patreon = opt.patreon?.value, patreonId = opt.patreonId?.value
@@ -40,6 +40,5 @@ module.exports = async(obj = {}, opt = {})=>{
     custom_id: JSON.stringify({ id: obj.id, dId: obj.message?.user?.id, response: 'no', subCmd: 'disable' })
   })
   msg2send.components.push(actionRow)
-  await saveCmdOptions(obj)
-  return msg2send
+  await replyComponent(obj, msg2send)
 }

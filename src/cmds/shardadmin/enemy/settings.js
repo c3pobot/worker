@@ -1,14 +1,9 @@
 'use strict'
 const mongo = require('mongoclient')
 const showEnemyWatch = require('./show')
-const { getOptValue } = require('src/helpers')
 
 module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  let role = getOptValue(opt, 'role')
-  let rank = getOptValue(opt, 'rank')
-  let chId = getOptValue(opt, 'channel')
-  let trigger = getOptValue(opt, 'trigger')
-  let notifyStatus = getOptValue(opt, 'status')
+  let role = opt.role?.value, rank = opt.rank?.value, chId = opt.channel?.value, trigger = opt.trigger?.value, notifyStatus = opt.status?.value
   let tempEnemy = {
     emoji: [],
     allyCodes: [],
@@ -23,7 +18,7 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
   if(chId) tempEnemy.chId = chId
   if(trigger) tempEnemy.status = trigger
   if(notifyStatus >= 0) tempEnemy.notify = notifyStatus
-  await mongo.set('payoutServers', {_id: shard._id}, {enemyWatch: tempEnemy})
+  await mongo.set('payoutServers', {_id: shard._id}, { enemyWatch: tempEnemy })
   shard.enemyWatch = tempEnemy
   return await showEnemyWatch(obj, shard, opt)
 }

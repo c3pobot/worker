@@ -6,7 +6,6 @@ Cmds.addShardCmds = require('./addShardCmds')
 Cmds.arrayToObject = require('./arrayToObject')
 
 Cmds.botRequest = require('./botRequest')
-Cmds.buttonPick = require('./buttonPick')
 
 Cmds.calcGuildStats = require('./calcGuildStats')
 Cmds.calcRosterStats = require('./calcRosterStats')
@@ -69,7 +68,6 @@ Cmds.joinImages = require('./joinImages')
 Cmds.modifyUnit = require('./modifyUnit')
 
 Cmds.removeShardCmds = require('./removeShardCmds')
-Cmds.replyButton = require('./replyButton')
 Cmds.replyComponent = require('./replyComponent')
 Cmds.replyError = require('./replyError')
 Cmds.replyMsg = require('./replyMsg')

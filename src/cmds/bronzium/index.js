@@ -4,7 +4,7 @@ const numeral = require('numeral')
 const formatItems = require('./formatItems')
 const getPackId = require('./getPackId')
 
-const { getDiscordAC, replyError, replyTokenError, replyMsg, saveCmdOptions } = require('src/helpers')
+const { getDiscordAC, replyError, replyTokenError, replyComponent } = require('src/helpers')
 
 module.exports = async(obj = {})=>{
   try{
@@ -18,6 +18,7 @@ module.exports = async(obj = {})=>{
     if(!dObj?.uId || !dObj?.type) return { content: 'You do not have google linked' }
 
     let pObj = await swgohClient.oauth(obj, 'getInitialData', dObj, {})
+    if(pObj === 'GETTING_CONFIRMATION') return
     if(pObj?.error == 'invalid_grant'){
       await replyTokenError(obj, dObj.allyCode)
       return;
@@ -35,6 +36,7 @@ module.exports = async(obj = {})=>{
     let spendRequest = qty * 250
     if(spendRequest > socialTotal) qty = Math.floor(socialTotal / 250)
     let tObj = await swgohClient.oauth(obj, 'buyItem', dObj, { itemId: packId, paymentCurrency: 4, quantity: qty })
+    if(tObj === 'GETTING_CONFIRMATION') return
     if(tObj?.error == 'invalid_grant'){
       await replyTokenError(obj, dObj.allyCode)
       return;
@@ -98,8 +100,7 @@ module.exports = async(obj = {})=>{
       style: 4,
       custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
     })
-    await saveCmdOptions(obj)
-    await replyMsg(obj, msg2send, 'POST')
+    await replyComponent(obj, msg2send, 'POST')
   }catch(e){
     replyError(obj)
     throw(e)

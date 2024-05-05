@@ -1,14 +1,10 @@
 'use strict'
 const mongo = require('mongoclient')
-const { getOptValue } = require('src/helpers')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  let msg2send = {content: 'Nothing was changed'}
-  let confirm = getOptValue(opt, 'confirm')
-
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
   if(shard.enemyWatch && confirm === 'yes'){
-    await mongo.unset('payoutServers', {_id: shard._id}, {enemyWatch: shard.enemyWatch})
+    await mongo.set('payoutServers', {_id: shard._id}, { enemyWatch: null })
     msg2send.content = 'Enemy group watch has been cleared'
   }
-  return msg2send
+  return { content: 'Nothing was changed' }
 }

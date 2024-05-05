@@ -38,7 +38,7 @@ module.exports = async(obj = {}, param)=>{
         custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
       })
       await saveCmdOptions(obj)
-      return { msg2send: embedMsg };
+      return await replyComponent(obj, { content: msg2send })
     }
   }
   if(baseId) return await getFaction(baseId, true)

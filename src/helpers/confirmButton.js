@@ -25,4 +25,5 @@ module.exports = async(obj = {}, msg, method = 'PATCH')=>{
       ]
     }]
   }, method)
+  return 'GETTING_CONFIRMATION'
 }

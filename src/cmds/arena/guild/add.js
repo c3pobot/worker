@@ -1,6 +1,6 @@
 'use strict'
 const mongo = require('mongoclient')
-const { checkBotPerms, getCmdOptions, saveCmdOptions, getGuildId } = require('src/helpers')
+const { checkBotPerms, getCmdOptions, replyComponent, getGuildId } = require('src/helpers')
 
 module.exports = async(obj = {}, patreon = {}, opt = {})=>{
   if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
@@ -39,8 +39,8 @@ module.exports = async(obj = {}, patreon = {}, opt = {})=>{
         style: 4,
         custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
       })
-      await saveCmdOptions(obj)
-      return msg2send
+      await replyComponent(obj, msg2send)
+      return
     }
   }
 

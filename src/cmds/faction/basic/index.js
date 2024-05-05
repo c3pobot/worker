@@ -16,6 +16,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!faction || !combatType) return { content: 'error with provided information' }
 
   let fInfo2, fInfo = await findFaction(obj, faction)
+  if(fInfo === 'GETTING_CONFIRMATION') return
   if(fInfo?.msg2send) return fInfo?.msg2send
   if(!fInfo?.units || fInfo?.units?.length == 0) return { content: `Error finding faction **${faction}**` }
 
@@ -25,6 +26,7 @@ module.exports = async(obj = {}, opt = {})=>{
   obj.data.options.faction = fInfo.baseId
   if(faction2){
     fInfo2 = await findFaction(obj, faction2)
+    if(fInfo2 === 'GETTING_CONFIRMATION') return
     if(fInfo2?.msg2send) return fInfo2?.msg2send
     if(!fInfo2?.units || fInfo2?.units?.length == 0) return { content: `Error finding 2nd faction **${faction2}**` }
 

@@ -15,6 +15,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!pObj?.guildId) return { content: `error getting guildId for ${allyCode}...` }
 
   let gObj = await getGuild(pObj.guildId)
+  if(gObj?.msg2send) return { content: gObj.msg2send }
   if(!gObj?.member) return { content: `Error getting guild info` }
 
   let members = sorter([{column: 'name', order: 'ascending'}], gObj.member)
@@ -27,10 +28,7 @@ module.exports = async(obj = {}, opt = {})=>{
       text: "Data updated"
     }
   }
-  for(let i in members){
-    let dObj = (await mongo.find('discordId', { 'allyCodes.allyCode': +members[i].allyCode }, { allyCodes: { allyCode: 1 } }))[0]
-    embedMsg.description += members[i].allyCode+' : '+(dObj?.allyCodes?.length > 0 ? 1:0)+' : '+members[i].name+'\n'
-  }
+  for(let i in members) embedMsg.description += members[i].allyCode+' : '+members[i].dId+' : '+members[i].name+'\n'
   embedMsg.description += '```'
   return { content: null, embeds: [embedMsg] }
 }

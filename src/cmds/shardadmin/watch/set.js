@@ -1,28 +1,26 @@
 'use strict'
 const mongo = require('mongoclient')
 const showWatch = require('./show')
-const { getOptValue } = require('src/helpers')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  let msg2send = {content: 'You did not provide the correct information'}
-  let allyCode = getOptValue(opt, 'allycode')?.toString()?.replace(/-/g, '')
-  let roleId = getOptValue(opt, 'role')
-  if(!allyCode || !roleId) return msg2send
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
+  let msg2send = {content: 'You did not provide the correct information' }
+  let allyCode = opt.allycode?.value?.toString()?.trim()?.replace(/-/g, ''), roleId = opt.role?.value
+  if(!allyCode || !roleId) return { content: 'You did not provide the correct information' }
+
   let tempWatch = {
     allyCode: +allyCode,
     chId: shard.logChannel,
     startTime: 24,
     moveDir: 'both'
   }
+  if(!shard.watch) shard.watch = {}
   if(shard.watch && shard.watch[allyCode]) tempWatch = shard.watch[allyCode]
   tempWatch.roleId = roleId
-  tempWatch.chId = getOptValue(opt, 'channel', tempWatch.chId)
-  tempWatch.startTime = getOptValue(opt, 'hours', tempWatch.startTime)
-  tempWatch.startRank = getOptValue(opt, 'rank', tempWatch.startRank)
-  tempWatch.moveDir = getOptValue(opt, 'direction', tempWatch.moveDir)
-  await mongo.set('payoutServers', {_id: shard._id}, {['watch.'+allyCode]: tempWatch})
+  tempWatch.chId = opt.channel?.value || tempWatch.chId
+  tempWatch.startTime = opt.hours?.value || tempWatch.startTime
+  tempWatch.startRank = opt.rank?.value || tempWatch.startRank
+  tempWatch.moveDir = opt.direction?.value || tempWatch.moveDir
   shard.watch[allyCode] = tempWatch
-  msg2send.content = 'Role watch updated'
-  msg2send = await showWatch(obj, shard, [{name: 'allycode', value: allyCode}])
-  return msg2send
+  await mongo.set('payoutServers', {_id: shard._id}, { watch: shard.watch })
+  return await showWatch(obj, shard, opt)
 }

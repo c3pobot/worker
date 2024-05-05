@@ -1,8 +1,9 @@
 'use strict'
+const { dataList } = require('src/helpers/dataList')
 const numeral = require('numeral')
 module.exports = (unit = null, uInfo) => {
   let alignment = unit?.alignment
-  if(!alignment) alignment = unitList[unit?.baseId]?.alignment
+  if(!alignment) alignment = dataList?.unitList[unit?.baseId]?.alignment
   if(alignment) alignment = alignment.split('_')[1]
   let obj = {
     alignment: alignment,

@@ -2,7 +2,7 @@
 const mongo = require('mongoclient')
 const swgohClient = require('src/swgohClient')
 const { getDiscordAC, getPOHour, getRotation } = require('src/helpers')
-const { GetGuildMember, SendMsg } = require('src/helpers/discordmsg')
+const { getGuildMember, sendMsg } = require('src/helpers/discordmsg')
 const addShardPlayer = async(shard = {}, allyCode)=>{
   let pObj = await swgohClient.post('getArenaPlayer', {allyCode: allyCode}, null)
   if(pObj && pObj.allyCode){
@@ -70,7 +70,7 @@ Cmds.forceMessage = (rObj = {})=>{
     rObj.players.unshift(newFirst)
   }
   let msg2Send = getRotation(rObj)
-  SendMsg({chId: rObj.chId, sId: rObj.sId}, {content: msg2Send})
+  sendMsg({chId: rObj.chId, sId: rObj.sId}, { content: msg2Send })
 }
 Cmds.getPlayers = async(shard = {}, pArray = [])=>{
   for(let i in pArray){
@@ -90,7 +90,7 @@ Cmds.getPlayers = async(shard = {}, pArray = [])=>{
           }
         }
         if(pObj){
-          let user = await GetGuildMember(shard.sId, pArray[i].replace(/[<@!>]/g, ''))
+          let user = await getGuildMember(shard.sId, pArray[i].replace(/[<@!>]/g, ''))
           if(user){
             nPlayer.name = (user.nick ? user.nick:user.user.username)
             nPlayer.discord = '<@'+user.user.id+'>'

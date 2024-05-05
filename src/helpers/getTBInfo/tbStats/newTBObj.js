@@ -35,8 +35,10 @@ const getTotalStarCount = (data, info)=>{
   }
   return starCount
 }
+
 module.exports = async(guildData)=>{
   let tbDef = (await mongo.find('tbDefinition', {_id: guildData.definitionId}))[0]
+  
   let tempObj = {
     name: guildData.profile.name,
     guildId: guildData.profile.id,
@@ -45,10 +47,10 @@ module.exports = async(guildData)=>{
     gpShip: numeral(guildData.gpShip).format("0,0"),
     currentRound: guildData.currentRound,
     currentRoundEndTime: guildData.currentRoundEndTime,
-    timeTillEnd: GetTimeTillEnd(guildData.currentRoundEndTime),
+    timeTillEnd: getTimeTillEnd(guildData.currentRoundEndTime),
     gpCharUndepoyed: guildData.gpChar,
     gpShipUndeployed: guildData.gpShip,
-    totalStarCount: (GetTotalStarCount(guildData.conflictZoneStatus, tbDef.conflictZoneDefinition) || 0),
+    totalStarCount: (getTotalStarCount(guildData.conflictZoneStatus, tbDef.conflictZoneDefinition) || 0),
     zoneData:[]
   }
   return (JSON.parse(JSON.stringify(tempObj)))

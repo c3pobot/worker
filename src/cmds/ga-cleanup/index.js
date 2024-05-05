@@ -4,7 +4,7 @@ const getHTML = require('webimg').counter
 
 const { botSettings } = require('src/helpers/botSettings')
 const { dataList } = require('src/helpers/dataList')
-const { getImg, saveCmdOptions, replyError } = require('src/helpers')
+const { getImg, replyComponent, replyError } = require('src/helpers')
 
 module.exports = async(obj = {})=>{
   try{
@@ -140,8 +140,7 @@ module.exports = async(obj = {})=>{
 
     let webImg = await getImg(webData, obj.id, 1025, false)
     if(!webImg) return { content: 'error getting image' }
-    await saveCmdOptions(obj)
-    await replyMsg(obj, { content: null, file: webImg, fileName: info.season+'-'+info.mode+'-cleanup.png', components: actionRow || [] }, method)
+    await replyComponent(obj, { content: null, file: webImg, fileName: info.season+'-'+info.mode+'-cleanup.png', components: actionRow || [] }, method)
   }catch(e){
     replyError(obj)
     throw(e)

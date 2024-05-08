@@ -12,10 +12,12 @@ module.exports = async(obj = {}, opt = {})=>{
   if(eAlly?.mentionError) return { content: 'that user does not have allyCode linked to discordId...' }
   if(!eAlly?.allyCode) return { content: 'error getting allyCode to compare..'}
 
-  let faction = opt.faction?.value?.toString()?.trim(), faction2 = opt['faction-2']?.value?.toString()?.trim(), combatType = +(opt.option?.value || 1)
+  let faction = opt.faction1 || opt.faction?.value?.toString()?.trim(), faction2 = opt['faction-2']?.value?.toString()?.trim(), combatType = +(opt.option?.value || 1)
   let msg2send = {content: 'Error with provided information'}
   if(!faction || !combatType) return { content: 'error with provided information' }
 
+  let tempFaction = obj.confirm?.baseId
+  if(opt.faction1 && obj.confirm) delete obj.confirm.baseId
   let fInfo2, fInfo = await findFaction(obj, faction)
   if(fInfo === 'GETTING_CONFIRMATION') return
   if(fInfo?.msg2send) return fInfo?.msg2send
@@ -24,9 +26,11 @@ module.exports = async(obj = {}, opt = {})=>{
   if(fInfo.units) fInfo.units = fInfo.units.filter(x=>x.combatType === combatType)
   if(!fInfo?.units || fInfo?.units?.length == 0) return { content: `${fInfo.nameKey} has not units of type ${combatType}...` }
 
-  obj.data.options.faction = fInfo.baseId
+  if(!opt.faction1 && obj.confirm) delete obj.confirm.baseId
+  if(tempFaction && opt.faction1) obj.confirm.baseId = tempFaction
+  obj.data.options.faction1 = fInfo.baseId
   if(faction2){
-    fInfo2 = await findFaction(obj, faction2)
+    fInfo2 = await findFaction(obj, faction2, false)
     if(fInfo2 === 'GETTING_CONFIRMATION') return
     if(fInfo2?.msg2send) return fInfo2?.msg2send
     if(!fInfo2?.units || fInfo2?.units?.length == 0) return { content: `Error finding 2nd faction **${faction2}**` }
@@ -43,5 +47,5 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!pObj?.value?.allyCode) return { content: 'Error getting your data...' }
   if(!eObj?.value?.allyCode) return { content: 'Error getting player data to compare...' }
 
-  return await getImg(fInfo, pObj, eObj, fInfo2)
+  return await getImg(fInfo, pObj.value, eObj.value, fInfo2)
 }

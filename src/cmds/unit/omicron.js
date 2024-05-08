@@ -23,41 +23,38 @@ const cleanDesc = (string)=>{
   for(let i in array) retString += array[i].replace('\\n','')+'\n'
   return retString
 }
-const { getOptValue, replyComponent } = require('src/helpers')
+const { replyComponent } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = { content: 'error getting info' }, webData, screenShot, skillId
-  if(obj?.select?.data[0]) skillId = obj.select.data[0]
-  let omiType = getOptValue(opt, 'type')
+module.exports = async(obj = {}, opt = {})=>{
+  let omiType = opt.type?.value
   if(!omiType) return { content: 'you did not provide an omicron type'}
 
-  let skills = await mongo.find('omicronList', {type: omiType})
+  let skills = await mongo.find('omicronList', { type: omiType })
   if(!skills || skills?.length === 0) return { content: `There where no units with omicron for **${omiType}**` }
 
   skills = sorter([{order: 'ascending', column: 'unitNameKey'}], skills)
-  msg2send.content = null
+  let msg2send = { content: null, embeds: [], components: [] }
   let embedMsg = {
     color: 15844367,
     timestamp: new Date(),
     title: omiType.toUpperCase()+' Omicrons ('+skills.length+')',
   }
-  if(skillId){
-    let tempSkill = skills.find(x=>x.id === skillId)
+  if(obj.selectValues && obj.selectValues[0]){
+    let tempSkill = skills.find(x=>x.id === obj.selectValues[0])
     if(tempSkill){
       embedMsg.description = '**'+tempSkill.unitNameKey+' : '+tempSkill.nameKey+' ('+getSkillType(tempSkill.id)+')**\n'
       embedMsg.description += '```'+cleanDesc(tempSkill.descKey)+'```'
     }
   }
-  msg2send.embeds = [embedMsg]
-  msg2send.components = []
+  msg2send.embeds.push(embedMsg)
   let count = 0, tempId = 0
-  let tempComp = {type: 1, components: [{type: 3, custom_id: JSON.stringify({id: obj.id, uId: tempId}), options:[]}]}
+  let tempComp = { type: 1, components: [{type: 3, custom_id: JSON.stringify({id: obj.id, dId: obj.member?.user?.id, uId: tempId}), options:[]}] }
   for(let i in skills){
     let tempObj = {
       label: skills[i].unitNameKey+' ('+getSkillType(skills[i].id)+')',
       description: skills[i].nameKey,
       value: skills[i].id,
-      default: (skills[i].id == skillId ? true:false)
+      default: (skills[i].id == obj.selectValues[0] ? true:false)
     }
     tempComp.components[0].options.push(tempObj)
     count++;
@@ -66,7 +63,7 @@ module.exports = async(obj = {}, opt = [])=>{
       if(tempComp.components[0].options.length > 0) msg2send.components.push(JSON.parse(JSON.stringify(tempComp)))
       tempId++
       tempComp.components[0].options = []
-      tempComp.components[0].custom_id = JSON.stringify({id: obj.id, uId: tempId})
+      tempComp.components[0].custom_id = JSON.stringify({id: obj.id, dId: obj.member?.user?.id, uId: tempId})
       count = 0
     }
   }

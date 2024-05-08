@@ -2,7 +2,7 @@
 const numeral = require('numeral')
 const mongo = require('mongoclient')
 const formatWebUnit = require('src/format/formatWebUnit')
-const checkStats = require('./checkStats')
+const CheckStats = require('./checkStats')
 const checkTurnOrder = require('./checkTurnOrder')
 const { pct } = require('../enum')
 const addRequirement = (obj = {}, type, value)=>{
@@ -35,7 +35,7 @@ module.exports = async(squad = {}, pRoster = [], ignoreStats = false)=>{
       if(tempObj.reqRelic && (!tempObj.relic || tempObj.relic < tempObj.reqRelic)) tempObj.notMet++
       if(!ignoreStats && squad.units[i].stats && squad.units[i].stats.length > 0){
         info.showStats = true
-        const checkStats = checkStats(squad.units[i].stats, squadUnit.stats, squad.units[i].combatType)
+        let checkStats = CheckStats(squad.units[i].stats, squadUnit.stats, squad.units[i].combatType)
         if(checkStats && checkStats.length > 0){
           if(checkStats.filter(x=>x.notMet > 0).length > 0) tempObj.statsNotMet++;
           tempObj.stats = checkStats

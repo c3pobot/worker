@@ -1,24 +1,21 @@
 'use strict'
 const { botSettings } = require('src/helpers/botSettings')
 const getHTML = require('webimg').unit
-const { getOptValue, findUnit, replyButton, getImg, getFakeUnit } = require('src/helpers')
+const { findUnit, getImg, getFakeUnit } = require('src/helpers')
 const { formatUnit } = require('src/format')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = { content: 'unit not provided' }, gLevel1 = 13, rLevel1 = botSettings.maxRelic || 10, gLevel2 = 13, rLevel2 = botSettings.maxRelic || 10
-  if(obj.confirm) await replyButton(obj)
-  let unit = getOptValue(opt, 'unit')?.toString()?.trim()
-  if(!unit) return msg2send
+module.exports = async(obj = {}, opt = {})=>{
+  if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
+  
+  let unit = opt.unit?.value?.toString()?.trim()
+  if(!unit) return { content: 'unit not provided' }
 
   let uInfo = await findUnit(obj, unit)
   if(uInfo === 'GETTING_CONFIRMATION') return
-  if(!uInfo?.baseId) return { content: `Error finding **${unit}**`}
+  if(!uInfo?.baseId) return { content: 'Error finding unit **'+unit+'**' }
 
-  let rarity = +getOptValue(opt, 'rarity', 7)
-  let gType1 = getOptValue(opt, 'gear1')
-  let gValue1 = getOptValue(opt, 'value1')
-  let gType2 = getOptValue(opt, 'gear2')
-  let gValue2 = getOptValue(opt, 'value2')
+  let rarity = +(opt.rarity?.value || 7), gType1 = opt.gear1?.value, gValue1 = opt.value1?.value, gLevel1 = 13, rLevel1 = botSettings.maxRelic || 11
+  let gType2 = opt.gear2?.value, gValue2 = opt.value2?.value, gLevel2 = 13, rLevel2 = botSettings.maxRelic || 11
   if(gType1 === 'g'){
     rLevel1 = 0
     if(gValue1 >= 0 && gValue1 < 13) gLevel1 = +gValue1
@@ -29,9 +26,6 @@ module.exports = async(obj = {}, opt = [])=>{
   }
   if(gType1 === 'r' && (gValue1 >= 0 && (+gValue1 + 2 < rLevel1))) rLevel1 = +gValue1 + 2
   if(gType2 === 'r' && (gValue2 >= 0 && (+gValue2 + 2 < rLevel2))) rLevel2 = +gValue2 + 2
-
-  await replyButton(obj, 'Getting info for **'+uInfo.nameKey+'** ...')
-  msg2send.content = 'Error calculating stats'
 
   let [ unit1, unit2 ] = await Promise.allSettled([
     getFakeUnit(uInfo, gLevel1, rLevel1, rarity, true),
@@ -51,8 +45,5 @@ module.exports = async(obj = {}, opt = [])=>{
   let webImg = await getImg(webData, obj.id, 1002, false)
   if(!webImg) return { content: 'Error getting image' }
 
-  msg2send.content = null
-  msg2send.file = webImg
-  msg2send.fileName = 'unit-'+uInfo.baseId+'.png'
-  return msg2send
+  return { content: null, file: webImg, fileName: 'unit-'+uInfo.baseId+'.png' }
 }

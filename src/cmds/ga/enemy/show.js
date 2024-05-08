@@ -1,4 +1,5 @@
 'use strict'
+const mongo = require('mongoclient')
 const sorter = require('json-array-sorter')
 const swgohClient = require('src/swgohClient')
 

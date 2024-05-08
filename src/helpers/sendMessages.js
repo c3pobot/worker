@@ -1,58 +1,68 @@
 'use strict'
 const mongo = require('mongoclient')
-const { sendDM, getUser } = require('./discordmsg')
+const botRequest = require('src/helpers/botRequest')
 const getLowTickets = require('./getLowTickets')
-const momWatchMsg = (member, momId, sId)=>{
+const cache = require('src/helpers/cache')
+
+const getMember = async(playerId, name, memberContribution)=>{
+  try{
+    let obj = await cache.playerId.get(playerId)
+    if(!obj?.allyCode) obj = await swgohClient.post('playerArena', { playerId: playerId, playerDetailsOnly: true } )
+    if(obj?.allyCode){
+      let dObj = (await mongo.find('discordId', {'allyCodes.playerId': playerId}))[0]
+      return { playerId: playerId, tickets: +(memberContribution.find(t => t.type == 2)?.currentValue), allyCode: +obj.allyCode, name: obj.name || name, dId: dObj?._id }
+    }
+  }catch(e){
+    log.error(e)
+  }
+}
+const getMembers = async(member = [])=>{
+  let array = [], i = member.length
+  while(i--) array.push(getMember(member[i].playerId, member[i].playerName, member[i].memberContribution))
+  let res = await Promise.allSettled(array)
+  return res?.filter(x=>x?.value?.playerId)?.map(x=>x.value)
+}
+const momWatchMsg = async(member, momId, sId)=>{
   let momMsg = "Oh Dear!\nI am sorry to bother you, my maker suggested that I send you a message about the following slackers who have not gotten thier daily 600 done : \n```\n"
   for(let i in member){
     momMsg += member[i].name+' only has '+member[i].tickets+'\n'
   }
   momMsg += '```'
-  sendDM({ dId: momId, sId: sId }, { content: momMsg })
+  return await botRequest('sendDM', { sId: sId, dId: momId, msg: { content: momMsg } })
 }
-const getPlayerDiscordId = async(playerId)=>{
-  let obj = (await mongo.find('discordId', {'allyCodes.playerId': playerId}))[0]
-  if(obj) return obj._id
-}
-module.exports = async(obj, gObj)=>{
-  let momWatch = [], momId, ticketCount = 600
-  let guild = (await mongo.find('guilds', {_id: gObj.profile.id}))[0]
-  if(guild?.auto){
-    mongo.set('guilds', {_id: gObj.profile.id}, {'auto.sent': Date.now()})
-    if(guild.auto.momWatch && guild.auto.momWatch.length > 0) momWatch = guild.auto.momWatch;
-    if(guild.auto.momId) momId = guild.auto.momId
-    if(guild.auto.ticketCount >= 0) ticketCount = + guild.auto.ticketCount
-  }
-  let member = gObj.member.filter(x => x.memberContribution.some(m => m.type == 2 && +m.currentValue < ticketCount)).map(p => {
-    return Object.assign({}, { playerId: p.playerId, name: p.playerName, tickets: +(p.memberContribution.find(t => t.type == 2).currentValue) })
-  })
-  if(member.length > 0){
-    let guildMsg = ''
-    let lowTicketMsg = "Hi! If you are online, Please get your "+ticketCount+" done!\nCurrent Ticket Count : "
-    let momWatchMember = []
-    for (let i in member) {
-      if (momWatch && momWatch.filter(x => x.playerId === member[i].playerId).length > 0) momWatchMember.push(member[i]);
-      let discordId = await getPlayerDiscordId(member[i].playerId)
-      if (discordId) {
-        let status = await sendDM({ sId: obj.sid, dId: discordId }, { content: lowTicketMsg + member[i].tickets })
+
+module.exports = async(obj = {}, gObj = {})=>{
+  let momWatch = obj.momWatch || [], ticketCount = +(obj.ticketCount || 600), momId = obj.momId, momWatchMember = []
+  let lowTicketMsg = "Hi! If you are online, Please get your "+ticketCount+" done!\nCurrent Ticket Count : ", guildMsg = ''
+  let member = await getMembers(gObj.member.filter(x => x.memberContribution.some(m => m.type == 2 && +m.currentValue < ticketCount)))
+  await mongo.set('guilds', { _id: obj.guildId }, {'auto.sent': Date.now()})
+  if(member?.length > 0){
+    if(obj.skipMessageSending) guildMsg += 'Sending messages to players is disabled via settings\n'
+    for(let i in member){
+      if (momWatch?.filter(x => x.playerId === member[i].playerId).length > 0) momWatchMember.push(member[i]);
+      if(obj.skipMessageSending) continue
+      if(member[i]?.dId){
+        let status = await botRequest('sendDM', { sId: obj.sId, dId: member[i]?.dId, msg: { content: `${lowTicketMsg}\n${member[i].name} : ${member[i].tickets}` }})
         if(status?.id){
           guildMsg += 'message sent to ' + member[i].name+'\n'
         }else{
           guildMsg += 'unable to send a DM to ' + member[i].name+'\n'
         }
-      } else {
+      }else{
         guildMsg += member[i].name + ' does not have allyCode linked to discordId\n'
       }
     }
     if(momId && momWatchMember.length > 0){
-      momWatchMsg(momWatchMember, momId, obj.sId)
-      let momName = 'Mom';
-      let usr = await getUser(momId);
-      if(usr) momName = usr.username
-      guildMsg += 'Message sent to '+momName+' about their posse\n'
+      let status = await momWatchMsg(momWatchMember, momId, obj.sId)
+      if(status?.id){
+        let momName = 'Mom';
+        let usr = await botRequest('getMember', { sId: obj.sId, dId: momId });
+        if(usr?.username) momName = usr.username
+        guildMsg += 'Message sent to '+momName+' about their posse\n'
+      }
     }
-    await sendMsg(obj, { content: guildMsg })
+    await botRequest('sendMsg', { sId: obj.sId, chId: obj.chId, msg: { content: guildMsg } })
   }
   let embedMsg = await getLowTickets(gObj, ticketCount);
-  if (embedMsg) await sendMsg(obj, { embeds: [embedMsg] });
+  if(embedMsg) await botRequest('sendMsg', {sId: obj.sId, chId: obj.chId, msg: { embeds: [embedMsg] }})
 }

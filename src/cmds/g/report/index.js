@@ -16,12 +16,12 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!pObj.guildId) return { content: `Error getting guildId...` }
 
   let gObj = await fetchGuild({ guildId: pObj.guildId, projection: dbProjection.guildReport })
-  if(!gObj?.members || gObj?.members?.length == 0) return { content: 'error getting guild...' }
+  if(!gObj?.member || gObj?.member?.length == 0) return { content: 'error getting guild...' }
 
   let includeUnits = opt.units?.value || false
   let glUnits = (await mongo.find('factions', {_id: 'galactic_legend'}))[0]
 
-  let guild = (await mongo.find('guilds', {_id: guildId}))[0]
+  let guild = (await mongo.find('guilds', {_id: pObj.guildId }))[0]
   if(!guild) guild = { units: [] }
   let msg2send = { content: null, embeds: [] }
   let baseMsg = {

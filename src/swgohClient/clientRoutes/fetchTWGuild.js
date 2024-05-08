@@ -35,5 +35,5 @@ module.exports = async(opt = {})=>{
     await cache.set('twGuildCache', guildId, JSON.stringify(guild))
   }
   guild.member = members
-  return guild
+  if(!opt.doNotReturnData) return guild
 }

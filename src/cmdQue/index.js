@@ -3,7 +3,7 @@ const log = require('logger')
 const rabbitmq = require('src/helpers/rabbitmq')
 const cmdProcessor = require('./cmdProcessor')
 const publisher = require('./publisher')
-let QUE_NAME = process.env.WORKER_QUE_NAME_SPACE || 'default', WORKER_TYPE = process.env.WORKER_TYPE || 'swgoh', POD_NAME = process.env.POD_NAME || 'worker', consumer
+let QUE_NAME = process.env.WORKER_QUE_NAME_SPACE || process.env.NAME_SPACE || 'default', WORKER_TYPE = process.env.WORKER_TYPE || 'swgoh', POD_NAME = process.env.POD_NAME || 'worker', consumer
 QUE_NAME += `.worker.${WORKER_TYPE}`
 if(process.env.PRIVATE_WORKER) QUE_NAME += '.private'
 const processMsg = async(msg = {})=>{

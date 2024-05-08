@@ -1,27 +1,26 @@
 'use strict'
 const mongo = require('mongoclient')
-const { show } = require('./helper')
-const { checkGuildAdmin, getOptValue, getGuildId } = require('src/helpers')
-const { GetChannel } = require('src/helpers/discordmsg')
+const show = require('./show')
+const { checkGuildAdmin, checkBotPerms, getGuildId } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'This command is only available to guild admins'}
-  let auth = await checkGuildAdmin(obj, opt, null)
-  if(!auth) return msg2send
-  msg2send.content = 'Error getting player guild'
+module.exports = async(obj = {}, opt = {})=>{
+  let auth = await checkGuildAdmin(obj, opt)
+  if(!auth) return { content: 'This command is only available to guild admins' }
+
   let pObj = await getGuildId({dId: obj.member.user.id}, {}, opt)
-  if(!pObj?.guildId) return msg2send
-  msg2send.content = 'Your guild is not linked to this server'
+  if(!pObj?.guildId) return { content: 'Error getting player guild' }
+
   let guild = (await mongo.find('guilds', {_id: pObj.guildId}))[0]
   if(!guild){
-    guild = {_id: pObj.guildId, guildName: pObj.guildName}
-    await mongo.set('guilds', {_id: pObj.guildId}, {guildName: pObj.guildName})[0]
+    guild = { _id: pObj.guildId, guildName: pObj.guildName }
+    await mongo.set('guilds', { _id: pObj.guildId }, { guildName: pObj.guildName })[0]
   }
-  if(guild?.sId !== obj.guild_id) return msg2send
-  msg2send.content = 'Error getting guild data'
+  if(guild?.sId !== obj.guild_id) return { content: 'Your guild is not linked to this server' }
+
   let gObj = await swgohClient.post('guild', {guildId: pObj.guildId, includeRecentGuildActivityInfo: true}, null)
-  if(!gObj?.guild?.profile?.id) return msg2send
+  if(!gObj?.guild?.profile?.id) return { content: 'Error getting guild data' }
+
   let tempObj = {
     guildId: pObj.guildId,
     guildName: pObj.guildName,
@@ -40,10 +39,10 @@ module.exports = async(obj = {}, opt = [])=>{
   }
 
   if(guild.auto) tempObj = guild.auto
-  tempObj.status = getOptValue(opt, 'status', tempObj.status)
-  tempObj.chId = getOptValue(opt, 'channel', tempObj.chId)
-  tempObj.ticketCount = getOptValue(opt, 'count', tempObj.ticketCount)
-  tempObj.sendUserMessages = getOptValue(opt, 'messages', tempObj.sendUserMessages)
+  if(opt.status?.value >= 0) tempObj.status = opt.status?.value
+  tempObj.chId = opt.channel?.value || tempObj.chId
+  tempObj.ticketCount = opt.count?.value || tempObj.ticketCount
+  tempObj.sendUserMessages = opt.messages?.value || tempObj.sendUserMessages
   if(tempObj.sendUserMessages){
     tempObj.skipMessageSending = false
   }else{
@@ -57,17 +56,10 @@ module.exports = async(obj = {}, opt = [])=>{
     tempObj.mins = tempReset.getMinutes()
   }
   if(guild.sId) tempObj.sId = guild.sId
-  msg2send.content = 'I do not have permissions to view <#'+chId+'>'
-  if(chId){
-    let checkPerm = await GetChannel(tempObj.chId)
-    if(!checkPerm || !checkPerm.id) return msg2send
+  if(opt.channel?.data){
+    let channelPerm = checkBotPerms('SEND_MESSAGES', opt.channel?.botPerms)
+    if(!channelPerm) return { content: `I do not have permissions to send messages to <#${opt.channel.value}>...`}
   }
-  msg2send.content = 'Error updating data'
-  await mongo.set('guilds', {_id: pObj.guildId}, {auto: tempObj})
-  let embedMsg = await show(gObj.guild, tempObj)
-  if(embedMsg){
-    msg2send.content = null
-    msg2send.embeds = [embedMsg]
-  }
-  return msg2send
+  await mongo.set('guilds', { _id: pObj.guildId }, { auto: tempObj })
+  return await show(obj, opt)
 }

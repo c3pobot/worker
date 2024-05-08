@@ -63,10 +63,8 @@ const CheckGameData = async()=>{
 const CheckCmdMap = async()=>{
   try{
     log.info(`start up cmdMap check...`)
-    if(process.env.POD_NAME?.toString().endsWith("0")){
-      saveSlashCmds(baseDir+'/src/cmds', workerType)
-      await checkCmds()
-    }
+    saveSlashCmds(baseDir+'/src/cmds', workerType)
+    await checkCmds()
     let status = await createCmdMap()
     if(status){
       cmdQue.start()

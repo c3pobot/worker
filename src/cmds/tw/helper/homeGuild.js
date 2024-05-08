@@ -2,7 +2,6 @@
 const enumTW = require('./enumTWZones')
 const checkDefeated = require('./checkDefeated')
 module.exports = (obj)=>{
-	let status = 'ok'
 	for(let i in obj.homeGuild){
 		obj.banners.home.finalScore += parseInt(obj.homeGuild[i].zoneStatus.score)
 		obj.banners.home.bestScore += parseInt(obj.homeGuild[i].zoneStatus.score)
@@ -103,5 +102,4 @@ module.exports = (obj)=>{
 		}
 		obj.zoneData.away.data.push(tempObj)
 	}
-	return status
 }

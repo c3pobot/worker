@@ -11,7 +11,7 @@ module.exports = async(fInfo = {}, pObj = {}, eObj = {}, fInfo2 = {})=>{
       getFactionUnits(fInfo, eObj.rosterUnit, formatWebUnitStats, 40)
     ])
     if(!pUnits?.value) return { content: 'Error getting player units...' }
-    if(!eUnit?.value) return { content: 'Error getting compare player units...' }
+    if(!eUnits?.value) return { content: 'Error getting compare player units...' }
 
     let fUnits = getTopUnits(pUnits.value, eUnits.value)
     if(!fUnits?.player || fUnits?.player?.length == 0) return { content: 'error gettin top units...' }

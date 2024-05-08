@@ -7,8 +7,9 @@ const BOT_TOKEN = process.env.BOT_TOKEN
 console.log('Discord Fetch Proxy : '+discordUrl)
 const discordRequest = async(uri, method, body, headers = {})=>{
   try{
+    if(BOT_TOKEN) headers['Authorization'] = `Bot ${BOT_TOKEN}`
     let res = await fetch(discordUrl+'/api'+uri, {
-      headers: { 'Authorization': `Bot ${BOT_TOKEN}`,...headers },
+      headers: headers,
       method: method,
       body: body,
       timeout: 30000,

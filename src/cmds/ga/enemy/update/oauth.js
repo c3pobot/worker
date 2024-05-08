@@ -14,6 +14,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!dObj?.uId || !dObj?.type) return { content: 'You do not have google linked to bot' }
 
   let pObj = await swgohClient.oauth(obj, 'getInitialData', dObj, {})
+  if(pObj === 'GETTING_CONFIRMATION') return
   if(pObj?.msg2send) return pObj.msg2send
   if(pObj?.error == 'invalid_grant'){
     await replyTokenError(obj, dObj?.allyCode)

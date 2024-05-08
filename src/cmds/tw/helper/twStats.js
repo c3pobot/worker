@@ -42,8 +42,8 @@ const getMaxBattles = (obj)=>{
 }
 module.exports = (guildData, guildId)=>{
   let twData = newObj(guildData)
-  status = homeGuild(twData)
-  status = awayGuild(twData)
+  homeGuild(twData)
+  awayGuild(twData)
   twData.joined = guildData.optedInMember?.map(m => {
     return Object.assign({}, {
       playerId: m.memberId,

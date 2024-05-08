@@ -2,8 +2,8 @@
 const swgohClient = require('src/swgohClient')
 const { replyTokenError } = require('src/helpers')
 
-module.exports = async(obj = {}, dObj, loginConfirm, channelId)=>{
-  let channelAuth = await swgohClient.oauth(obj, 'createGameChannelSession', dObj, {}, loginConfirm)
+module.exports = async(obj = {}, dObj, channelId)=>{
+  let channelAuth = await swgohClient.oauth(obj, 'createGameChannelSession', dObj, {})
   if(channelAuth === 'GETTING_CONFIRMATION') return channelAuth
   if(channelAuth?.error == 'invalid_grant'){
     await replyTokenError(obj, dObj.allyCode)

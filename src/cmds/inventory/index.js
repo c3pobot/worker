@@ -1,6 +1,7 @@
 'use strict'
 const getData = require('./getData')
 const Cmds = {}
+Cmds.export = require('./export')
 Cmds.unit = require('./unit')
 Cmds.journey = require('./journey')
 

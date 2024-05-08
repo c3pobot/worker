@@ -20,14 +20,24 @@ module.exports = async(obj = {}, opt = {})=>{
   let pObj = await getGuildId({}, { allyCode: allyCode })
   if(!pObj?.guildId) return { content: 'error finding guildId...' }
 
-  let gObj = await fetchGuild({  guildId: pObj.guildId, projection: { playerId: 1, name: 1, rosterUnit: { $elemMatch: { baseId: uInfo.baseId } }}})
+  let gObj = await fetchGuild({ guildId: pObj.guildId, projection: { playerId: 1, name: 1, roster: { [uInfo.baseId]: 1 } } })
   if(!gObj?.member || gObj?.member?.length == 0) return { content: `error finding guild...` }
 
-  let gType = opt.options?.value, gValue = opt.value?.value, gLevel = 0, rLevel = 0, units = []
+  let gType = opt.option?.value, gValue = opt.value?.value, gLevel = 0, rLevel = 0, units = []
   if(gType === 'g' && gValue >= 0) gLevel = +gValue
-  if(gType == 'r' && gValue >= 0) rLevel = +gValue + 2
+  if(gType == 'r' && gValue >= 0) rLevel = +gValue
 
   if(uInfo.combatType == 1){
+    units = gObj.member.filter(r=>r.roster && r.roster[uInfo.baseId] && r.roster[uInfo.baseId].gearTier >= gLevel && r.roster[uInfo.baseId].relicTier >= rLevel)?.map(m=>{
+      return {
+        member: m.name,
+        rarity: m.roster[uInfo.baseId].rarity,
+        gp: m.roster[uInfo.baseId].gp,
+        gear: m.roster[uInfo.baseId].gearTier,
+        relic: m.roster[uInfo.baseId].relicTier || 0
+      }
+    })
+    /*
     units = gObj.member.filter(r=>r.rosterUnit?.some(u=>u.definitionId?.startsWith(uInfo.baseId+':') && u.currentTier >= gLevel && u.relic.currentTier >= rLevel)).map(m=>{
       return Object.assign({}, {
         member: m.name,
@@ -37,8 +47,17 @@ module.exports = async(obj = {}, opt = {})=>{
         relic: +(m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':') && x.currentTier >= gLevel && x.relic.currentTier >= rLevel).relic.currentTier - 2) || 0
       })
     })
+    */
   }
   if(uInfo.combatType == 2){
+    units = gObj.member.filter(r=>r.roster && r.roster[uInfo.baseId])?.map(m=>{
+      return {
+        member: m.name,
+        rarity: m.roster[uInfo.baseId].rarity,
+        gp: m.roster[uInfo.baseId].gp
+      }
+    })
+    /*
     units = gObj.member.filter(r=>r?.rosterUnit?.some(u=>u.definitionId.startsWith(uInfo.baseId+':'))).map(m=>{
       return Object.assign({}, {
         member: m.name,
@@ -46,6 +65,7 @@ module.exports = async(obj = {}, opt = {})=>{
         gp: m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':')).gp
       })
     })
+    */
   }
   if(units?.length > 0) units = sorter([{column: 'gp', order: 'descending'}], units)
   if(!units) return { content: 'error getting guild units...' }
@@ -70,7 +90,7 @@ module.exports = async(obj = {}, opt = {})=>{
     color: 15844367,
     title: gObj.name+' ('+gObj.member.length+')',
     timestamp: new Date(gObj.updated),
-    description: uInfo.nameKey+' (<UNITCOUNT>/'+units.length+')'+(+rLevel > 0 && uInfo.combatType == 1 ? ' - Relic >= '+(+rLevel - 2):'')+(+gLevel > 0 && uInfo.combatType == 1 ? ' - Gear >= '+gLevel:''),
+    description: uInfo.nameKey+' (<UNITCOUNT>/'+units.length+')'+(+rLevel > 0 && uInfo.combatType == 1 ? ' - Relic >= '+(+rLevel):'')+(+gLevel > 0 && uInfo.combatType == 1 ? ' - Gear >= '+gLevel:''),
     author: {
       icon_url: "https://swgoh.gg/static/img/assets/"+uInfo.thumbnailName+".png"
     },
@@ -102,7 +122,7 @@ module.exports = async(obj = {}, opt = {})=>{
         embedMsg.description = embedMsg.description.replace('<UNITCOUNT>', unitCount)
         if(msg2send.embeds.length < 11) msg2send.embeds.push(JSON.parse(JSON.stringify(embedMsg)))
         embedMsg.fields = []
-        embedMsg.description = uInfo.nameKey+' (<UNITCOUNT>/'+unitsSorted.length+')'+(+rLevel > 0 && uInfo.combatType == 1 ? ' - Relic >= '+(+rLevel - 2):'')+(+gLevel > 0 && uInfo.combatType == 1 ? ' - Gear >= '+gLevel:'')
+        embedMsg.description = uInfo.nameKey+' (<UNITCOUNT>/'+array.length+')'+(+rLevel > 0 && uInfo.combatType == 1 ? ' - Relic >= '+(+rLevel):'')+(+gLevel > 0 && uInfo.combatType == 1 ? ' - Gear >= '+gLevel:'')
         tempObj.name = array[i].rarity+"★ : "
         tempObj.value = "```autohotkey\n GP   : "+(uInfo.combatType ==  1 ? 'G/R : ':'')+"Player\n"
         count = 0,

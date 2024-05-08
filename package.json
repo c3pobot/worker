@@ -26,7 +26,6 @@
     "numeral": "^2.0.6",
     "rabbitmq-client": "^4.5.3",
     "redis": "^4.6.13",
-    "redisclient": "github:c3pobot/redisclient",
     "shyriiwook": "^1.0.0",
     "statcalc": "github:c3pobot/statcalc",
     "uuid": "^9.0.1",

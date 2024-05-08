@@ -1,6 +1,6 @@
 'use strict'
 const mongo = require('mongoclient')
-const { getGuildMember } = require('src/helpers/discordmsg')
+const { getGuildMember, getGuild } = require('src/helpers/discordmsg')
 
 module.exports = async(obj = {}, opt = {})=>{
   if(!obj.guild?.owner_name && obj.guild?.owner_id){
@@ -8,14 +8,14 @@ module.exports = async(obj = {}, opt = {})=>{
     if(owner) obj.guild.owner_name = owner?.nickname || owner?.user?.username
   }
   let guild = (await mongo.find('discordServer', {_id: obj.guild_id}))[0]
-
+  let server = await getGuild(obj.guild_id)
   let embedMsg = {
     color: 15844367,
     title: server.name+' info',
     timestamp: new Date(),
     fields: [{
       name: 'Server Owner : ',
-      value: '```\n@'+( `@${obj.guild?.owner_name}` || obj.guild?.owner_id)+'\n```\n'
+      value: `\`\`\`\n@${obj.guild?.owner_name}\n\`\`\``,
     }]
   }
   if(guild){
@@ -40,5 +40,5 @@ module.exports = async(obj = {}, opt = {})=>{
       embedMsg.fields.push(tempGuild)
     }
   }
-  return { content: null, embed: [embedMsg] }
+  return { content: null, embeds: [embedMsg] }
 }

@@ -9,18 +9,11 @@ module.exports = async(obj = {})=>{
   try{
     let auth = checkBotOwner(obj)
     if(!auth) return { content: 'This command is only available to the bot owner' }
-    let tempCmd
-    if(obj.data?.options){
-      for(let i in obj.data.options){
-        if(Cmds[obj.data.options[i].value]){
-          tempCmd = obj.data.options[i].value
-          break;
-        }
-      }
-    }
-    let msg2send = { content: (tempCmd ? '**'+tempCmd+'** command not recongnized':'command not provided') }
+    let opt = obj.data?.options || {}
+    let tempCmd = opt.update?.value
+    let msg2send = { content: 'command not recongnized' }
     if(tempCmd && Cmds[tempCmd]){
-      msg2send = await Cmds[tempCmd](obj)
+      msg2send = await Cmds[tempCmd](obj, opt)
       await updateWeb()
     }
     return msg2send

@@ -24,12 +24,12 @@ module.exports = async(obj = {}, squadData = {}, pObj, guideTemplate = {})=>{
       includeInventory: false
     }
   }
-  if(!weData) return { content: 'error calculating data' }
+  if(!webData) return { content: 'error calculating data' }
 
   let webHtml = await getHTML.journey(webData)
   if(!webHtml) return { content: 'error getting html' }
 
-  let webImg = await getImg(guideHTML, obj.id, 640, false)
+  let webImg = await getImg(webHtml, obj.id, 640, false)
   if(!webImg) return { content: 'error getting image' }
 
   return { content: null, file: webImg, fileName: 'journey-'+guideTemplate.name+'.png' }

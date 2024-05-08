@@ -89,6 +89,11 @@
             ]
           }
         ]
+      },
+      {
+        "type": 1,
+        "name": "export",
+        "description": "Export inventory to JSON object (requires google link)"
       }
     ]
   }

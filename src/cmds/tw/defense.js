@@ -2,21 +2,22 @@
 const swgohClient = require('src/swgohClient')
 const sorter = require('json-array-sorter')
 const numeral = require('numeral')
-const { getOptValue, getDiscordAC, replyTokenError, truncateString } = require('src/helpers')
+const { getOptValue, getDiscordAC, replyTokenError, truncateString, findUnit } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You do not have your google account linked to your discordId'}
-  if(obj.confirm) await replyButton(obj, 'Pulling guild data....')
-  let loginConfirm = obj.confirm?.response
+module.exports = async(obj = {}, opt = {})=>{
+  if(obj.confirm?.response == 'no') return { content: 'command canceled...' }
 
   let dObj = await getDiscordAC(obj.member.user.id, opt)
-  if(!dObj?.uId || !dObj?.type) return msg2send
+  if(!dObj?.uId || !dObj?.type) return { content: 'You do not have your google account linked to your discordId' }
 
-
-  let unit = getOptValue(opt, 'unit')?.toString()?.trim()
+  let unit = opt.unit?.value?.toString()?.trim(), has_omi = opt.has_omicron?.value
   if(!unit) return { content: 'you did not provide a unit'}
 
-  let guild = await swgohClient.oauth(obj, 'guild', dObj, {}, loginConfirm)
+  let uInfo = await findUnit(obj, unit)
+  if(uInfo === 'GETTING_CONFIRMATION') return
+  if(!uInfo?.baseId) return { content: `Error finding unit **${unit}**`}
+
+  let guild = await swgohClient.oauth(obj, 'guild', dObj, {})
   if(guild === 'GETTING_CONFIRMATION') return
   if(guild?.error == 'invalid_grant'){
     await replyTokenError(obj, dObj.allyCode)
@@ -31,13 +32,10 @@ module.exports = async(obj = {}, opt = [])=>{
   if(!twData || !twData?.optedInMember) return { content: 'There is not a TW in progress' }
 
   let joined = twData.optedInMember?.map(m =>m.memberId)
-  let gObj = await swgohClient.post('fetchGuild', { id: guildId, projection: {playerId: 1, name: 1, rosterUnit: {definitionId: 1, currentRarity: 1, currentTier: 1, relic: 1, gp: 1}} })
+  let gObj = await swgohClient.post('fetchTWGuild', { guildId: guildId, projection: { playerId: 1, name: 1, roster: { [uInfo.baseId]: 1 } } })
   if(!gObj?.member || gObj?.member?.length === 0) return { content: 'Error getting guild data'}
 
   if(gObj.member.length > joined?.length) gObj.member = gObj.member.filter(x=>joined?.includes(x.playerId))
-  let uInfo = await findUnit(obj, unit)
-  if(uInfo === 'GETTING_CONFIRMATION') return
-  if(!uInfo?.baseId) return { content: `Error finding unit **${unit}**`}
 
   let twDefense = twData.homeGuild?.conflictStatus, memberSet = []
   for(let i in twDefense){
@@ -48,12 +46,15 @@ module.exports = async(obj = {}, opt = [])=>{
 
   if(memberSet?.length === 0) return { content: 'No members have set **'+uInfo.nameKey+'** on defense' }
 
-  let defAvailable = gObj.member.filter(x=>!memberSet.includes(x.playerId) && x.rosterUnit.filter(u=>u.definitionId.startsWith(uInfo.baseId)).length > 0)
-  if(defAvailable?.length === 0) return { content: 'All members have **'+uInfo.nameKey+'** have set on defense'}
-
+  let defAvailable = gObj.member.filter(x=>!memberSet.includes(x.playerId) && x?.roster && x.roster[uInfo.baseId])
+  if(defAvailable?.length === 0) return { content: 'All members have **'+uInfo.nameKey+'** have set on defense' }
+  if(has_omi){
+    defAvailable = defAvailable.filter(x=>x.roster[uInfo.baseId].omiCount)
+    if(defAvailable?.length == 0) return { content: `all memebers with ${uInfo.nameKey} with omicron have set them on defense` }
+  }
   defAvailable = sorter([{column: 'name', order: 'ascending'}], defAvailable)
 
-  let embedMsg = {
+  let count = 0, embedMsg = {
     color: 15844367,
     timestamp: new Date(gObj.updated),
     description: 'Total Joined ('+gObj.member.length+')\n```autohotkey\n',
@@ -62,17 +63,15 @@ module.exports = async(obj = {}, opt = [])=>{
       text: "Data Updated"
     }
   }
-  let count = 0
+  if(has_omi) embedMsg.title += ` with omicron`
   for(let i in defAvailable){
-    let tempUnit = defAvailable[i].rosterUnit?.find(x=>x.definitionId.startsWith(uInfo.baseId))
+    let tempUnit = defAvailable[i].roster[uInfo.baseId]
     if(tempUnit){
-      embedMsg.description += (tempUnit.currentRarity || 0)+' : '+numeral(tempUnit.gp || 0).format('0,0').padStart(7, ' ')+' : '+truncateString(defAvailable[i].name, 12)+'\n'
+      embedMsg.description += (tempUnit.rarity || 0)+' : '+numeral(tempUnit.gp || 0).format('0,0').padStart(7, ' ')+' : '+truncateString(defAvailable[i].name, 12)+'\n'
       count++;
     }
   }
   embedMsg.description += '```'
   embedMsg.title += ' ('+count+')'
-  msg2send.content = null
-  msg2send.embeds = [embedMsg]
-  return msg2send
+  return { content: null, embeds: [embedMsg] }
 }

@@ -1,4 +1,6 @@
 'use strict'
+const mongo = require('mongoclient')
+const sorter = require('json-array-sorter')
 const swgohClient = require('src/swgohClient')
 const getMemberPrevious = require('./getMemberPrevious')
 const getHTML = require('webimg').raid
@@ -17,7 +19,7 @@ const timeTillEnd = (endTime)=>{
 }
 const { getDiscordAC, replyTokenError, getImg } = require('src/helpers')
 module.exports = async(obj = {}, opts = [])=>{
-  if(obj.confirm?.response !== 'yes') return { content: 'command canceled' }
+  if(obj.confirm?.response == 'no') return { content: 'command canceled' }
   let dObj = await getDiscordAC(obj.member?.user?.id, opts)
   if(!dObj?.uId || !dObj?.type) return { content: 'You do not have google or fb linked' }
 
@@ -58,7 +60,7 @@ module.exports = async(obj = {}, opts = [])=>{
     if(previousScores.guildTotal) raid.leaderBoard.unshift({...{name: 'Guild Total', memberProgress: raid.score},...{previous: previousScores.guildTotal}})
   }
   raid.footer = await timeTillEnd(raid.endTime)
-  if(!raidData?.leaderBoard || raidData?.leaderBoard?.length === 0) return { content: 'error calculating data' }
+  if(!raid?.leaderBoard || raid?.leaderBoard?.length === 0) return { content: 'error calculating data' }
 
   let webHtml = await getHTML.status(raid)
   if(!webHtml) return { content: 'Error getting HTML'}

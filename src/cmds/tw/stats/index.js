@@ -3,16 +3,15 @@ const getData = require('./getData')
 const getHtml = require('webimg').chart
 const convertData = require('./convertData')
 const swgohClient = require('src/swgohClient')
-const { replyButton, replyTokenError, getDiscordAC } = require('src/helpers')
+const { getDiscordAC } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You do not have your google account linked to your discordId'}
-  if(obj.confirm) await replyButton(obj)
-  let loginConfirm = obj.confirm?.response
+module.exports = async(obj = {}, opt = {})=>{
+  if(obj.confirm?.response == 'no') return { content: 'command canceled...' }
+
   let dObj = await getDiscordAC(obj.member?.user?.id, opt)
-  if(!dObj?.uId || !dObj?.type) return msg2send
+  if(!dObj?.uId && !dObj?.type) return { content: 'You do not have your google account linked to your discordId' }
 
-  let gObj = await swgohClient.oauth(obj, 'guild', dObj, {}, loginConfirm)
+  let gObj = await swgohClient.oauth(obj, 'guild', dObj, {})
   if(gObj === 'GETTING_CONFIRMATION') return
   if(gObj?.error == 'invalid_grant'){
     await replyTokenError(obj, dObj.allyCode)
@@ -75,7 +74,7 @@ module.exports = async(obj = {}, opt = [])=>{
   }
   if(!chartDefense || !guildData || chartData?.length === 0 || !chartData) return { content: 'Error calculating data' }
 
-  let webData = []
+  let webData = [], msg2send = { content: 'Error getting html' }
   let bannerObj = { fileName: 'banners.png' }
   bannerObj.html = await getHtml(chartData, {
     sort: 'total',

@@ -1,12 +1,21 @@
 'use strict'
+const log = require('logger')
 const swgohClient = require('src/swgohClient')
-const { getDiscordAC, replyButton, replyTokenError, buttonPick, replyMsg } = require('src/helpers')
+const { getDiscordAC, replyTokenError, replyMsg } = require('src/helpers')
+const lazyGetGuild = async(guildId, opponentId)=>{
+  try{
+    if(guildId) await swgohClient.post('fetchTWGuild', { guildId: guildId, doNotReturnData: true })
+    if(opponentId) await swgohClient.post('fetchTWGuild', { guildId: opponentId, doNotReturnData: true })
+    log.info(`Guild fetch done`)
+  }catch(e){
+    log.error(e)
+  }
+}
+module.exports = async(obj = {}, opt = {})=>{
+  if(obj.confirm?.response == 'no') return { content: 'command canceled...' }
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = { content: 'You do not have your google account linked to your discordId' }
-  if(obj.confirm) replyButton(obj)
   let dObj = await getDiscordAC(obj.member.user.id, opt)
-  if(!dObj?.uId && !dObj.type) return msg2send
+  if(!dObj?.uId && !dObj.type) return { content: 'You do not have your google account linked to your discordId' }
 
   let gObj = await swgohClient.oauth(obj, 'guild', dObj, {})
   if(gObj === 'GETTING_CONFIRMATION') return
@@ -17,8 +26,10 @@ module.exports = async(obj = {}, opt = [])=>{
   if(gObj?.msg2send) return { content: gObj.msg2send }
   if(!gObj?.data?.guild) return { content: 'Error getting guild data...'}
   if(!gObj?.data?.guild?.territoryWarStatus || gObj?.data?.guild?.territoryWarStatus?.length === 0) return { content: 'There is not a TW in progress' }
+
   let enemyId = gObj.data.guild.territoryWarStatus[0]?.awayGuild?.profile?.id, enemyName = gObj.data.guild.territoryWarStatus[0]?.awayGuild?.profile?.name
   if(!enemyId) return { content: 'Error getting opponent id...' }
-  msg2send.content = `Found your opponent guild **${enemyName}**\nhttps://swgoh.gg/g/${enemyId}/`
-  return msg2send
+
+  lazyGetGuild(gObj.data.guild.profile.id, enemyId)
+  return { content: `Found your opponent guild **${enemyName}**\nhttps://swgoh.gg/g/${enemyId}/` }
 }

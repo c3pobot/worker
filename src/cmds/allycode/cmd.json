@@ -42,8 +42,26 @@
           },
           {
             "type": 1,
-            "name": "code",
-            "description": "use EA Connect to allow bot to login to your game"
+            "name": "ea_connect",
+            "description": "use EA Connect to allow bot to login to your game",
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "required": false,
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
           },
           {
             "type": 1,

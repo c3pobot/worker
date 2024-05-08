@@ -20,7 +20,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!uInfo?.baseId) return { content: `Error finding **${unit}**` }
 
   let pObj = await fetchPlayer({ allyCode: allyCode?.toString(), projection: { playerId: 1, name: 1, updated: 1, rosterUnit: { $elemMatch: { baseId: uInfo.baseId } }} })
-  if(!pObj?.rosterUnit) return { content: `Error getting player data for **${allyCode}**` }
+  if(!pObj?.playerId) return { content: `Error getting player data for **${allyCode}**` }
 
   return await getImg(uInfo, pObj)
 }

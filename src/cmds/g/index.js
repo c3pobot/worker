@@ -8,6 +8,7 @@ Cmds.omicron = require('./omicron')
 Cmds.member = require('./member')
 Cmds.report = require('./report')
 Cmds.unit = require('./unit')
+Cmds.unlink = require('./unlink')
 const { replyError } = require('src/helpers')
 
 module.exports = async(obj = {})=>{

@@ -89,7 +89,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let webHTML = await getHTML.guild(webData)
   if(!webHTML) return { content: 'Error getting HTML' }
 
-  let webImg = await getImg(imgHTML, obj.id, 600, false)
+  let webImg = await getImg(webHTML, obj.id, 600, false)
   if(!webImg) return { content: 'Error getting Image' }
 
   return { content: null, file: webImg, fileName: gObj?.profile?.name+'-omicrons.png' }

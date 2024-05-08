@@ -8,7 +8,7 @@ const { getImg } = require('src/helpers')
 module.exports = async(pObj = {}, type = 'char')=>{
   try{
     let arena = await getSquadInfo(pObj?.arena[type]?.squad, pObj.rosterUnit)
-    if(!area || arena?.length == 0) return { content: 'error calculating data' }
+    if(!arena || arena?.length == 0) return { content: 'error calculating data' }
 
     let webData = await getHTML(arena, type, {
         name: pObj.name,

@@ -63,6 +63,7 @@ const getIdentity = async(uid, type, newIdentity = false)=>{
     let tempAuth = (await mongo.find('identity', {_id: uid}, {_id:0, TTL: 0}))[0]
     if(tempAuth?.auth?.authId && tempAuth?.auth?.authToken) auth = tempAuth?.auth
   }
+  if(!auth) return
   return await getAuthObj(uid, auth)
 }
 
@@ -75,6 +76,7 @@ module.exports = async(obj = {}, method, dObj = {}, payload)=>{
     loginConfirm = 'no'
   }
   let identity = await getIdentity(dObj.uId, dObj.type, forceNewIdentity)
+  if(!identity) return await confirmButton(obj, 'Using this command will temporarly log you out of the game on your device.\n Are you sure you want to do this?')
   if(identity?.error) return {status: 'error', error: 'invalid_grant'}
   if(identity?.description) return {status: 'error', error: identity?.description}
   if(identity?.auth?.authId && identity?.auth?.authToken) data = await processAPIRequest(method, payload, identity)

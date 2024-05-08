@@ -12,76 +12,61 @@ const getMapStatus = require('./helper/getMapStatus')
 const getChannelLogs = require('./helper/getChannelLogs')
 const getHtml = require('webimg').tw
 
-const { getDiscordAC, buttonPick, replyButton, getImg } = require('src/helpers')
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You do not have your google account linked to your discordId'}, method = 'PATCH', webHTML, webImg
-  let loginConfirm = obj?.confirm?.response
-  let zoneId = obj?.confirm?.zoneId
-  if(obj?.confirm){
-    await replyButton(obj, 'Here we go again ...')
-    method = 'POST'
-    if(loginConfirm === 'no') return { content: 'command canceled', components: []}
-  }
+const { getDiscordAC, replyComponent, getImg } = require('src/helpers')
+module.exports = async(obj = {}, opt = {})=>{
+  if(obj.confirm?.response == 'no') return { content: 'command canceled...' }
+
   let dObj = await getDiscordAC(obj.member?.user?.id, opt)
-  if(!dObj?.uId && !dObj?.type) return msg2send
+  if(!dObj?.uId && !dObj?.type) return { content: 'You do not have your google account linked to your discordId' }
 
-
-  let battleLog
-
-  let mapStatus = await getMapStatus(obj, dObj, loginConfirm)
+  let mapStatus = await getMapStatus(obj, dObj)
   if(mapStatus === 'GETTING_CONFIRMATION') return;
-  if(!mapStatus?.territoryWarStatus || mapStatus?.territoryWarStatus?.length === 0) return {content: `Error get TW data`}
+  if(!mapStatus?.territoryWarStatus || mapStatus?.territoryWarStatus?.length === 0) return { content: `Error get TW data` }
 
-  let buttons = getButtons(obj, loginConfirm)
+  let zoneId = obj.confirm?.zoneId, buttons = getButtons(obj), method = 'PATCH'
+  if(zoneId) method = 'POST'
   if(!zoneId){
-    msg2send.content = 'Please pick the zone below to check for attack log'
-    msg2send.components = buttons
-    await buttonPick(obj, msg2send)
+    await replyComponent(obj, { content: 'Please pick the zone below to check for attack log', components: buttons })
     return
   }
+
   let conflictStatus = mapStatus?.territoryWarStatus[0]?.awayGuild?.conflictStatus?.find(x=>x.zoneStatus?.zoneId === zoneId)
   let homeGuild = mapStatus?.territoryWarStatus[0]?.homeGuild?.conflictStatus?.find(x=>x.zoneStatus?.zoneId === zoneId)
   let guild = mapStatus?.territoryWarStatus[0]?.homeGuild?.profile
   let zoneChannelId = homeGuild?.zoneStatus?.channelId
   if(!conflictStatus || !zoneChannelId) return { content: `Error get TW data, maybe a TW is not in progress` }
-  msg2send.content = `Error getting battles for ${zoneMap[zoneId]?.nameKey}, maybe that zone is not open yet`
-  msg2send.components = buttons
-  let squads = await getSquads(conflictStatus)
 
-  if(squads?.length > 0){
-    msg2send.content = `Error getting battle log for ${zoneMap[zoneId]?.nameKey}`
-    msg2send.components = buttons
-    battleLog = await getChannelLogs(obj, dObj, loginConfirm, zoneChannelId)
-    if(battleLog === 'GETTING_CONFIRMATION') return;
-  }
-  if(battleLog?.event?.length > 0){
-    console.log(`BATTLE LOGS have ${battleLog.event.length} events...`)
-    mongo.set('battleLogs', {}, { data: battleLog, zone: zoneId })
-    msg2send.content = `Error updaing battle log for ${zoneMap[zoneId]?.nameKey}`
-    for(let i in squads){
-      if(squads && squads[i]) getBattles(battleLog.event, squads[i])
-    }
-    squads = squads.filter(x=>x.log?.length > 0)
-    if(squads?.length == 0) msg2send.content = `I could not find info for attackes in ${zoneMap[zoneId]?.nameKey} maybe no battles have happened yet`
-  }
-  if(squads?.length > 0){
-    msg2send.content = 'error getting html'
-    guild.zone = zoneMap[zoneId]?.nameKey
-    webHTML = getHtml.battleLog({squads: squads, profile: guild})
-  }
-  if(webHTML){
-    msg2send.content = 'error getting image'
-    webImg = await getImg(webHTML, obj.id, 650, false )
-  }
-  if(webImg){
-    msg2send.content = null
-    msg2send.file = webImg
-    msg2send.components = buttons
-    msg2send.fileName = 'tw-attack-log.png'
-  }
-  if(msg2send?.components?.length > 0){
-    await buttonPick(obj, msg2send, method)
+  let squads = await getSquads(conflictStatus)
+  if(!squads || squads?.length == 0){
+    await replyComponent(obj, { content: `Error getting battles for ${zoneMap[zoneId]?.nameKey}, maybe that zone is not open yet`, components: buttons }, method)
     return
   }
-  return msg2send
+  let battleLog = await getChannelLogs(obj, dObj, zoneChannelId)
+  if(battleLog === 'GETTING_CONFIRMATION') return;
+  if(!battleLog?.event || battleLog?.event?.length == 0){
+    await replyComponent(obj, { content: `Error getting battle log for ${zoneMap[zoneId]?.nameKey}`, components: buttons }, method)
+    return
+  }
+
+  for(let i in squads) getBattles(battleLog.event, squads[i])
+  squads = squads.filter(x=>x.log?.length > 0)
+  if(squads?.length == 0){
+    await replyComponent(obj, { content: `I could not find info for attackes in ${zoneMap[zoneId]?.nameKey} maybe no battles have happened yet`, components: buttons }, method)
+    return
+  }
+
+  guild.zone = zoneMap[zoneId]?.nameKey
+  let webHTML = getHtml.battleLog({squads: squads, profile: guild})
+  if(!webHTML){
+    await replyComponent(obj, { content: 'error getting html', components: buttons }, method)
+    return
+  }
+
+  let webImg = await getImg(webHTML, obj.id, 650, false )
+  if(!webImg){
+    await replyComponent(obj, { content: 'error getting image', components: buttons }, method)
+    return
+  }
+
+  await replyComponent(obj, { content: null, file: webImg, fileName: 'tw-attack-log.png', components: buttons }, method)
 }

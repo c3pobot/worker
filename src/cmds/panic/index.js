@@ -9,7 +9,7 @@ const { fetchPlayer, replyError, getPlayerAC, checkGuide } = require('src/helper
 module.exports = async(obj = {})=>{
   try{
     let opt = obj.data?.options || {}
-    let guideId = opt.journey?.value, displayOpt = obj.option?.value || 'units'
+    let guideId = opt.journey?.value, displayOpt = opt.option?.value || 'units'
     if(!guideId) return { content: 'You did not provide a squad name' }
 
     let guideTemplate = (await mongo.find('guideTemplates', {_id: guideId}))[0]
@@ -27,8 +27,8 @@ module.exports = async(obj = {})=>{
     if(!squadData?.units) return { content: 'Error Calcuting stats' }
     if(squadData.units.length == 0) return { content: 'The requirements for the guide may not have not been set up in the bot yet' }
 
-    if(displayOpt === 'material') return await getMaterial(squadData, pObj, guideTemplate)
-    return await getUnits(squadData, pObj, guideTemplate)
+    if(displayOpt === 'material') return await getMaterial(obj, squadData, pObj, guideTemplate)
+    return await getUnits(obj, squadData, pObj, guideTemplate)
   }catch(e){
     replyError(obj)
     throw(e)

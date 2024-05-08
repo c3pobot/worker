@@ -12,7 +12,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!pObj.guildId) return { content: `Error getting guildId...` }
 
   let gObj = await fetchGuild({ guildId: pObj.guildId, projection: { playerId: 1, name: 1, rosterUnit: {alignment: 1, definitionId: 1, relic: 1, currentTier: 1 } } })
-  if(!gObj?.members || gObj?.members?.length == 0) return { content: 'error getting guild...' }
+  if(!gObj?.member || gObj?.member?.length == 0) return { content: 'error getting guild...' }
 
   let gLevel = 13, rLevel = 0, order ='ascending'
   let gOption = opt.option?.value, gValue = opt.value?.value, sort = opt.sort?.value || 'name'
@@ -43,7 +43,7 @@ module.exports = async(obj = {}, opt = {})=>{
     title: gObj.name+' ('+gObj.member.length+')',
     description: 'Members with units '+(rLevel ? ' Relic >='+(rLevel - 2):'')+(!rLevel && gLevel ? 'Gear >='+gLevel:'')+' (<MEMBERCOUNT>)\n```\n:  LS  :  DS  : Total : Member\n'
   }
-  let count = 0, memberCount = 0
+  let count = 0, memberCount = 0, msg2send = { content: null, embeds: [] }
   for(let i in members){
     embedMsg.description += ': '+members[i].lsCount.toString().padStart(3, '0')+'  : '+members[i].dsCount.toString().padStart(3, '0')+'  : '+members[i].count.toString().padStart(3, '0')+'   : '+members[i].name+'\n'
     count++
@@ -58,5 +58,5 @@ module.exports = async(obj = {}, opt = {})=>{
       memberCount = 0
     }
   }
-  return { content: null, embeds: [embedMsg] }
+  return msg2send
 }

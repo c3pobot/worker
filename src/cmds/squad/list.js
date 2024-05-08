@@ -37,7 +37,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let usr = opt.user?.data || obj.member, search = opt.search?.value?.toString()?.trim()?.toLowerCase(), tempIndex = checkOption(obj.selectValues[0]) || {}
 
   if(tempIndex?.type && startIndex[tempIndex.type] >= 0) startIndex[tempIndex.type] = +tempIndex.index
-  if(tempIndex.squadId) return await checkSquad(obj, { ...opt,...tempIndex })
+  if(tempIndex.squadId) return await checkSquad(obj, { ...opt, squadId: { value: tempIndex.squadId } })
 
   let globalSquads = await mongo.find('squadTemplate', { id: 'global' })
   let playerSquads = await mongo.find('squadTemplate', { id: dId })
@@ -51,6 +51,7 @@ module.exports = async(obj = {}, opt = {})=>{
       serverSquads = serverSquads.concat(parentSquads)
     }
   }
+  let msg2send = { components: [] }
   if(playerSquads?.length > 0){
     if(search) playerSquads = playerSquads.filter(x=>x.nameKey.includes(search))
     playerSquads = sorter([{column: 'nameKey', order: 'ascending'}], playerSquads)
@@ -83,7 +84,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(msg2send.components.length > 0){
     msg2send.content = 'Squad List Results'
     if(search) msg2send.content += ' for search **'+search+'**'
-    if(usr) msg2send.content += ' for member **'+usr+'**'
+    if(usr) msg2send.content += ' for member **'+(usr?.nick || usr?.user?.username)+'**'
     await replyComponent(obj, msg2send)
     return
   }

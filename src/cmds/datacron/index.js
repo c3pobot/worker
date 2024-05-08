@@ -6,7 +6,7 @@ const { fetchPlayer, getPlayerAC, replyError, getImg } = require('src/helpers')
 module.exports = async(obj = {})=>{
   try{
     let opt = obj?.data?.options || {}
-    let datacronSet = opt['datacron-set']?.value || 'all'(opt, 'datacron-set', 'all')
+    let datacronSet = opt['datacron-set']?.value || 'all'
     let datacronLvl = opt.level?.value || 3
     if(+datacronLvl >= 0){
       if(datacronLvl > 9 ) datacronLvl = 9
@@ -46,7 +46,7 @@ module.exports = async(obj = {})=>{
     let webImg = await getImg(webHtml, obj.id, 1400, false)
     if(!webImg) return { content: 'Error getting image' }
 
-    return { content: null, file: webimg, fileName: pObj.name+'-datacron'+'.png' }
+    return { content: null, file: webImg, fileName: pObj.name+'-datacron'+'.png' }
   }catch(e){
     replyError(obj)
     throw(e)

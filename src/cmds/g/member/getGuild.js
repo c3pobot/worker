@@ -3,7 +3,7 @@ const log = require('logger')
 const mongo = require('mongoclient')
 const cache = require('src/helpers/cache')
 const swgohClient = require('src/swgohClient')
-const getPlayer = async(playerId, name)=>{
+const getMember = async(playerId, name)=>{
   try{
     let obj = await cache.playerId.get(playerId)
     if(!obj?.allyCode) obj = await swgohClient.post('playerArena', { playerId: playerId, playerDetailsOnly: true } )
@@ -17,7 +17,7 @@ const getPlayer = async(playerId, name)=>{
 }
 const getMembers = async(member = [])=>{
   let array = [], i = member.length
-  while(i--) array.push(getPlayer(member[i].playerId, member[i].playerName))
+  while(i--) array.push(getMember(member[i].playerId, member[i].playerName))
   let res = await Promise.allSettled(array)
   return res?.filter(x=>x?.value?.playerId)?.map(x=>x.value)
 }

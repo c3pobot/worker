@@ -1,5 +1,5 @@
 'use strict'
-const { getPlayerAC } = require('src/helpers')
+const { getPlayerAC, fetchPlayer } = require('src/helpers')
 const { formatPlayerStats } = require('src/format')
 
 const modStatObj = {

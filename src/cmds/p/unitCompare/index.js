@@ -15,7 +15,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!eAllyCode) return { content: 'You must provide @user or allyCode to compare with' }
   if(eAllyCode === dObj.allyCode) return { content: 'you can\'t compare to yourself'}
 
-  let unit = getOptValue(opt, 'unit')?.toString()?.trim()
+  let unit = opt.unit?.value?.toString()?.trim()
   if(!unit) return { content: 'you did not provide a unit for comparison'}
 
   let uInfo = await findUnit(obj, unit)
@@ -23,11 +23,11 @@ module.exports = async(obj = {}, opt = {})=>{
   if(uInfo.msg2send) return uInfo.msg2send
   if(!uInfo?.baseId) return { content: `Error finding **${unit}**` }
 
-  let [ pObj, eObj ] = await Promise.all([
+  let [ pObj, eObj ] = await Promise.allSettled([
     fetchPlayer({ allyCode: dObj.allyCode?.toString(), projection: { playerId: 1, name: 1, updated: 1, rosterUnit: { $elemMatch: { baseId: uInfo.baseId } }} }),
     fetchPlayer({ allyCode: eAllyCode?.toString(), projection: { playerId: 1, name: 1, updated: 1, rosterUnit: { $elemMatch: { baseId: uInfo.baseId } }}})
   ])
-  if(!pObj?.rosterUnit || !eObj?.rosterUnit) return { content: 'Error getting player data'}
+  if(!pObj?.value?.playerId || !eObj?.value?.playerId) return { content: 'Error getting player data'}
 
-  return await getImg(uInfo, pObj, eObj)
+  return await getImg(uInfo, pObj.value, eObj.value)
 }

@@ -1,4 +1,5 @@
 'use strict'
+const mongo = require('mongoclient')
 const swgohClient = require('src/swgohClient')
 const getImg = require('src/cmds/p/unit/basic/getImg')
 

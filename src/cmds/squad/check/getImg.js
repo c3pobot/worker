@@ -60,7 +60,7 @@ module.exports = async(squad = {}, pObj = {}, includeLinks)=>{
 
     let squadImg = await joinImages( imgArray, {color: { alpha: 1.0, b: 0, g: 0, r: 0 }})
     if(!squadImg) return { content: 'error joining images' }
-    
+
     return { content: content, file: squadImg, fileName: 'squad-'+squad.name+'.png' }
   }catch(e){
     log.error(e)

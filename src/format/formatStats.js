@@ -1,8 +1,9 @@
 'use strict'
 const numeral = require('numeral')
+const { pct } = require('src/helpers/enum')
 module.exports = (statId, base, mod)=>{
   let returnStat = ''
-  if(statEnum.pct[statId]){
+  if(pct[statId]){
     returnStat = numeral(base*100).format('0.00')
     if(mod) returnStat += '('+numeral(mod*100).format('0.00')+')'
   }else{

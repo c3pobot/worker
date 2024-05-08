@@ -1,11 +1,12 @@
 'use strict'
 const mongo = require('mongoclient')
 const getGuildId = require('../getGuildId')
-
+const { botSettings } = require('src/helpers/botSettings')
 module.exports = async(obj = {}, opt = {})=>{
   let parentId
   if(botSettings?.squadLink) parentId = botSettings?.squadLink[obj?.guild_id]
-  let squadName = opt.name?.toString()?.trim()?.toLowerCase(), squadId = opt.squadId?.value
+  let squadName = opt.name?.value?.toString()?.trim()?.toLowerCase(), squadId = opt.squadId?.value
+  
   if(!squadId && !squadName) return
   if(squadId) return (await mongo.find('squadTemplate', {_id: squadId}))[0]
   let squad = (await mongo.find('squadTemplate', {_id: obj.member.user.id+'-'+squadName}))[0]

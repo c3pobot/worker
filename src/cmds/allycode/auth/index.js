@@ -1,5 +1,6 @@
 'use strict'
 const Cmds = {}
+Cmds['ea_connect'] = require('./ea_connect')
 Cmds.code = require('./code')
 Cmds.android = require('./android')
 Cmds.remove = require('./remove')

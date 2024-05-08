@@ -9,7 +9,7 @@ Cmds.show = require('./show')
 Cmds.unit = require('./unit')
 Cmds.update = require('./update')
 
-module.exports = async(obj = {}, opts = {})=>{
+module.exports = async(obj = {}, opt = {})=>{
   let tempCmd = obj.subCmd, msg2send = { content: 'command not recongnized' }
   if(tempCmd && Cmds[tempCmd]) msg2send = await Cmds[tempCmd](obj, opt)
   return msg2send

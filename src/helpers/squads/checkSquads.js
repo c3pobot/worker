@@ -1,9 +1,9 @@
 'use strict'
 const checkSquad = require('./checkSquad')
 module.exports = async(squads = [], pRoster = [], ignoreStats = false)=>{
-  let res = [], info = {unitCount: 0, showStats: false, colLimit: 5, tdSpan: 5, links: []}
+  let res = [], info = { unitCount: 0, showStats: false, colLimit: 5, tdSpan: 5, links: [] }
   for(let i in squads){
-    const tempObj = checkSquad(squads[i], pRoster, ignoreStats)
+    let tempObj = await checkSquad(squads[i], pRoster, ignoreStats)
     if(tempObj.units?.length > 0){
       res.push(tempObj)
       if(tempObj.info?.showStats) info.showStats = true

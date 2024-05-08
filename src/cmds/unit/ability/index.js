@@ -4,6 +4,8 @@ const sorter = require('json-array-sorter')
 const numeral = require('numeral')
 const getAbilityDamage = require('./getAbilityDamage')
 
+const { replyComponent, findUnit } = require('src/helpers')
+
 const damageTypes = {
   'ATTACK_DAMAGE': 'Physical Damage',
   'ABILITY_POWER': 'Special Damage',
@@ -35,21 +37,21 @@ const enumSkill = {
   h: 'Reinforcement',
   u: 'Unique'
 }
-const { getOptValue, replyButton, buttonPick } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'You did not provide the correct information'}
-  if(obj.confirm) await replyButton(obj)
-  let unit = getOptValue(opt, 'unit')?.toString()?.trim()
-  if(!unit) return msg2send
+  if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
 
-  let skillType = getOptValue(opt, 'type')
-  let skillIndex = obj.confirm?.skillIndex
-  let uInfo = (await mongo.find('skills', { _id: unit }))[0]
-  if(!uInfo?.nameKey) return { content: `Error finding ability info for **${unit}**`}
+  let unit = opt.unit?.value?.toString()?.trim()
+  if(!unit) return { content: 'unit not provided' }
 
-  let skills = uInfo.skills || [], skill
-  if(uInfo?.ultimate?.length > 0) skills = skills.concat(uInfo.ultimate)
+  let uInfo = await findUnit(obj, unit)
+  if(uInfo === 'GETTING_CONFIRMATION') return
+  if(!uInfo?.baseId) return { content: 'Error finding unit **'+unit+'**' }
+
+  let skillType = opt.type?.value, skillIndex = obj.confirm?.skillIndex
+
+  let skills = Object.values(uInfo.skills) || [], skill
+  if(uInfo?.ultimate?.length > 0) skills = skills.concat(Object.values(uInfo.ultimate))
   if(skillType) skills = skills?.filter(x=>x.abilityId?.startsWith(skillType))
   skills = sorter([{column: 'abilityId', order: 'ascending'}], skills || [])
   if(!skills || skills?.length == 0) return { content: `Error getting skills for **${uInfo.nameKey}**` }
@@ -57,33 +59,36 @@ module.exports = async(obj = {}, opt = [])=>{
   if(skills.length === 1) skill = skills[0]
   if(!skill && skillIndex >= 0) skill = skills[skillIndex]
   if(!skill && skills.length > 0){
-    let pickMsg = {
+    let x = 0, msg2send = {
       content: 'Please Choose skill below for **'+uInfo.nameKey+'**',
       components: []
     }
-    let x = 0
     for(let i = 0; i < skills.length; i++){
-      if(!pickMsg.components[x]) pickMsg.components[x] = { type:1, components: []}
+      if(!msg2send.components[x]) msg2send.components[x] = { type:1, components: [] }
       let skillLabel = skills[i].abilityId?.charAt(0).toUpperCase()
       if(skillLabel == 'h') skillLabel = 'R'
       if(skills[i].abilityId?.startsWith('ult')) skillLabel = 'Ult'
       skillLabel += ' - '+skills[i].nameKey
-      pickMsg.components[x].components.push({
+      msg2send.components[x].components.push({
         type: 2,
         label: skillLabel,
         style: 1,
-        custom_id: JSON.stringify({id: obj.id, baseId: uInfo.baseId, skillIndex: +i})
+        custom_id: JSON.stringify({id: obj.id, dId: obj.member?.user?.id, baseId: uInfo.baseId, skillIndex: +i})
       })
-      if(pickMsg.components[x].components.length == 5) x++;
+      if(msg2send.components[x].components.length == 5) x++;
     }
-    await buttonPick(obj, pickMsg)
+    msg2send.components[x].components.push({
+      type: 2,
+      label: 'Cancel',
+      style: 4,
+      custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
+    })
+    await replyComponent(obj, msg2send)
     return
   }
 
   if(!skill) return { content: `Error getting skill for **${uInfo.nameKey}**`}
 
-  msg2send.content = null
-  msg2send.embeds = []
   let aInfo = await getAbilityDamage(skill)
   let msgTitle = enumSkill[skill.abilityId.charAt(0)]
   if(skill.abilityId.startsWith('ult')) msgTitle = 'Ultimate'
@@ -102,7 +107,5 @@ module.exports = async(obj = {}, opt = [])=>{
     embedMsg.description += '\n**Ability Multiper**\n'
     for(let i in aInfo) embedMsg.description += aInfo[i].type+' x '+numeral(aInfo[i].multipler).format('0.000')+'\n'
   }
-  msg2send.embeds.push(embedMsg)
-
-  return msg2send
+  return { content: null, embeds: [embedMsg] }
 }

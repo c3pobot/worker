@@ -2,7 +2,8 @@
 const mongo = require('mongoclient')
 const numeral = require('numeral')
 const swgohClient = require('src/swgohClient')
-const redis = require('redisclient')
+const { checkGuildAdmin, getGuildId } = require('src/helpers')
+
 const createMissedMsg = (gObj, cache)=>{
   let embedMsg = {
       color: 15844367,
@@ -40,39 +41,39 @@ const createMissedMsg = (gObj, cache)=>{
     }
     return embedMsg
 }
-const { checkGuildAdmin, getGuildId } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = [])=>{
+module.exports = async(obj = {}, opt = {})=>{
   let msg2send = {content: 'This command is only available to guild admins'}, redisCache = 0
+
   let auth = await checkGuildAdmin(obj, opt, null)
-  if(!auth) return msg2send
-  msg2send.content = 'Error getting player guild'
+  if(!auth) return { content: 'This command is only available to guild admins' }
+
   let pObj = await getGuildId({dId: obj.member.user.id}, {}, opt)
-  if(!pObj?.guildId) return msg2send
-  msg2send.content = 'Error getting guild data'
-  let gObj = await redis.get('tickets-'+pObj.guildId)
+  if(!pObj?.guildId) return { content: 'Error getting player guild' }
+
+  let mongoCache = 0
+  let gObj = (await mongo.find('missedCheckCache', { _id: pObj.guildId }))[0]
   if(gObj) redisCache++;
-  if(!gObj) gObj = await swgohClient.post('guild', {guildId: pObj.guildId, includeRecentGuildActivityInfo: true}, null)
+  if(!gObj) gObj = await swgohClient.post('guild', { guildId: pObj.guildId, includeRecentGuildActivityInfo: true }, null)
   if(gObj?.guild) gObj = gObj.guild
-  if(redisCache === 0 && gObj?.profile?.id){
+  if(mongoCache === 0 && gObj?.profile?.id){
     gObj.updated = Date.now()
-    redis.setTTL('tickets-'+gObj.profile.id, gObj, 60)
+    await mongo.set('missedCheckCache', { _id: gObj.profile.id }, gObj)
   }
-  if(!gObj?.profile) return msg2send
-  msg2send.content = 'There is no cached ticket data saved'
+  if(!gObj?.profile) return { content: 'Error getting guild data' }
+
   let cache = (await mongo.find('ticketCache', {_id: guildId}))[0]
-  if(!cache?.updated) return msg2send
+  if(!cache?.updated) return { content: 'There is no cached ticket data saved' }
+
   let timeNow = Date.now()
   let resetTime = gObj.nextChallengesRefresh * 1000
-  if(timeNow - cache.updated > 21600000) return { content: 'The cached data is to old'}
-  msg2send.content = 'You can only check missed tickets for 4 hours after reset'
+  if(timeNow - cache.updated > 21600000) return { content: 'The cached data is to old' }
+
   if(resetTime > timeNow && (resetTime - timeNow) > 72000000){
     msg2send.content = 'Error calculating the data'
     let embedMsg = await createMissedMsg(gObj, cache)
-    if(embedMsg){
-      msg2send.content = null
-      msg2send.embeds = [embedMsg]
-    }
+    if(!embedMsg) return { content: 'Error calculating the data' }
+    return { content: null, embeds: [embedMsg] }
   }
-  return msg2send
+  return { content: 'You can only check missed tickets for 4 hours after reset' }
 }

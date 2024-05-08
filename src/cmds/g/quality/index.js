@@ -13,7 +13,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!pObj?.guildId) return { content: `error getting guildId...` }
 
   let gObj = await fetchGuild({ guildId: pObj.guildId, projection: { playerId: 1, name: 1, quality: 1 } })
-  if(!gObj?.members || gObj?.members?.length == 0) return { content: 'error getting guild...' }
+  if(!gObj?.member || gObj?.member?.length == 0) return { content: 'error getting guild...' }
 
   let sortOrder = opt.sort?.value || 'mods', guildTotal = {
     mods: 0,
@@ -51,5 +51,6 @@ module.exports = async(obj = {}, opt = {})=>{
     let top80Quality = numeral(array[m].top).format('0.00')
     embedMsg.description += (modQuality.length > 4 ? modQuality.substring(0,4):modQuality)+' : '+(gearQuality.length > 4 ? gearQuality.substring(0,4):gearQuality)+' : '+(totalQuality.length > 4 ? totalQuality.substring(0,4):totalQuality)+' : '+(top80Quality.length > 4 ? top80Quality.substring(0,4):top80Quality)+' : '+(array[m].name.length > 10 ? array[m].name.substring(0, 10):array[m].name)+'\n'
   }
+  embedMsg.description += '```'
   return { content: null, embeds: [embedMsg] }
 }

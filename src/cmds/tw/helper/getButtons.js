@@ -28,7 +28,7 @@ const rows = [
     ]
   }
 ]
-module.exports = (obj = {}, loginConfirm)=>{
+module.exports = (obj = {})=>{
   let msgComponents = []
   for(let i in rows){
     let tempObj = {
@@ -42,14 +42,14 @@ module.exports = (obj = {}, loginConfirm)=>{
           style: 1,
           label: 'n/a',
           disabled: true,
-          custom_id: JSON.stringify({ id: obj.id, zoneId: b})
+          custom_id: JSON.stringify({ zoneId: b })
         })
       }else{
         tempObj.components.push({
           type: 2,
           label: rows[i].buttons[b].nameKey,
           style: 1,
-          custom_id: JSON.stringify({ id: obj.id, zoneId: rows[i].buttons[b].zoneId, response: loginConfirm })
+          custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, zoneId: rows[i].buttons[b].zoneId })
         })
       }
     }

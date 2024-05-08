@@ -13,7 +13,7 @@ module.exports = async(obj = {}, squadData = {}, pObj, guideTemplate = {})=>{
 
   let windowWidth = 728
   if(squadData.info.unitCount < 5) windowWidth = (143 * (+squadData.info.unitCount)) + 2 + (+squadData.info.unitCount * 2)
-  let webImg = await getImg(guideHTML, obj.id, windowWidth, false)
+  let webImg = await getImg(webHtml, obj.id, windowWidth, false)
   if(!webImg) return { content: 'error getting image' }
 
   return { content: null, file: webImg, fileName: 'journey-'+guideTemplate.name+'.png' }

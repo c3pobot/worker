@@ -17,7 +17,7 @@ module.exports = async(squad = {}, pObj = {}, eObj = {})=>{
         formatPlayerSquad(tempArray[i].units, pObj.rosterUnit.filter(x=> unitIds.includes(x.definitionId.split(':')[0]))),
         formatPlayerSquad(tempArray[i].units, eObj.rosterUnit.filter(x=> unitIds.includes(x.definitionId.split(':')[0])))
       ])
-      if(!pSquad?.value || eSquad?.value) return { content: 'Error formating squads' }
+      if(!pSquad?.value || !eSquad?.value) return { content: 'Error formating squads' }
 
       squadData.squads.push({ pUnits: pSquad.value, eUnits: eSquad.value, note: tempArray[i].note })
       if(pSquad.value.length > squadData.info.tdSpan) squadData.info.tdSpan = +pSquad.value.length

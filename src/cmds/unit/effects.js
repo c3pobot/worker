@@ -8,15 +8,12 @@ const enumSkill = (id)=>{
 }
 const mongo = require('mongoclient')
 const sorter = require('json-array-sorter')
-const { getOptValue } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = [])=>{
-  let msg2send = {content: 'you did not provide the correct information'}
-  let effect = getOptValue(opt, 'effect')?.trim()
-  if(!effect) return msg2send
+module.exports = async(obj = {}, opt = {})=>{
+  let effect = opt.effect?.value?.trim()
+  if(!effect) return { content: 'you did not provide the correct information' }
 
-  let show = getOptValue(opt, 'show', 'chars')?.trim()
-  let skillType = getOptValue(opt, 'ability-type')
+  let show = opt.show?.value?.trim() || 'chars', skillType = opt['ability-type']?.value
   let effects = (await mongo.find('effects', {_id: effect}))[0]
   if(!effects) effects = (await mongo.find('effects', {nameKey: effect}))[0]
   if(!effects || effects?.length === 0) return { content: `Error finding effect **${effect}**`}
@@ -28,11 +25,10 @@ module.exports = async(obj = {}, opt = [])=>{
   if(skillType) units = units.filter(x=>x.skillId.startsWith(`${skillType}skill_`))
   if(!units || units?.length == 0) return { content: `There are no units for **${effects.nameKey}** for **${skillType}**` }
 
-  msg2send.content = `Error figuring it out..`
   let ships = units.filter(x=>x.combatType === 2)
   let chars = units.filter(x=>x.combatType === 1)
-  msg2send.embeds = []
-  const embedMsg = {
+  let msg2send = { content: null, embeds: [] }
+  let embedMsg = {
     color: 15844367,
     timestamp: new Date()
   }
@@ -52,6 +48,6 @@ module.exports = async(obj = {}, opt = [])=>{
     embedMsg.description += '```'
     msg2send.embeds.push(JSON.parse(JSON.stringify(embedMsg)))
   }
-  if(msg2send.embeds.length > 0) msg2send.content = null
-  return msg2send
+  if(msg2send.embeds.length > 0) return msg2send
+  return { content: 'error figuring it out' }
 }

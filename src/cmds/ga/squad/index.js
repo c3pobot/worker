@@ -1,6 +1,8 @@
 'use strict'
+const mongo = require('mongoclient')
 const getImg = require('src/cmds/squad/compare/getImg')
-const { getPlayerAC, getSquad } = require('src/helpers')
+const { getPlayerAC, getDiscordAC } = require('src/helpers')
+const { getSquad } = require('src/helpers/squads')
 const swgohClient = require('src/swgohClient')
 
 module.exports = async(obj = {}, opt = {})=>{
@@ -11,10 +13,10 @@ module.exports = async(obj = {}, opt = {})=>{
   let gaInfo = (await mongo.find('ga', {_id: allyCode.toString()}))[0]
   if(!gaInfo?.currentEnemy) return { content: 'You do not have a GA opponent configured' }
 
-  let squadName = opt.squad?.value?.toString()?.toLowerCase()?.trim()
+  let squadName = opt.name?.value?.toString()?.toLowerCase()?.trim()
   if(!squadName) return { content: 'you did not provide a squad name' }
 
-  let squad = await getSquad(obj, opt, squadName)
+  let squad = await getSquad(obj, opt)
   if(!squad) return { content: `error finding squad ${squadName}` }
 
   let [ pObj, eObj ] = await Promise.allSettled([

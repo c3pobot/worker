@@ -3,7 +3,6 @@ const getImg = require('./getImg')
 const { getPlayerAC, fetchPlayer } = require('src/helpers')
 const { getSquad } = require('src/helpers/squads')
 module.exports = async(obj = {}, opt = {})=>{
-
   let squadName = opt.name?.value || opt.squadId?.value
   if(!squadName) return { content: 'You did not provide a squad name', components: [] }
 

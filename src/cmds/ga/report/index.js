@@ -1,4 +1,5 @@
 'use strict'
+const mongo = require('mongoclient')
 const sorter = require('json-array-sorter')
 const swgohClient = require('src/swgohClient')
 const getUnits = require('./getUnits')
@@ -42,8 +43,8 @@ module.exports = async(obj = {}, opt = {}, dObj, gaInfo)=>{
   gaOverview.fields.push(formatGAQuality(pObj, eObj));
   msg2send.embeds.push(gaOverview)
   if(gaInfo.units.length > 0){
-    if(gaInfo.units.filter(x=>x.combatType == 1).length > 0) charUnits = sorter([{column: 'nameKey', order: 'ascending'}], gaInfo.units.filter(x=>x.combatType == 1))
-    if(gaInfo.units.filter(x=>x.combatType == 2).length > 0) shipUnits = sorter([{column: 'nameKey', order: 'ascending'}], gaInfo.units.filter(x=>x.combatType == 2))
+    let charUnits = sorter([{column: 'nameKey', order: 'ascending'}], gaInfo.units.filter(x=>x.combatType == 1))
+    let shipUnits = sorter([{column: 'nameKey', order: 'ascending'}], gaInfo.units.filter(x=>x.combatType == 2))
     if(charUnits?.length > 0) await getUnits(pObj, eObj, charUnits, msg2send, 'Char')
     if(shipUnits.length > 0) await getUnits(pObj, eObj, shipUnits, msg2send, 'Ship')
   }

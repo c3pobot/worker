@@ -1,10 +1,10 @@
 'use strict'
-const saveCmdOptions = require('./saveCmdOptions')
 const sorter = require('json-array-sorter')
 const getFaction = require('./getFaction')
+const replyComponent = require('./replyComponent')
 const { dataList } = require('./dataList')
 
-module.exports = async(obj = {}, param)=>{
+module.exports = async(obj = {}, param, getUnits = true)=>{
   let baseId, faction
   if(param) faction = param.toString().trim().toLowerCase()
   if(obj?.confirm?.baseId) baseId = obj.confirm.baseId
@@ -15,31 +15,30 @@ module.exports = async(obj = {}, param)=>{
     if(factList?.length == 1) baseId = factList[0].value
     if(!baseId && factList.length > 1 && factList.length < 26){
       factList = sorter([{column: 'name', order: 'ascending'}], factList)
-      let embedMsg = {
+      let msg2send = {
         content: 'There were multiple results for **'+ faction + '**. Please pick desired faction',
         components: [],
         flags: 64
       }
       let x = 0
       for(let i = 0; i < factList.length; i++){
-        if(!embedMsg.components[x]) embedMsg.components[x] = { type:1, components: []}
-        embedMsg.components[x].components.push({
+        if(!msg2send.components[x]) msg2send.components[x] = { type:1, components: []}
+        msg2send.components[x].components.push({
           type: 2,
           label: factList[i].name,
           style: 1,
           custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, baseId: factList[i].value })
         })
-        if(embedMsg.components[x].components.length == 5) x++;
+        if(msg2send.components[x].components.length == 5) x++;
       }
-      embedMsg.components[x].components.push({
+      msg2send.components[x].components.push({
         type: 2,
         label: 'Cancel',
         style: 4,
         custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
       })
-      await saveCmdOptions(obj)
-      return await replyComponent(obj, { content: msg2send })
+      return await replyComponent(obj, msg2send)
     }
   }
-  if(baseId) return await getFaction(baseId, true)
+  if(baseId) return await getFaction(baseId, getUnits)
 }

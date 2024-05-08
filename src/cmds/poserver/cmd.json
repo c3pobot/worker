@@ -67,7 +67,7 @@
           },
           {
             "type": 3,
-            "name": "patreonId",
+            "name": "patreonid",
             "description": "poserver patreonId",
             "required": false
           }

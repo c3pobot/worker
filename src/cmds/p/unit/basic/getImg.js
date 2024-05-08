@@ -7,7 +7,7 @@ const { formatUnit } = require('src/format')
 
 module.exports = async(uInfo = {}, pObj = {})=>{
   try{
-    let webUnit = pObj.rosterUnit.find(x => x.definitionId.startsWith(uInfo.baseId + ':'))
+    let webUnit = pObj.rosterUnit?.find(x => x.definitionId.startsWith(uInfo.baseId + ':'))
     if(webUnit) webUnit = await formatUnit(uInfo, webUnit)
     if(!webUnit) return { content: '**'+uInfo.nameKey+'** is not activated' }
 

@@ -5,7 +5,7 @@ const swgohClient = require('src/swgohClient')
 module.exports = async(obj = {}, opt = {})=>{
   if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
 
-  let allyCode = obj.confirm?.allyCode || opt.allycode?.value?.toString()?.trim()?.replace(/-/g, ''), usr = opt.user.data
+  let allyCode = obj.confirm?.allyCode || opt.allycode?.value?.toString()?.trim()?.replace(/-/g, ''), usr = opt.user?.data
   if(!allyCode && !usr) return { content: 'you must provide an allyCode or user...' }
 
   if(!allyCode && usr){

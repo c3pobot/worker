@@ -1,7 +1,6 @@
 'use strict'
 const log = require('logger')
 log.setLevel('debug');
-const redis = require('redisclient')
 const mongo = require('mongoclient')
 
 const cmdQue = require('./cmdQue')
@@ -14,15 +13,7 @@ const createCmdMap = require('./helpers/createCmdMap')
 const { dataList } = require('./helpers/dataList')
 
 let workerType = process.env.WORKER_TYPE || 'swgoh'
-const CheckRedis = ()=>{
-  log.info(`start up redis check...`)
-  let status = redis.status()
-  if(status){
-    CheckMongo()
-    return
-  }
-  setTimeout(CheckRedis, 5000)
-}
+
 const CheckMongo = ()=>{
   log.info(`start up mongo check...`)
   let status = mongo.status()
@@ -78,4 +69,4 @@ const CheckCmdMap = async()=>{
   }
 }
 
-setTimeout(CheckRedis, 5000)
+setTimeout(CheckMongo, 5000)

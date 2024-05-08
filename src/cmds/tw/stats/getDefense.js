@@ -1,10 +1,10 @@
 'use strict'
 const { dataList } = require('src/helpers/dataList')
-const getNewObj = async(leader)=>{
+const getNewObj = (leader)=>{
   let uInfo = dataList?.unitList[leader?.baseId]
   if(uInfo) return { baseId: leader.baseId, nameKey: uInfo.name, total: 0, battles: 0}
 }
-module.exports = async( defense = {}, warSquad = [] )=>{
+module.exports = ( defense = {}, warSquad = [] )=>{
   for(let i in warSquad){
     let leader = warSquad[i]?.squad?.cell?.find(x=>x.squadUnitType === 2 || x.squadUnitType === 3)
     if(leader) leader.baseId = leader.unitDefId.split(':')[0]

@@ -1,7 +1,6 @@
 "use strict";
 const log = require('logger')
 const mongo = require('mongoclient')
-const redis = require('redisclient')
 const numeral = require('numeral')
 const convertFlatDefToPercent = (value, level)=>{
   return (value / (level*7.5 + value))
@@ -31,7 +30,7 @@ module.exports = async(unit = {})=>{
       sTier = (unit.skill.find(x=>x.id == sUnit.skill).tier) - 1
     }
     let sId = sUnit.tier[sTier]
-    let sData = await redis.get('su-'+sId)
+    let sData
     if(sData){
       let sInfo = {
         nameKey:sData.nameKey,

@@ -1,9 +1,10 @@
 'use strict'
+const mongo = require('mongoclient')
 const getData = require('./getData')
 const getHtml = require('webimg').chart
 const convertData = require('./convertData')
 const swgohClient = require('src/swgohClient')
-const { getDiscordAC } = require('src/helpers')
+const { getDiscordAC, getImg } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {})=>{
   if(obj.confirm?.response == 'no') return { content: 'command canceled...' }
@@ -18,24 +19,27 @@ module.exports = async(obj = {}, opt = {})=>{
     return;
   }
   if(gObj?.msg2send) return { content: gObj.msg2send }
-  if(!gObj?.data?.guild?.member || !gObj?.data?.guild?.member?.length == 0) return { content: 'Error getting guild data' }
+  if(!gObj?.data?.guild?.member || gObj?.data?.guild?.member?.length == 0) return { content: 'Error getting guild data' }
 
-  let members = [], joined = [], guildData, chartData = [], chartDefense
+  gObj = gObj.data.guild
+  let members = [], joined = [], guildData, chartData = [], chartDefense, endTime
   if(gObj?.territoryWarStatus?.length > 0 && gObj.territoryWarStatus[0]?.instanceId){
-    let instanceId = gObj.data.guild.territoryWarStatus[0].instanceId
-    let endTime = gObj.data.guild.territoryWarStatus[0].currentRoundEndTime
+    let instanceId = gObj.territoryWarStatus[0].instanceId
+    endTime = gObj.territoryWarStatus[0].currentRoundEndTime
     if(!instanceId || !endTime) return { content: 'Error getting tw data'}
 
-    let battleStats = await swgohClient.oauth(obj, 'getMapStats', dObj, {territoryMapId: gObj.data.guild.territoryWarStatus[0]?.instanceId}, loginConfirm)
+    let battleStats = await swgohClient.oauth(obj, 'getMapStats', dObj, { territoryMapId: gObj.territoryWarStatus[0]?.instanceId })
     if(battleStats === 'GETTING_CONFIRMATION') return
     if(battleStats?.error == 'invalid_grant'){
       await replyTokenError(obj, dObj.allyCode)
       return;
     }
     if(!battleStats?.data?.currentStat) return { content: 'error getting battle stats'}
+
+    let mapStats = battleStats.data.currentStat
     let joined = gObj.territoryWarStatus[0]?.optedInMember?.map(m => m.memberId)
     if(joined?.length > 0) members = gObj?.member.filter(x=>joined.includes(x.playerId))
-    guildData = await getData(gObj.data.guild.territoryWarStatus[0])
+    guildData = await getData(gObj.territoryWarStatus[0])
     if(guildData){
       let tempObj = { guildData: guildData }
       convertData(tempObj)

@@ -4,7 +4,7 @@
   "description": "pull ga history (defaults to user history)",
   "options": [
     {
-      "type": 4,
+      "type": 3,
       "name": "ga-date",
       "description": "ga match date",
       "required": true,

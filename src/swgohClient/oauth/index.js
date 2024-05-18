@@ -1,5 +1,5 @@
 'use strict'
-const processAPIRequest = require('../processAPIRequest');
+const processAPIRequest = require('./processOauthRequest');
 const mongo = require('mongoclient')
 const google = require('./google')
 const codeAuth = require('./codeAuth')

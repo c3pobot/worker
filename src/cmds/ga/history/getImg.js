@@ -1,5 +1,6 @@
 'use strict'
 const mongo = require('mongoclient')
+const fetchHistory = require('./fetchHistory')
 const sorter = require('json-array-sorter')
 const getHTML = require('webimg').ga
 const pipeline = require('./mongoPipeline')
@@ -10,16 +11,15 @@ const { getImg, replyMsg, replyComponent } = require('src/helpers')
 module.exports = async(obj = {}, opt = {}, playerId)=>{
   if(!playerId) return { content: `playerId not provided..` }
 
-  let ggId = opt['ga-date']?.value, round = +(opt.round?.value || 1), holdOnly = opt['hold-only']?.value || false, side = opt.side?.value || 'd'
-  if(obj.confirm?.round) round = +obj.confirm.round
-  if(obj.confirm?.side) side = obj.confirm.side
-  if(!ggId) return { content: 'you did not specify a date..' }
+  let key = opt['ga-date']?.value, round = +(obj.confirm?.round || opt.round?.value || 1), holdOnly = opt['hold-only']?.value || false, side = (obj.confirm?.side || opt.side?.value || 'd')
+  if(!key) return { content: 'you did not specify a date..' }
 
-  let gaEvent = (await mongo.find('gaScanStatus', { ggId: ggId }, { _id: 0, eventInstanceId: 1, date: 1, mode: 1, season: 1 }))[0]
-  if(!gaEvent) return { content: `error finding eventId for ${ggId}` }
+  let gaEvent = (await mongo.find('gaEvents', { key: key }, { _id: 0, eventInstanceId: 1, date: 1, mode: 1, season: 1 }))[0]
+  if(!gaEvent) return { content: `error finding eventId for ${key}` }
 
-  let pObj = (await mongo.aggregate('gaHistory', { _id: playerId+'-'+gaEvent.eventInstanceId }, JSON.parse(JSON.stringify(pipeline))))[0]
-  if(!pObj?.matchResult || pObj?.matchResult?.length == 0) return { content: `Error finding ga history for ${gaEvent.mode} ${gaEvent.data}` }
+  let pObj = await fetchHistory(playerId, key, gaEvent.season)
+  //let pObj = (await mongo.aggregate('gaHistory', { _id: playerId+'-'+gaEvent.eventInstanceId }, JSON.parse(JSON.stringify(pipeline))))[0]
+  if(!pObj?.matchResult || pObj?.matchResult?.length == 0) return { content: `Error finding ga history for ${gaEvent.mode} ${gaEvent.date}` }
 
   let gaMatch = pObj.matchResult.find(x=>x.matchId === round)
   if(!gaMatch?.attackResult || !gaMatch?.defenseResult) return { content: `error finding ga history for ${gaEvent.mode} ${gaEvent.date} round ${round}` }
@@ -27,12 +27,6 @@ module.exports = async(obj = {}, opt = {}, playerId)=>{
     gaMatch.attackResult =  gaMatch.attackResult.filter(x=>x.battleOutcome !== 1)
     gaMatch.defenseResult =  gaMatch.defenseResult.filter(x=>x.battleOutcome !== 1)
   }
-  if((gaMatch?.attackResult?.length == 0 && side === 'a') || (gaMatch?.defenseResult?.length == 0 && side === 'd')){
-    if(holdOnly) return { content: 'There where no defense holds' }
-    return { content: `error finding battles for ${gaEvent.mode} ${gaEvent.date} round ${round} ${side == 'd' ? 'defense':'attack'}` }
-  }
-
-  let msg2send = { content: null, components: [] }
   let actionRow = { type: 1, components: [] }
   actionRow.components.push({
     type: 2,
@@ -48,6 +42,17 @@ module.exports = async(obj = {}, opt = {}, playerId)=>{
       custom_id: JSON.stringify({id: obj.id, dId: obj.member?.user?.id, side: side, round: +i})
     })
   }
+  if((gaMatch?.attackResult?.length == 0 && side === 'a') || (gaMatch?.defenseResult?.length == 0 && side === 'd')){
+    if(holdOnly){
+      await replyComponent(obj, { content: `There where no defense holds for round ${round}`, components: [actionRow] }, 'POST')
+      return
+    }
+    await replyComponent(obj, { content: `error finding battles for ${gaEvent.mode} ${gaEvent.date} round ${round} ${side == 'd' ? 'defense':'attack'}`, components: [actionRow] }, 'POST')
+    return
+  }
+
+  let msg2send = { content: null, components: [] }
+
   if(actionRow?.components?.length > 0) msg2send.components = [actionRow]
   gaEvent.side = side
   gaEvent.holdOnly = holdOnly

@@ -1,9 +1,10 @@
 'use strict'
 const mongo = require('mongoclient')
 const getHTML = require('webimg').inventory
+const { dataList } = require('src/helpers/dataList')
 const { checkGuide, checkUnitMats, getImg } = require('src/helpers')
 
-module.exports = async(obj = {}, opts = {}, pObj = {})=>{
+module.exports = async(obj = {}, opt = {}, pObj = {})=>{
   if(!dataList?.gameData?.unitData) return { content: 'gameData list is empty.' }
 
   let guideId = opt.journey?.value

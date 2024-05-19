@@ -69,7 +69,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let resetTime = gObj.nextChallengesRefresh * 1000
   if(timeNow - cache.updated > 21600000) return { content: 'The cached data is to old' }
 
-  if(resetTime > timeNow && (resetTime - timeNow) > 72000000){
+  if(resetTime > timeNow && (resetTime - timeNow) < 72000000){
     msg2send.content = 'Error calculating the data'
     let embedMsg = await createMissedMsg(gObj, cache)
     if(!embedMsg) return { content: 'Error calculating the data' }

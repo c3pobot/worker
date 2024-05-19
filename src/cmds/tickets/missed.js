@@ -62,7 +62,7 @@ module.exports = async(obj = {}, opt = {})=>{
   }
   if(!gObj?.profile) return { content: 'Error getting guild data' }
 
-  let cache = (await mongo.find('ticketCache', {_id: guildId}))[0]
+  let cache = (await mongo.find('ticketCache', {_id: pObj.guildId}))[0]
   if(!cache?.updated) return { content: 'There is no cached ticket data saved' }
 
   let timeNow = Date.now()

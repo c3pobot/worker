@@ -44,7 +44,7 @@ module.exports = async(obj = {}, patreon = {}, opt = {})=>{
       custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
     })
     if(dataChange) await mongo.set('patreon', { _id: patreon._id }, { guild: patreon.guilds })
-    await replayComponent(obj, msg2send)
+    await replyComponent(obj, msg2send)
     return
   }
 

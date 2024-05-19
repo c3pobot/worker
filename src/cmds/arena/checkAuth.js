@@ -11,6 +11,6 @@ module.exports = async(dId)=>{
   let pObj = await getGuildId({ dId: dId }, {})
   if(pObj?.guildId) guild = (await mongo.find('guilds', {_id: pObj.guildId, syncArena: 1}))[0]
   if(guild?.syncArena) return true
-  if(pObj?.guildId && auth == 0) guild = (await mongo.find('patreon', {'guilds.id': pObj.guildId, status: 1}))[0]
+  if(pObj?.guildId) guild = (await mongo.find('patreon', {'guilds.id': pObj.guildId, status: 1}))[0]
   if(guild?.status) return true
 }

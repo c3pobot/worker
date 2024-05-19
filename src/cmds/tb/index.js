@@ -1,5 +1,6 @@
 'use strict'
 const Cmds = {}
+Cmds.export = require('./export')
 Cmds.gp = require('./gp')
 Cmds.status = require('./status')
 Cmds.info = require('./info')

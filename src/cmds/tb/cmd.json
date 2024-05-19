@@ -7,6 +7,29 @@
     "options": [
       {
         "type": 1,
+        "name": "export",
+        "description": "export tb data to json (Requires google/EA connect link)",
+        "options": [
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "required": false,
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
         "name": "platoons-export",
         "description": "export platoon requirements to excel file (RotE only right now)",
         "options": [

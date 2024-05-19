@@ -54,7 +54,7 @@ const getIdentity = async(uid, type, newIdentity = false)=>{
     }
     if(type === 'facebook'){
       let encrypted_ssaid = (await mongo.find('facebook', {_id: uid}))[0]
-      if(encrypted_ssaid) ssaid = await Google.Decrypt(encrypted_ssaid.ssaid)
+      if(encrypted_ssaid) ssaid = await google.Decrypt(encrypted_ssaid.ssaid)
       if(!ssaid) log.error(`Guest Auth Credentials lost for ${uid}`)
       if(ssaid) auth = await getGuestAuth(ssaid)
     }

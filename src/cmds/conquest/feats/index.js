@@ -44,7 +44,7 @@ module.exports = async(obj = {}, opt = {}, pObj ={})=>{
     res.totalKeys += tempStatus.total
     if(tempStatus.battles?.length > 0) res.stars = tempStatus.battles
   }
-  if(res.totalKeys) return { content: 'Error calculating data...' }
+  if(!res.totalKeys) return { content: 'Error calculating data...' }
   if(pObj.inventory) res.credits = +(pObj.inventory.find(x=>x.currency == 39).quantity || 0)
   if(res.keys > 0) res.rewards = await getRewards(+res.keys, pObj.conquestStatus.difficultyType, pObj.conquestStatus.conquestDefinitionIdentifier)
 

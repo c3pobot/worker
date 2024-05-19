@@ -42,12 +42,8 @@ module.exports = async(obj = {}, opt = {})=>{
   if(opt.status?.value >= 0) tempObj.status = opt.status?.value
   tempObj.chId = opt.channel?.value || tempObj.chId
   tempObj.ticketCount = opt.count?.value || tempObj.ticketCount
-  tempObj.sendUserMessages = opt.messages?.value || tempObj.sendUserMessages
-  if(tempObj.sendUserMessages){
-    tempObj.skipMessageSending = false
-  }else{
-    tempObj.skipMessageSending = true
-  }
+  if(opt.message?.value == false) tempObj.skipMessageSending = true
+  if(opt.message?.value == true) tempObj.skipMessageSending = false
   if(!tempObj.guildId) tempObj.guildId = pObj.guildId
   if(!tempObj.guildName) tempObj.guildName = pObj.guildName
   let tempReset = new Date(gObj.guild.nextChallengesRefresh * 1000)

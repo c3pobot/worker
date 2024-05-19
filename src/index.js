@@ -1,6 +1,5 @@
 'use strict'
 const log = require('logger')
-log.setLevel('debug');
 const mongo = require('mongoclient')
 
 const cmdQue = require('./cmdQue')

@@ -16,7 +16,7 @@ module.exports = async(obj = {}, opt = {})=>{
 
   let uInfo = await findUnit(obj, unit)
   if(uInfo === 'GETTING_CONFIRMATION') return
-  if(uInfo.msg2send) return uInfo.msg2send
+  if(uInfo?.msg2send) return uInfo.msg2send
   if(!uInfo?.baseId) return { content: `Error finding **${unit}**` }
 
   let pObj = await fetchPlayer({ allyCode: allyCode?.toString(), projection: { playerId: 1, name: 1, updated: 1, rosterUnit: { $elemMatch: { baseId: uInfo.baseId } }} })

@@ -47,7 +47,7 @@ module.exports = async(obj = {}, opt = {})=>{
         custom_id: JSON.stringify({id: obj.id, dId: obj.members?.user?.id, unit: uInfo.baseId, skillId: skills[i].id})
       })
     }
-    msg2send.components[x].components.push({
+    msg2send.components[0].components.push({
       type: 2,
       label: 'Cancel',
       style: 4,

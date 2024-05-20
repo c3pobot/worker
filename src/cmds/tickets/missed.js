@@ -51,25 +51,18 @@ module.exports = async(obj = {}, opt = {})=>{
   let pObj = await getGuildId({dId: obj.member.user.id}, {}, opt)
   if(!pObj?.guildId) return { content: 'Error getting player guild' }
 
-  let mongoCache = 0
-  let gObj = (await mongo.find('missedCheckCache', { _id: pObj.guildId }))[0]
-  if(gObj) redisCache++;
-  if(!gObj) gObj = await swgohClient.post('guild', { guildId: pObj.guildId, includeRecentGuildActivityInfo: true }, null)
-  if(gObj?.guild) gObj = gObj.guild
-  if(mongoCache === 0 && gObj?.profile?.id){
-    gObj.updated = Date.now()
-    await mongo.set('missedCheckCache', { _id: gObj.profile.id }, gObj)
-  }
-  if(!gObj?.profile) return { content: 'Error getting guild data' }
-
   let cache = (await mongo.find('ticketCache', {_id: pObj.guildId}))[0]
   if(!cache?.updated) return { content: 'There is no cached ticket data saved' }
+
+  let gObj = await swgohClient.post('guild', { guildId: pObj.guildId, includeRecentGuildActivityInfo: true }, null)
+  if(gObj?.guild) gObj = gObj.guild
+  if(!gObj?.profile) return { content: 'Error getting guild data' }  
 
   let timeNow = Date.now()
   let resetTime = gObj.nextChallengesRefresh * 1000
   if(timeNow - cache.updated > 21600000) return { content: 'The cached data is to old' }
 
-  if(resetTime > timeNow && (resetTime - timeNow) < 72000000){
+  if(resetTime > timeNow && (resetTime - timeNow) > 20 * 3600 * 1000){
     msg2send.content = 'Error calculating the data'
     let embedMsg = await createMissedMsg(gObj, cache)
     if(!embedMsg) return { content: 'Error calculating the data' }

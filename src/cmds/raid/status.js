@@ -24,6 +24,7 @@ module.exports = async(obj = {}, opts = [])=>{
   if(!dObj?.uId || !dObj?.type) return { content: 'You do not have google or fb linked' }
 
   let gObj = await swgohClient.oauth(obj, 'guild', dObj, {})
+  if(gObj === 'GETTING_CONFIRMATION') return
   if(gObj?.msg2send) return gObj.msg2send
   if(gObj?.error == 'invalid_grant'){
     await replyTokenError(obj, dObj.allyCode)

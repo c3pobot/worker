@@ -32,7 +32,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!guild) guild = { units: [] }
 
   let msg2send = { content: null, embeds: [] }
-  let baseMsg = { color: 15844367, timestamp: new Date(gObj.updated), title: `TW Report`, description: `[${gObj.name}](https://swgoh.gg/g/${gObj.id}) vs [${eObj.name}](https://swgoh.gg/g/${eObj.id})`, fields: [], footer: { text: "Data Updated" } }
+  let baseMsg = { color: 15844367, timestamp: new Date(gObj.updated), title: `TW Report`, description: `[${gObj.name}](https://swgoh.gg/g/${gObj.id}) (${gObj.member.length}) vs [${eObj.name}](https://swgoh.gg/g/${eObj.id}) (${eObj.member.length})`, fields: [], footer: { text: "Data Updated" } }
   baseMsg.fields.push(formatReportGP(gObj, eObj));
   baseMsg.fields.push(formatReportGuild(glUnits.units, gObj, eObj));
   baseMsg.fields.push(formatTWRecord(gObj.recentTerritoryWarResult, eObj.recentTerritoryWarResult));

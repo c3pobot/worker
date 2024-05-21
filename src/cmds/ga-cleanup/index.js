@@ -9,7 +9,7 @@ const { getImg, replyComponent, replyError } = require('src/helpers')
 module.exports = async(obj = {})=>{
   try{
     let opt = obj.data?.options || {}, mode = obj.subCmdGroup || obj.subCmd || '5v5'
-    if(mode !== '5v5' || mode !== '3v3') return { content: 'unknown ga mode' }
+    if(mode !== '5v5' && mode !== '3v3') return { content: 'unknown ga mode' }
     if(!dataList?.unitList) return { content: 'unitList data is empty..' }
 
     let dObj = (await mongo.find('discordId', { _id: obj.member?.user?.id }, { settings: 1 }))[0]
@@ -19,12 +19,12 @@ module.exports = async(obj = {})=>{
     if(!season && botSettings['ga-'+mode]) season = botSettings['ga-'+mode]
     if(!season) return { content: 'you did not specify a proper season' }
 
-    let method = 'PATCH', skip = +(obj.confirm?.skip || 0), countSquads
+    let method = 'PATCH', skip = +(obj.confirm?.skip || 0), totalBattles = +(obj.confirm?.t || 0), numCounters = +(obj.confirm?.n || 0)
     if(minBattles >= 0) minBattles = +minBattles
     if(battleLimit >= 0) battleLimit = +battleLimit
     if(battleLimit > 50) battleLimit = 50
-    if(obj.confirm) method =  'POST', countSquads = JSON.parse(JSON.stringify(obj.confirm))
-    let info = { league: league, battles: minBattles, limit: battleLimit, gl_only: gl_only, leader: leader, units: [] }
+    if(obj.confirm) method =  'POST'
+    let info = { league: league, battles: minBattles, limit: battleLimit, exclude_gl: exclude_gl, leader: leader, units: [] }
     for(let i in opt){
       if(i?.startsWith('unit')){
         let baseId = opt[i].value?.toString()?.toUpperCase()?.trim()
@@ -100,8 +100,11 @@ module.exports = async(obj = {})=>{
     if(singleUnit) payload.defendUnitCount = 1
     let tempSquads = await mongo.aggregate('gaCounter', payload, pipeline)
     if(!tempSquads || tempSquads?.length == 0) return msg2send
-
-    if(!countSquads) countSquads = (await mongo.aggregate('gaCounter', payload, countPipeline))[0]
+    if(!totalBattles){
+      let countSquads = (await mongo.aggregate('gaCounter', payload, countPipeline))[0]
+      totalBattles = +(countSquads?.total || 0)
+    }
+    if(!numCounters) numCounters = await mongo.count('gaCounter', payload)
 
     let squads = []
     for(let i in tempSquads){
@@ -115,26 +118,24 @@ module.exports = async(obj = {})=>{
       })
     }
     if(!squads || squads?.length == 0) return { content: 'error getting squads' }
-    info.season = countSquads?._id
-    info.mode = countSquads?.mode
-    info.total = countSquads?.total
-    info.header = 'GAC Season '+countSquads?._id+' '+countSquads?.mode+' '+dataList.unitList[leader]?.name || dataList.unitList[units[0]]?.name+' Cleanup Counters in '+countSquads?.total+' battles'
+    info.season = season, info.mode = mode, info.total = totalBattles
+    info.header = 'GAC Season '+season+' '+mode+' '+(dataList.unitList[leader]?.name || dataList.unitList[units[0]]?.name)+' Cleanup Counters in '+totalBattles+' <br>'+numCounters+' total counters'
 
-    let actionRow = { type: 1, components: [] }
-    if(skip > 0) actionRow.components.push({
+    let actionRow = [{ type: 1, components: [] }]
+    if(skip > 0) actionRow[0].components.push({
       type: 2,
       label: 'Previous '+battleLimit,
       style: 1,
-      custom_id: JSON.stringify({...countSquads, skip: skip - battleLimit, dId: obj.member?.user?.id, id: obj.id })
+      custom_id: JSON.stringify({t: totalBattles, n: numCounters, skip: skip - battleLimit, dId: obj.member?.user?.id, id: obj.id })
     })
-    if(countSquads?.total > skip + battleLimit) actionRow.components.push({
+    if(numCounters > skip + battleLimit) actionRow[0].components.push({
       type: 2,
       label: 'Next '+battleLimit,
       style: 1,
-      custom_id: JSON.stringify({...countSquads, skip: skip + battleLimit, dId: obj.member?.user?.id, id: obj.id })
+      custom_id: JSON.stringify({t: totalBattles, n: numCounters, skip: skip + battleLimit, dId: obj.member?.user?.id, id: obj.id })
     })
 
-    if(actionRow.components.length == 0) actionRow = []
+    if(actionRow[0].components.length == 0) actionRow = []
     let webData = await getHTML(squads, info)
     if(!webData) return { content: 'error getting html' }
 

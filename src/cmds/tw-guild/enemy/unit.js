@@ -1,13 +1,16 @@
 'use strict'
+const mongo = require('mongoclient')
+const getGuild = require('../getGuild')
 const sorter = require('json-array-sorter')
 const numeral = require('numeral')
-const { getPlayerAC, getGuildId, findUnit, fetchGuild, truncateString } = require('src/helpers')
+const { getGuildId, truncateString, findUnit } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {})=>{
-  let allyObj = await getPlayerAC(obj, opt)
-  if(allyObj?.mentionError) msg2send.content = 'that user does not have allyCode linked to discordId'
-  let allyCode = allyObj?.allyCode
-  if(!allyCode) return { content: 'You do not have allyCode linked to discord' }
+  let pObj = await getGuildId({ dId: obj.member?.user?.id }, {}, opt)
+  if(!pObj?.guildId) return { content: 'You do not have your allycode linked to discord id' }
+
+  let twStatus = (await mongo.find('twStatus', { _id: pObj.guildId }))[0]
+  if(!twStatus.enemy) return { content: 'there is no opponent guild registerd' }
 
   let unit = opt.unit?.value?.toString()?.trim()
   if(!unit) return { content: 'You did not provide a unit'}
@@ -17,11 +20,8 @@ module.exports = async(obj = {}, opt = {})=>{
   if(uInfo?.msg2send) return uInfo.msg2send
   if(!uInfo.baseId) return { content: `Error finding unit **${unit}**` }
 
-  let pObj = await getGuildId({}, { allyCode: allyCode })
-  if(!pObj?.guildId) return { content: 'error finding guildId...' }
-
-  let gObj = await fetchGuild({ guildId: pObj.guildId, projection: { playerId: 1, name: 1, roster: { [uInfo.baseId]: 1 } } })
-  if(!gObj?.member || gObj?.member?.length == 0) return { content: `error finding guild...` }
+  let gObj = await getGuild(twStatus.enemy, [], { playerId: 1, name: 1, roster: { [uInfo.baseId]: 1 } })
+  if(!gObj?.member) return { content: 'error getting away guild data' }
 
   let gType = opt.option?.value, gValue = opt.value?.value, gLevel = 0, rLevel = 0, units = []
   if(gType === 'g' && gValue >= 0) gLevel = +gValue
@@ -37,17 +37,6 @@ module.exports = async(obj = {}, opt = {})=>{
         relic: m.roster[uInfo.baseId].relicTier || 0
       }
     })
-    /*
-    units = gObj.member.filter(r=>r.rosterUnit?.some(u=>u.definitionId?.startsWith(uInfo.baseId+':') && u.currentTier >= gLevel && u.relic.currentTier >= rLevel)).map(m=>{
-      return Object.assign({}, {
-        member: m.name,
-        rarity: m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':') && x.currentTier >= gLevel && x.relic.currentTier >= rLevel).currentRarity,
-        gp: m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':') && x.currentTier >= gLevel && x.relic.currentTier >= rLevel).gp,
-        gear: +m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':') && x.currentTier >= gLevel && x.relic.currentTier >= rLevel).currentTier || 0,
-        relic: +(m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':') && x.currentTier >= gLevel && x.relic.currentTier >= rLevel).relic.currentTier - 2) || 0
-      })
-    })
-    */
   }
   if(uInfo.combatType == 2){
     units = gObj.member.filter(r=>r.roster && r.roster[uInfo.baseId])?.map(m=>{
@@ -57,15 +46,6 @@ module.exports = async(obj = {}, opt = {})=>{
         gp: m.roster[uInfo.baseId].gp
       }
     })
-    /*
-    units = gObj.member.filter(r=>r?.rosterUnit?.some(u=>u.definitionId.startsWith(uInfo.baseId+':'))).map(m=>{
-      return Object.assign({}, {
-        member: m.name,
-        rarity: m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':')).currentRarity,
-        gp: m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':')).gp
-      })
-    })
-    */
   }
   if(units?.length > 0) units = sorter([{column: 'gp', order: 'descending'}], units)
   if(!units) return { content: 'error getting guild units...' }

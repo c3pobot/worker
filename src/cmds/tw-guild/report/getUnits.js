@@ -1,8 +1,8 @@
 'use strict'
 const mongo = require('mongoclient')
 const { formatReportUnit } = require('src/format')
-const { dataList } = require('src/helpers/dataList')
-module.exports = async(units, type, gObj, msg2send = { embeds: []})=>{
+
+module.exports = async(units, type, gObj = {}, eObj = {}, msg2send = { embeds: [] })=>{
   if(!units || units?.length == 0) return
   let count = 0, embeds = [], embedMsg = {
     color: 15844367,
@@ -17,7 +17,8 @@ module.exports = async(units, type, gObj, msg2send = { embeds: []})=>{
     let uInfo = (await mongo.find('units', { _id: units[i] }, { nameKey: 1, baseId: 1, combatType: 1, skills: 1, ultimate: 1 }))[0]
     if(!uInfo?.baseId) continue
     let gUnits = gObj.member.filter(x => x.rosterUnit.some(u=>u.definitionId.startsWith(uInfo.baseId+':'))).map(x=>x.rosterUnit.find(u=>u.definitionId.startsWith(`${uInfo.baseId}:`)))
-    embedMsg.fields.push(formatReportUnit(uInfo, gUnits, null))
+    let eUnits = eObj.member.filter(x => x.rosterUnit.some(u=>u.definitionId.startsWith(uInfo.baseId+':'))).map(x=>x.rosterUnit.find(u=>u.definitionId.startsWith(`${uInfo.baseId}:`)))
+    embedMsg.fields.push(formatReportUnit(uInfo, gUnits, eUnits))
     count++
     if((+i + 1) == units.length && count < 20) count = 20
     if(count == 20){

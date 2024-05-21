@@ -68,6 +68,7 @@ Cmds.joinImages = require('./joinImages')
 Cmds.modifyUnit = require('./modifyUnit')
 
 Cmds.removeShardCmds = require('./removeShardCmds')
+Cmds.replyButton = require('./replyButton')
 Cmds.replyComponent = require('./replyComponent')
 Cmds.replyError = require('./replyError')
 Cmds.replyMsg = require('./replyMsg')

@@ -4,7 +4,7 @@ module.exports = (glUnits = [], homeGuild = {}, awayGuild)=>{
   let homeGLCount = 0, awayGLCount = 0, len = 7
   if(glUnits.length > 0){
     for(let i in glUnits){
-      homeGLCount += +(homeGuild?.member.filter(x => x.rosterUnit.some(u =>u.definitionId.startsWith(glUnits[i].baseId+':'))).length || 0)
+      homeGLCount += +(homeGuild?.member.filter(x => x.rosterUnit.some(u =>u.definitionId.startsWith(glUnits[i]+':'))).length || 0)
       if(awayGuild?.member) awayGLCount += +(awayGuild?.member.filter(x => x.rosterUnit.some(u =>u.definitionId.startsWith(glUnits[i].baseId+':'))).length || 0)
     }
   }

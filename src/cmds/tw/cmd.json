@@ -157,6 +157,238 @@
                 ]
             },
             {
+              "type": 1,
+              "name": "report",
+              "description": "Shows current TW report",
+              "options": [
+                {
+                  "type": 5,
+                  "name": "units",
+                  "description": "include units in the report (defaults to true)"
+                },
+                {
+                  "type": 3,
+                  "name": "allycode_option",
+                  "description": "primary or alt allycode",
+                  "required": false,
+                  "choices": [
+                    {
+                      "name": "Primary",
+                      "value": "primary"
+                    },
+                    {
+                      "name": "Alt",
+                      "value": "alt"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": 1,
+              "name": "omicron",
+              "description": "compare TW omicrons"
+            },
+            {
+              "type": 2,
+              "name": "enemy",
+              "description": "configure tw enemy",
+              "options": [
+                {
+                  "type": 1,
+                  "name": "quality",
+                  "description": "Shows opponent quality report",
+                  "options": [
+                    {
+                      "type": 3,
+                      "name": "allycode_option",
+                      "description": "primary or alt allycode",
+                      "required": false,
+                      "choices": [
+                        {
+                          "name": "Primary",
+                          "value": "primary"
+                        },
+                        {
+                          "name": "Alt",
+                          "value": "alt"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": 1,
+                  "name": "member",
+                  "description": "shows opponent member list",
+                  "options": [
+                    {
+                      "type": 3,
+                      "name": "allycode_option",
+                      "description": "primary or alt allycode",
+                      "required": false,
+                      "choices": [
+                        {
+                          "name": "Primary",
+                          "value": "primary"
+                        },
+                        {
+                          "name": "Alt",
+                          "value": "alt"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": 1,
+                  "name": "unit",
+                  "description": "shows unit info for opponent guild",
+                  "options": [
+                    {
+                      "type": 3,
+                      "name": "unit",
+                      "description": "Unit to query",
+                      "required": true,
+                      "autocomplete": true,
+                      "focused": true
+                    },
+                    {
+                      "type": 3,
+                      "name": "option",
+                      "description": "min relic or gear level",
+                      "choices": [
+                        {
+                          "name": "relic",
+                          "value": "r"
+                        },
+                        {
+                          "name": "gear",
+                          "value": "g"
+                        }
+                      ]
+                    },
+                    {
+                      "type": 4,
+                      "name": "value",
+                      "description": "relic or gear value"
+                    },
+                    {
+                      "type": 3,
+                      "name": "allycode_option",
+                      "description": "primary or alt allycode",
+                      "required": false,
+                      "choices": [
+                        {
+                          "name": "Primary",
+                          "value": "primary"
+                        },
+                        {
+                          "name": "Alt",
+                          "value": "alt"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": 1,
+                  "name": "update",
+                  "description": "sets current tw opponent (allycode not needed if google/fb linked)",
+                  "options": [
+                    {
+                      "type": 3,
+                      "name": "allycode",
+                      "description": "allycode from opponent guild for manual update"
+                    },
+                    {
+                      "type": 3,
+                      "name": "allycode_option",
+                      "description": "primary or alt allycode",
+                      "required": false,
+                      "choices": [
+                        {
+                          "name": "Primary",
+                          "value": "primary"
+                        },
+                        {
+                          "name": "Alt",
+                          "value": "alt"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": 2,
+              "name": "report-units",
+              "description": "manage units for guild report",
+              "options": [
+                {
+                  "type": 1,
+                  "name": "add",
+                  "description": "add units for guild report",
+                  "options": [
+                    {
+                      "type": 3,
+                      "name": "unit",
+                      "description": "unit to add",
+                      "required":  true,
+                      "autocomplete": true,
+                      "focused": true
+                    },
+                    {
+                      "type": 3,
+                      "name": "allycode_option",
+                      "description": "primary or alt allycode",
+                      "choices": [
+                        {
+                          "name": "Primary",
+                          "value": "primary"
+                        },
+                        {
+                          "name": "Alt",
+                          "value": "alt"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": 1,
+                  "name": "remove",
+                  "description": "remove units for guild report",
+                  "options": [
+                    {
+                      "type": 3,
+                      "name": "unit",
+                      "description": "unit to add",
+                      "required":  true,
+                      "autocomplete": true,
+                      "focused": true
+                    },
+                    {
+                      "type": 3,
+                      "name": "allycode_option",
+                      "description": "primary or alt allycode",
+                      "choices": [
+                        {
+                          "name": "Primary",
+                          "value": "primary"
+                        },
+                        {
+                          "name": "Alt",
+                          "value": "alt"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
                 "type": 1,
                 "name": "member",
                 "description": "show join status of guild members (requires google link)",

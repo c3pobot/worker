@@ -12,6 +12,6 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!auth) return { content: "This command is only avaliable to guild Admins" }
   let tempCmd = obj.subCmd
   let msg2send = { content: 'command not recongnized' }
-  if(tempCmd && Cmds[tempCmd]) msg2send = await Cmds[tempCmd](obj, opt, pObj, server)
+  if(tempCmd && Cmds[tempCmd]) msg2send = await Cmds[tempCmd](obj, opt, pObj)
   return msg2send
 }

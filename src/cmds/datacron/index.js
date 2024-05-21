@@ -27,7 +27,7 @@ module.exports = async(obj = {})=>{
     if(!pObj.allyCode) return { content: 'Error gettign player data' }
     if(!pObj.datacron || pObj.datacron?.length == 0) return { content: 'That player has no datacrons...' }
 
-    if(datacronSet !== 'all') pObj.datacron = pObj.datacron.filter(x=>x?.templateId == datacronSet)
+    if(datacronSet !== 'all') pObj.datacron = pObj.datacron.filter(x=>x?.setId == +datacronSet)
     if(datacronLvl >= 0) pObj.datacron = pObj.datacron.filter(x=>+x?.affix?.length >= 0 +datacronLvl)
     let pDatacron = pObj.datacron
     if(!pDatacron || pDatacron?.length == 0) return { content: `player has not ${datacronSet} datacron's at or above ${datacronLvl}...` }

@@ -5,7 +5,7 @@ const rabbitmq = require('src/cmdQue/publisher')
 const { addGuildCmd } = require('src/helpers/discordmsg')
 const BOT_OWNER_ID = process.env.BOT_OWNER_ID
 const addJob = async(sId, cmds = [])=>{
-  await rabbitmq.add({ id: sId, guild_id: sId, member: { user: { id: BOT_OWNER_ID } }, data: { name: 'updateslashcmds', options: [{ name: 'update', value: 'add-guild-cmds'}] }, cmds: cmds })
+  await rabbitmq.add('discord', { id: sId, guild_id: sId, member: { user: { id: BOT_OWNER_ID } }, data: { name: 'updateslashcmds', options: [{ name: 'update', value: 'add-guild-cmds'}] }, cmds: cmds })
 }
 const updateCmdObj = (cmds = [], obj = {})=>{
   if(!cmds || cmds.length == 0) return

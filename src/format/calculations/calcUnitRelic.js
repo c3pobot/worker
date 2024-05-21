@@ -4,7 +4,7 @@ module.exports = (obj = {})=>{
     total: 0
   }
   for(let i in obj){
-    if(obj[i].relic.currentTier > 2){
+    if(obj[i]?.relic?.currentTier > 2){
       tempObj.total++;
       let tempRelic = +obj[i].relic.currentTier - 2
       if(tempRelic > 4){

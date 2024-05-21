@@ -34,7 +34,7 @@ module.exports = async(obj = {}, opt = {})=>{
     }
   }
   baseMsg.fields.push(formatReportGP(gObj, null));
-  baseMsg.fields.push(formatReportGuild(glUnits, gObj, null));
+  baseMsg.fields.push(formatReportGuild(glUnits?.units, gObj, null));
   baseMsg.fields.push(formatTWRecord(gObj.recentTerritoryWarResult, null));
   msg2send.embeds.push(baseMsg)
   if(opt.units?.value == true){

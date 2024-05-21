@@ -2,7 +2,7 @@
 const numeral = require('numeral')
 const { calcAllZeta, calcUnitRelic, calcUnitRarity, calcUnitUlt } = require('./calculations')
 
-module.exports = (unit = {}, gObj = {}, eObj = {})=>{
+module.exports = (unit = {}, gObj = [], eObj)=>{
   let len = 7
   let obj = {
     name: unit.nameKey+' ('+gObj.length,

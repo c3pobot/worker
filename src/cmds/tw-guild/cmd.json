@@ -1,0 +1,8 @@
+{
+  "type": "public",
+  "hidden": true,
+  "worker": "tw-guild",
+  "cmd": {
+    "name": "tw-guild"
+  }
+}

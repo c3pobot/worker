@@ -10,7 +10,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!pObj?.guildId) return { content: 'You do not have your allycode linked to discord id' }
 
   let twStatus = (await mongo.find('twStatus', { _id: pObj.guildId }))[0]
-  if(!twStatus.enemy) return { content: 'there is no opponent guild registerd' }
+  if(!twStatus?.enemy) return { content: 'there is no opponent guild registerd' }
 
   let gObj = await getGuild(twStatus.enemy, [], { name: 1, allyCode: 1 })
   let memberSorted = sorter([{column: 'name', order: 'ascending'}], gObj?.member || [])

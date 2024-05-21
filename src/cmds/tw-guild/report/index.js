@@ -14,7 +14,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!pObj?.guildId) return { content: 'You do not have your allycode linked to discord id' }
 
   let twStatus = (await mongo.find('twStatus', { _id: pObj.guildId }))[0]
-  if(!twStatus.enemy) return { content: 'there is no opponent guild registerd' }
+  if(!twStatus?.enemy) return { content: 'there is no opponent guild registerd' }
 
   await replyButton(obj, 'Fetching guild data...')
   let [ gObj, eObj ] = await Promise.allSettled([

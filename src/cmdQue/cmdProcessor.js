@@ -16,7 +16,7 @@ const saveCmd = async(obj = {})=>{
 }
 module.exports = async(obj = {})=>{
   try{
-    await saveCmd(obj)    
+    //await saveCmd(obj)    
     if(!obj?.cmd || !cmdMap || !cmdMap[obj.cmd]) return
 
     if(!obj.timestamp) obj.timestamp = Date.now()

@@ -1,6 +1,6 @@
 'use strict'
 const sorter = require('json-array-sorter')
-module.exports = async(inventory = [], neededMats = [])=>{
+module.exports = (inventory = [], neededMats = [])=>{
   if(neededMats?.length > 0){
     for(let i in neededMats){
       let item = inventory.find(x=>x.id === neededMats[i].id)

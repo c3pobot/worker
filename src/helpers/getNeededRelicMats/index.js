@@ -1,6 +1,7 @@
 'use strict'
 const getMissingRelicMats = require('./getMissingRelicMats')
 module.exports = (inventory = [], relicRecipe = [], currentTier)=>{
+
   let neededMats = {}
   for(let i in relicRecipe){
     if(relicRecipe[i].tier > currentTier){

@@ -2,7 +2,7 @@
 const mongo = require('mongoclient')
 
 const getPlatoonConfig = require('./getPlatoonConfig')
-const { getPlayerAC, fetchPlayer, replyComponent } = require('src/helpers')
+const { getPlayerAC, fetchPlayer, replyComponent, getGuildId } = require('src/helpers')
 
 module.exports = async(obj ={}, opt = [])=>{
   if(obj.confirm?.cancel) return { content: 'Command canceled' }

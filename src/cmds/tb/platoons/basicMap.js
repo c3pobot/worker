@@ -9,7 +9,7 @@ const relicSort = [{column: 'relicTier', order: 'ascending'}]
 const gpSort = [{column: 'gp', order: 'ascending'}]
 
 module.exports = (guild = [], pDef, opt={})=>{
-  let phase = opt.phase?.value || 'all', conflict = opt.conflict?.value || 'all', fillSquad = opt.fill_squad?.value
+  let phase = opt.phase?.value || 'all', conflict = opt.conflict?.value || 'all', fill_squad = opt.fill_squad?.value
   if(fill_squad !== false) fill_squad = true
 
   let units = {}, platoons = [], res = {}
@@ -39,7 +39,7 @@ module.exports = (guild = [], pDef, opt={})=>{
         if(!units[unitCounts[u].baseId]) units[unitCounts[u].baseId] = getUnits(unitCounts[u].baseId, guild, playerUnitCount, tempPlatoon.maxUnit)
         let avaliableUnits = units[unitCounts[u].baseId].filter(x=>x.level >= unitCounts[u].level && x.rarity >= unitCounts[u].rarity)
         if(unitCounts[u].combatType === 1) avaliableUnits = avaliableUnits?.filter(x=>x.tier >= unitCounts[u].tier && x.relicTier >= unitCounts[u].unitRelicTier)
-        if(unitCounts[u].count > +avaliableUnits?.length && fillSquad) squadMet = 0
+        if(unitCounts[u].count > +avaliableUnits?.length && fill_squad) squadMet = 0
       }
       if(squadMet === 0) res.content = 'Your guild cannot fill any squads completely'
       if(squadMet > 0){

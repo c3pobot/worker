@@ -1,9 +1,10 @@
 'use strict'
+const mongo = require('mongoclient')
 const getHTML = require('webimg').tbPlatoons
 const basicMap = require('./basicMap')
 const savedMap = require('./savedMap')
 const getPlatoonConfig = require('../getPlatoonConfig')
-const { getPlayerAC, getGuildId, replyComponent } = require('src/helpers')
+const { getPlayerAC, getGuildId, replyComponent, getImg } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
 
 module.exports = async(obj ={}, opt = {})=>{
@@ -15,7 +16,7 @@ module.exports = async(obj ={}, opt = {})=>{
   if(!pDef?.platoons || pDef?.platoons?.length === 0) return { content: 'The platoon info is not in the database yet' }
 
   let guild = await swgohClient.post('fetchGuild', { guildId: gObj.guildId, projection: { name: 1, playerId: 1, allyCode: 1, guildName: 1, rosterUnit: {sort: 1, definitionId: 1, currentLevel: 1, currentRarity: 1, currentTier: 1, relic: 1, gp: 1, combatType: 1 }}})
-  if(!guild?.memeber || guild?.member?.length === 0) return { content: 'Error getting guild data...' }
+  if(!guild?.member || guild?.member?.length === 0) return { content: 'Error getting guild data...' }
 
   let tbDay = obj.confirm?.tbDay
   let pConfig = await getPlatoonConfig(gObj.guildId, tbId)

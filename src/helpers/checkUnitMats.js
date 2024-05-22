@@ -5,7 +5,7 @@ const { dataList } = require('src/helpers/dataList')
 
 const getRelicMats = (unit = {}, relicRecipe = [], res = {}, inventory = [])=>{
   let neededRelicMats = getNeededRelicMats([], relicRecipe.filter(x=>(unit.reqRelic - 2) >= x.tier), (unit.relic - 2) || 0, unit.reqRelic - 2)
-  console.log(neededRelicMats)
+  
   for(let i in neededRelicMats){
     if(neededRelicMats[i]?.count > 0){
       if(!res[neededRelicMats[i].id]){

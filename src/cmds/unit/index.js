@@ -2,6 +2,7 @@
 const Cmds = {}
 Cmds.ability = require('./ability')
 Cmds.effects = require('./effects')
+Cmds.portrait = require('./portrait')
 Cmds.stats = require('./stats')
 Cmds.omicron = require('./omicron')
 const { replyError } = require('src/helpers')

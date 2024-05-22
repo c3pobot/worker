@@ -20,17 +20,16 @@ module.exports = async(obj = {}, opt = {}, pObj = {})=>{
   if(!uInfo?.baseId) return { content: `Error finding **${unit}**` }
   if(uInfo.combatType === 2) return { content: 'Ships don\'t have gear' }
 
-  let gType = opt.gear?.value, gValue = opt.value?.value, gLevel = 13, rLevel
-  if(gType === 'r'){
-    rLevel = +((botSettings.maxRelic || 11) >= (gValue + 2) ? gValue: (botSettings.maxRelic || 11) - 2)
-  }else{
-    gLevel = (gValue < 14 ? gValue:13)
-  }
+  let gLevel = opt.gear_level || 13, rLevel = opt.relic_level?.value || 5
+  if(gLevel > 13) gLevel = 13
+  if(gLevel < 13) rLevel = 0
+  if(rLevel + 2 > (botSettings.maxRelic || 11)) rLevel = (botSettings.maxRelic || 11) - 2
+
   let unitGear = dataList?.gameData.unitData[uInfo.baseId]?.gearLvl
   if(!unitGear || !unitGear[gLevel]) return { content: `error getting ${uInfo.nameKey} gear data` }
 
   let relicRecipe, neededGear = [], currentRelicLevel = 0
-  if(gType === 'r' && rLevel >= 0 ){
+  if(rLevel > 0 ){
     relicRecipe = await mongo.find('recipe', {type: 'relic'})
     if(!relicRecipe || relicRecipe?.length === 0) return { content: 'Error getting relic info from db' }
     relicRecipe = relicRecipe.filter(x=>rLevel >= x.tier)

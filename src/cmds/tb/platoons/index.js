@@ -7,7 +7,7 @@ const { getPlayerAC, getGuildId, replyComponent } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
 
 module.exports = async(obj ={}, opt = {})=>{
-  let gObj = await getGuildId({dId: obj.memeber?.user?.id}, {}, opt)
+  let gObj = await getGuildId({ dId: obj.member?.user?.id }, {}, opt)
   if(!gObj?.guildId) return { content: 'Your allyCode is not linked to discordId' }
 
   let tbId = opt['tb-name']?.value || 't05D'

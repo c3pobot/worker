@@ -105,9 +105,21 @@
         ]
       },
       {
-        "type": 1,
+        "type": 2,
         "name": "remove",
-        "description": "remove a registered allyCode"
+        "description": "remove a registered allyCode",
+        "options": [
+          {
+            "type": 1,
+            "name": "all",
+            "description": "unlink all allyCodes from your discordId"
+          },
+          {
+            "type": 1,
+            "name": "single",
+            "description": "unlink single allyCode from your discordId"
+          }
+        ]
       },
       {
         "type": 1,

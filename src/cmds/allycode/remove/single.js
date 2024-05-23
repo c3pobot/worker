@@ -1,5 +1,6 @@
 'use strict'
 const mongo = require('mongoclient')
+const { replyComponent } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {})=>{
   if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
@@ -20,7 +21,7 @@ module.exports = async(obj = {}, opt = {})=>{
         type: 2,
         label: dObj.allyCodes[i].name+' ('+dObj.allyCodes[i].allyCode+')',
         style: 1,
-        custom_id: JSON.stringify({ dId: obj.member?.user?.id, allyCode: dObj.allyCodes[i].allyCode })
+        custom_id: JSON.stringify({ dId: obj.member?.user?.id, allyCode: dObj.allyCodes[i].allyCode, id: obj.id })
       })
       if(msg2send.components[x].components.length == 5) x++;
     }
@@ -28,9 +29,10 @@ module.exports = async(obj = {}, opt = {})=>{
       type: 2,
       label: 'Cancel',
       style: 4,
-      custom_id: JSON.stringify({ dId: obj.member?.user?.id, cancel: true })
+      custom_id: JSON.stringify({ dId: obj.member?.user?.id, cancel: true, id: obj.id })
     })
-    return msg2send
+    await replyComponent(obj, msg2send)
+    return
   }
 
   let allyObj = dObj.allyCodes.find(x=>x.allyCode === allyCode)

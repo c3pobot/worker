@@ -17,8 +17,9 @@ module.exports = async(obj = {}, opt = {})=>{
   let effects = (await mongo.find('effects', {_id: effect}))[0]
   if(!effects) effects = (await mongo.find('effects', {nameKey: effect}))[0]
   if(!effects || effects?.length === 0) return { content: `Error finding effect **${effect}**`}
-  if(!effects?.units || effects?.units?.length === 0) return { content: `There are no units for **${effects.nameKey}**` }
-  let units = effects?.units?.filter(x=>x.skill?.descKey?.toLowerCase()?.includes(effects?.nameKey?.toLowerCase()))
+  let units = Object.values(effects?.units)
+  if(!units || units?.length === 0) return { content: `There are no units for **${effects.nameKey}**` }
+  units = units?.filter(x=>x.skill?.descKey?.toLowerCase()?.includes(effects?.nameKey?.toLowerCase()))
   if(!units || units?.length == 0) return { content: `There are no units for **${effects.nameKey}**` }
 
   units = sorter([{column: 'nameKey', order: 'ascending'}], units)

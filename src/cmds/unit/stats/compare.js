@@ -1,12 +1,19 @@
 'use strict'
 const { botSettings } = require('src/helpers/botSettings')
 const getHTML = require('webimg').unit
-const { findUnit, getImg, getFakeUnit } = require('src/helpers')
+const { findUnit, getImg, getFakeUnit, getRelicLevel } = require('src/helpers')
 const { formatUnit } = require('src/format')
+const getCompareValues = (opt = {})=>{
+  let values1 = getRelicLevel(opt, +(botSettings.maxRelic || 11), 13)
+  let values2 = getRelicLevel({ relic_level: opt.relic_level_2, gear_level: opt.gear_level_2 }, +(botSettings.maxRelic || 11), 13)
+  if(values1?.rLevel > 0) values1.rLevel += 2
+  if(values2?.rLevel > 0) values2.rLevel += 2
+  return { rLevel1: values1?.rLevel, gLevel1: values1?.gLevel, rLevel2: values2?.rLevel, gLevel2: values2?.gLevel }
+}
 
 module.exports = async(obj = {}, opt = {})=>{
   if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
-  
+
   let unit = opt.unit?.value?.toString()?.trim()
   if(!unit) return { content: 'unit not provided' }
 
@@ -14,19 +21,8 @@ module.exports = async(obj = {}, opt = {})=>{
   if(uInfo === 'GETTING_CONFIRMATION') return
   if(!uInfo?.baseId) return { content: 'Error finding unit **'+unit+'**' }
 
-  let rarity = +(opt.rarity?.value || 7), gType1 = opt.gear1?.value, gValue1 = opt.value1?.value, gLevel1 = 13, rLevel1 = botSettings.maxRelic || 11
-  let gType2 = opt.gear2?.value, gValue2 = opt.value2?.value, gLevel2 = 13, rLevel2 = botSettings.maxRelic || 11
-  if(gType1 === 'g'){
-    rLevel1 = 0
-    if(gValue1 >= 0 && gValue1 < 13) gLevel1 = +gValue1
-  }
-  if(gType2 === 'g'){
-    rLevel2 = 0
-    if(gValue2 >= 0 && gValue2 < 13) gLevel2 = +gValue2
-  }
-  if(gType1 === 'r' && (gValue1 >= 0 && (+gValue1 + 2 < rLevel1))) rLevel1 = +gValue1 + 2
-  if(gType2 === 'r' && (gValue2 >= 0 && (+gValue2 + 2 < rLevel2))) rLevel2 = +gValue2 + 2
-
+  let rarity = +(opt.rarity?.value || 7)
+  let { rLevel1, gLevel1, rLevel2, gLevel2 } = getCompareValues(opt)
   let [ unit1, unit2 ] = await Promise.allSettled([
     getFakeUnit(uInfo, gLevel1, rLevel1, rarity, true),
     getFakeUnit(uInfo, gLevel2, rLevel2, rarity, true),

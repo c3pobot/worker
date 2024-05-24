@@ -5,7 +5,7 @@ const getHTML = require('webimg').inventory
 const { botSettings } = require('src/helpers/botSettings')
 const { dataList } = require('src/helpers/dataList')
 
-const { findUnit, getNeededGear, getNeededRelicMats, getImg } = require('src/helpers')
+const { findUnit, getNeededGear, getNeededRelicMats, getImg, getRelicLevel } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {}, pObj = {})=>{
   if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
@@ -19,11 +19,7 @@ module.exports = async(obj = {}, opt = {}, pObj = {})=>{
   if(uInfo?.msg2send) return uInfo.msg2send
   if(!uInfo?.baseId) return { content: `Error finding **${unit}**` }
   if(uInfo.combatType === 2) return { content: 'Ships don\'t have gear' }
-
-  let gLevel = opt.gear_level || 13, rLevel = opt.relic_level?.value || 5
-  if(gLevel > 13) gLevel = 13
-  if(gLevel < 13) rLevel = 0
-  if(rLevel + 2 > (botSettings.maxRelic || 11)) rLevel = (botSettings.maxRelic || 11) - 2
+  let { gLevel, rLevel } = getRelicLevel(opt)
 
   let unitGear = dataList?.gameData.unitData[uInfo.baseId]?.gearLvl
   if(!unitGear || !unitGear[gLevel]) return { content: `error getting ${uInfo.nameKey} gear data` }

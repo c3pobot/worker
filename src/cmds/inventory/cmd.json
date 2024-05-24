@@ -23,7 +23,7 @@
               "name": "relic_level",
               "description": "Relic Level (default 5)",
               "required": false,
-              "min_value": 0
+              "min_value": 1
           },
           {
               "type": 4,

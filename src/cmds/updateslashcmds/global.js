@@ -14,6 +14,7 @@ module.exports = async(obj = {})=>{
   }
   if(!globalCmds || globalCmds?.length == 0) return { content: "Error parsing SlashCmds" }
   await mongo.set('tempSlashCmdUpdate', { _id: 'global' }, { data: globalCmds })
+  //console.log(globalCmds[21])
   let status = await addGlobalCmd(globalCmds, 'PUT')
   return { content: `**${(status?.length >= 0 ? status.length:0)}** of **${globalCmds.length}** global commands where updated`}
 }

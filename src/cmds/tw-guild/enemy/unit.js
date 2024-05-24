@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 const getGuild = require('../getGuild')
 const sorter = require('json-array-sorter')
 const numeral = require('numeral')
-const { getGuildId, truncateString, findUnit } = require('src/helpers')
+const { getGuildId, truncateString, findUnit, getRelicLevel } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {})=>{
   let pObj = await getGuildId({ dId: obj.member?.user?.id }, {}, opt)
@@ -23,9 +23,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let gObj = await getGuild(twStatus.enemy, [], { playerId: 1, name: 1, roster: { [uInfo.baseId]: 1 } })
   if(!gObj?.member) return { content: 'error getting away guild data' }
 
-  let gType = opt.option?.value, gValue = opt.value?.value, gLevel = 0, rLevel = 0, units = []
-  if(gType === 'g' && gValue >= 0) gLevel = +gValue
-  if(gType == 'r' && gValue >= 0) rLevel = +gValue
+  let { gLevel, rLevel } = getRelicLevel(opt, 0, 0), units = []
 
   if(uInfo.combatType == 1){
     units = gObj.member.filter(r=>r.roster && r.roster[uInfo.baseId] && r.roster[uInfo.baseId].gearTier >= gLevel && r.roster[uInfo.baseId].relicTier >= rLevel)?.map(m=>{
@@ -70,7 +68,7 @@ module.exports = async(obj = {}, opt = {})=>{
     color: 15844367,
     title: gObj.name+' ('+gObj.member.length+')',
     timestamp: new Date(gObj.updated),
-    description: uInfo.nameKey+' (<UNITCOUNT>/'+units.length+')'+(+rLevel > 0 && uInfo.combatType == 1 ? ' - Relic >= '+(+rLevel):'')+(+gLevel > 0 && uInfo.combatType == 1 ? ' - Gear >= '+gLevel:''),
+    description: uInfo.nameKey+' (<UNITCOUNT>/'+units.length+')',
     author: {
       icon_url: "https://swgoh.gg/static/img/assets/"+uInfo.thumbnailName+".png"
     },
@@ -80,6 +78,10 @@ module.exports = async(obj = {}, opt = {})=>{
     footer:{
       text: 'Data Updated'
     }
+  }
+  if(uInfo.combatType == 1){
+    if(rLevel) embedMsg.description += ` - Relic >= ${rLevel}`
+    if(!rLevel && gLevel) embedMsg.description += ` - Gear >= ${gLevel}`
   }
   embedMsg.fields = []
   for(let i in array){

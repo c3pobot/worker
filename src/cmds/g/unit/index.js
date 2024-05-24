@@ -1,7 +1,7 @@
 'use strict'
 const sorter = require('json-array-sorter')
 const numeral = require('numeral')
-const { getPlayerAC, getGuildId, findUnit, fetchGuild, truncateString } = require('src/helpers')
+const { getPlayerAC, getGuildId, findUnit, fetchGuild, truncateString, getRelicLevel } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {})=>{
   let allyObj = await getPlayerAC(obj, opt)
@@ -23,9 +23,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let gObj = await fetchGuild({ guildId: pObj.guildId, projection: { playerId: 1, name: 1, roster: { [uInfo.baseId]: 1 } } })
   if(!gObj?.member || gObj?.member?.length == 0) return { content: `error finding guild...` }
 
-  let gType = opt.option?.value, gValue = opt.value?.value, gLevel = 0, rLevel = 0, units = []
-  if(gType === 'g' && gValue >= 0) gLevel = +gValue
-  if(gType == 'r' && gValue >= 0) rLevel = +gValue
+  let { gLevel, rLevel } = getRelicLevel(opt, 0, 0), units = []
 
   if(uInfo.combatType == 1){
     units = gObj.member.filter(r=>r.roster && r.roster[uInfo.baseId] && r.roster[uInfo.baseId].gearTier >= gLevel && r.roster[uInfo.baseId].relicTier >= rLevel)?.map(m=>{
@@ -90,7 +88,7 @@ module.exports = async(obj = {}, opt = {})=>{
     color: 15844367,
     title: gObj.name+' ('+gObj.member.length+')',
     timestamp: new Date(gObj.updated),
-    description: uInfo.nameKey+' (<UNITCOUNT>/'+units.length+')'+(+rLevel > 0 && uInfo.combatType == 1 ? ' - Relic >= '+(+rLevel):'')+(+gLevel > 0 && uInfo.combatType == 1 ? ' - Gear >= '+gLevel:''),
+    description: uInfo.nameKey+' (<UNITCOUNT>/'+units.length+')',
     author: {
       icon_url: "https://swgoh.gg/static/img/assets/"+uInfo.thumbnailName+".png"
     },
@@ -101,6 +99,11 @@ module.exports = async(obj = {}, opt = {})=>{
       text: 'Data Updated'
     }
   }
+  if(uInfo.combatType == 1){
+    if(rLevel) embedMsg.description += ` - Relic >= ${rLevel}`
+    if(!rLevel && gLevel) embedMsg.description += ` - Gear >= ${gLevel}`
+  }
+
   embedMsg.fields = []
   for(let i in array){
     let count = 0, unitCount = 0

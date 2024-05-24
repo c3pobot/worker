@@ -24,25 +24,16 @@
       "required": false
     },
     {
-        "type": 3,
-        "name": "gear",
-        "description": "Gear or Relic for comparison",
+        "type": 4,
+        "name": "relic_level",
+        "description": "Relic Level (default 5)",
         "required": false,
-        "choices": [
-            {
-                "name": "Relic",
-                "value": "r"
-            },
-            {
-                "name": "Gear",
-                "value": "g"
-            }
-        ]
+        "min_value": 1
     },
     {
         "type": 4,
-        "name": "value",
-        "description": "gear or relic value",
+        "name": "gear_level",
+        "description": "Gear level (default 13)",
         "required": false,
         "min_value": 1
     },

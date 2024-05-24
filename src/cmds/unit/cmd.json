@@ -41,50 +41,32 @@
             "focused": true
           },
           {
-            "type": 3,
-            "name": "gear1",
-            "description": "Gear or Relic",
-            "required": false,
-            "choices": [
-              {
-                "name": "Relic",
-                "value": "r"
-              },
-              {
-                "name": "Gear",
-                "value": "g"
-              }
-            ]
+              "type": 4,
+              "name": "relic_level",
+              "description": "Relic Level (default 9)",
+              "required": false,
+              "min_value": 1
           },
           {
-            "type": 4,
-            "name": "value1",
-            "description": "gear or relic value",
-            "require": false,
-            "min_value": 1
+              "type": 4,
+              "name": "relic_level_2",
+              "description": "Relic Level for comparison",
+              "required": false,
+              "min_value": 1
           },
           {
-            "type": 3,
-            "name": "gear2",
-            "description": "Gear or Relic for comparison",
-            "required": false,
-            "choices": [
-              {
-                "name": "Relic",
-                "value": "r"
-              },
-              {
-                "name": "Gear",
-                "value": "g"
-              }
-            ]
+              "type": 4,
+              "name": "gear_level",
+              "description": "Gear level (default 13)",
+              "required": false,
+              "min_value": 1
           },
           {
-            "type": 4,
-            "name": "value2",
-            "description": "gear or relic value",
-            "required": false,
-            "min_value": 1
+              "type": 4,
+              "name": "gear_level_2",
+              "description": "Gear level for comparison",
+              "required": false,
+              "min_value": 1
           },
           {
             "type": 4,

@@ -1,5 +1,6 @@
 'use strict'
 const mongo = require('mongoclient')
+const { dataList } = require('src/helpers/dataList')
 const Cmds = {}
 const enumTD = {
   'xp-mat-one-star': 'T1 Training Droid',
@@ -43,7 +44,7 @@ Cmds.unit = (obj = [], res = {})=>{
     if(res.unit[obj[i].id]){
       res.unit[obj[i].id].total += 1
       if(!res.unit[obj[i].id].nameKey){
-        if(unitList[obj[i].id.split(':')[0]]) res.unit[obj[i].id].nameKey = unitList[obj[i].id.split(':')[0]].name
+        if(dataList?.unitList[obj[i].id.split(':')[0]]) res.unit[obj[i].id].nameKey = dataList?.unitList[obj[i].id.split(':')[0]].name
       }
     }
   }

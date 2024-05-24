@@ -16,7 +16,7 @@ module.exports = async(obj = {}, opt = {}, pObj = {})=>{
 
   let uInfo = await findUnit(obj, unit)
   if(uInfo === 'GETTING_CONFIRMATION') return
-  if(uInfo.msg2send) return uInfo.msg2send
+  if(uInfo?.msg2send) return uInfo.msg2send
   if(!uInfo?.baseId) return { content: `Error finding **${unit}**` }
   if(uInfo.combatType === 2) return { content: 'Ships don\'t have gear' }
 

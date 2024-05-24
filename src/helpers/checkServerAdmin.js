@@ -1,4 +1,5 @@
 'use strict'
+const mongo = require('mongoclient')
 module.exports = async(obj = {})=>{
   if(!obj.member?.user?.id) return
   if(obj.guild?.owner_id == obj.member.user.id) return true

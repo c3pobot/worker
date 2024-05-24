@@ -61,7 +61,7 @@ module.exports = async(obj = {}, opt = {})=>{
     let pObj = await getGuildId({dId: obj.member?.user?.id}, {}, [])
     if(!pObj?.guildId) return { content: 'your discord Id is not linked to allyCode' }
 
-    let gObj = await swgohClient.post('fetchGuild', {token: obj.token, id: guildId, projection: { playerId: 1, name: 1, rosterUnit: { definitionId: 1, currentRarity: 1, relic: 1, gp: 1} }}, null)
+    let gObj = await swgohClient.post('fetchGuild', { guildId: pObj?.guildId, projection: { playerId: 1, name: 1, rosterUnit: { definitionId: 1, currentRarity: 1, relic: 1, gp: 1} }}, null)
     if(!gObj?.member || gObj?.member?.length === 0) return { content: 'error getting guild data' }
 
     let rosterUnits = []

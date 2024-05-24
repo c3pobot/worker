@@ -1,6 +1,6 @@
 'use strict'
 const sorter = require('json-array-sorter')
-const getUnit = require('src/helpers')
+const getUnit = require('./getUnit')
 const { formatWebUnit } = require('src/format')
 
 module.exports = async(fInfo = {}, roster = [], Format = formatWebUnit, maxUnits = 40)=>{

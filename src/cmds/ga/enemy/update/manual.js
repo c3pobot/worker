@@ -26,7 +26,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!gaInfo) gaInfo = { units: [], enemies: [] }
   if(!gaInfo.units) gaInfo.units = [];
   if(!gaInfo.enemies) gaInfo.enemies = [];
-  if(!gaInfo.playerId && pObj.id) gaInfo.playerId = pObj.id
+  if(!gaInfo.playerId && dObj.playerId) gaInfo.playerId = dObj.playerId
   let allyCodes = opt.allycodes?.value?.toString()?.trim()?.replace(/-/g, '')?.split(' ')
   if(!allyCodes || allyCodes?.length == 0) return { content: `you did not provide any opponent allyCodes` }
 

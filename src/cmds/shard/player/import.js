@@ -30,11 +30,11 @@ module.exports = async(obj = {}, shard = {}, opt = {})=>{
   if(!auth) return { content: 'Adding players requires admin permissions' }
 
   let emoji = opt.emoji?.value
-  msg2send.content = 'You do not have google or fb linked to you discordId'
   let dObj = await getDiscordAC(obj.member.user.id, opt)
   if(!dObj?.uId || !dObj?.type) return { content: 'this command requires google or code auth linked' }
 
   let lb = await swgohClient.oauth(obj, 'getLeaderboard', dObj, { leaderboardType: 2, combatType: (shard.type == 'char' ? 1:2) })
+  if(lb == 'GETTING_CONFIRMATION') return
   if(lb?.error == 'invalid_grant'){
     await replyTokenError(obj, dObj.allyCode)
     return;

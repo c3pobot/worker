@@ -7,7 +7,7 @@ const { getGuildId, checkGuildAdmin } = require('src/helpers')
 module.exports = async(obj = {}, opt = {})=>{
   let allyCode = +(opt.allycode?.value?.toString()?.trim()?.replace(/-/g, '') || 0)
   if(!allyCode) return { content: 'You must provide an allyCode for opponent guild' }
-  let pObj = await getGuildId({ dId: obj.user.id }, {}, opt)
+  let pObj = await getGuildId({ dId: obj.member?.user?.id }, {}, opt)
   if(!pObj.guildId) return { content: 'You do not have allycode linked to discordId' }
 
   let auth = await checkGuildAdmin(obj, opt, pObj)

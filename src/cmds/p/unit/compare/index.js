@@ -3,7 +3,7 @@ const getImg = require('./getImg')
 
 const { botSettings } = require('src/helpers/botSettings')
 
-const { getPlayerAC, findUnit, fetchPlayer } = require('src/helpers')
+const { getPlayerAC, findUnit, fetchPlayer, getRelicLevel } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {})=>{
   if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
@@ -24,18 +24,12 @@ module.exports = async(obj = {}, opt = {})=>{
   let pObj = await fetchPlayer({ allyCode: allyCode?.toString(), projection: { playerId: 1, name: 1, updated: 1, rosterUnit: { $elemMatch: { baseId: uInfo.baseId } }} })
   if(!pObj?.rosterUnit) return { content: `Error getting player data for **${allyCode}**` }
 
-  let rarity = opt.rarity?.value, gType = opt.gear?.value, gValue = opt.value?.value, gLevel = 13, rLevel = botSettings.maxRelic || 11
+  let rarity = opt.rarity?.value
   if(rarity){
     if(rarity > 7 || 0 >= rarity) rarity = 7
     rarity = +rarity
   }
-  if(gType && gValue){
-    if(gType === 'g'){
-      rLevel = 0, gLevel = +gValue
-    }
-    if(gType === 'r'){
-      rLevel = gValue +2, rarity = 7
-    }
-  }
+  let { rLevel, gLevel } = getRelicLevel(opt)
+  if(rLevel) rLevel += 2
   return await getImg(uInfo, pObj, gLevel, rLevel, rarity)
 }

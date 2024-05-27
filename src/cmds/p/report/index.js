@@ -12,7 +12,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!allyCode) return { content: 'You do not have allycode linked to discordId' }
 
   let pObj = await swgohClient.post('fetchPlayer', {allyCode: allyCode.toString()})
-  if(!pObj.allyCode) return { content: '**'+allyCode+'** is an invalid allyCode' }
+  if(!pObj?.allyCode) return { content: '**'+allyCode+'** is an invalid allyCode' }
 
   let msg2send = { content: null, embeds: [] }
   let baseMsg = {

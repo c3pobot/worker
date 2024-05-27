@@ -37,7 +37,7 @@ module.exports = async(obj = {})=>{
     let pipeline = [], countPipeline = [], searchString = '^'+season+'-cleanup-'
     let msg2send = { content:  'No results found' }
     if(leader){
-      msg2send.content += 'No results found for **'+dataList.unitList[leader].name+'**'
+      msg2send.content += 'No results found for **'+dataList?.unitList[leader]?.name+'**'
       searchString += 'd'+leader+'-'
     }
 
@@ -119,7 +119,7 @@ module.exports = async(obj = {})=>{
     }
     if(!squads || squads?.length == 0) return { content: 'error getting squads' }
     info.season = season, info.mode = mode, info.total = totalBattles
-    info.header = 'GAC Season '+season+' '+mode+' '+(dataList.unitList[leader]?.name || dataList.unitList[units[0]]?.name)+' Cleanup Counters in '+totalBattles+' <br>'+numCounters+' total counters'
+    info.header = 'GAC Season '+season+' '+mode+' '+(dataList.unitList[leader]?.name || dataList.unitList[info?.units[0]]?.name)+' Cleanup Counters in '+totalBattles+' <br>'+numCounters+' total counters'
 
     let actionRow = [{ type: 1, components: [] }]
     if(skip > 0) actionRow[0].components.push({

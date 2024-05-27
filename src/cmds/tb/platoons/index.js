@@ -54,7 +54,7 @@ module.exports = async(obj ={}, opt = {})=>{
     if(tempData?.platoons) data = tempData
     if(!data){
       data = savedMap(guild.member, pDef.platoons, pConfig.find(x=>x.id === 'tbPlatoonIds-'+tbDay+'-'+tbId)?.data, tbDay)
-      //await mongo.set('tbPlatoonCache', {_id: guild?.id+'-'+tbDay+'-'+tbId}, {platoons: data?.platoons, tbId: tbId, guildId: guild.id, tbDay: tbDay})
+      await mongo.set('tbPlatoonCache', {_id: guild?.id+'-'+tbDay+'-'+tbId}, {platoons: data?.platoons, tbId: tbId, guildId: guild.id, tbDay: tbDay})
     }
     if(!data) return { content: 'Error calculating saved platoon data...' }
   }

@@ -2,7 +2,7 @@
 const sorter = require('json-array-sorter')
 
 const { dataList } = require('src/helpers/dataList')
-const { getPlayerAC, fetchPlayer, truncateString } = require('src/helpers')
+const { getPlayerAC, fetchPlayer, truncateString, getRelicLevel } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {})=>{
   if(!dataList?.unitList) return { content: 'unitList is empty' }
@@ -15,12 +15,11 @@ module.exports = async(obj = {}, opt = {})=>{
   let pObj = await fetchPlayer({ allyCode: allyCode.toString() })
   if(!pObj?.rosterUnit) return { content: 'error getting player data' }
 
-  let gType = opt.option?.value, gValue = opt.value?.value, sort = opt.sort?.value || 'nameKey', gLevel = 13, rLevel = 0, order = 'ascending'
+  let gType = opt.option?.value, gValue = opt.value?.value, sort = opt.sort?.value || 'nameKey', order = 'ascending'
   if(sort == 'gp') order = 'descending'
-  if(gType && gValue >= 0){
-    if(gType === 'g') gLevel = +gValue
-    if(gType === 'r') rLevel = +gValue + 2
-  }
+
+  let { rLevel, gLevel } = getRelicLevel(opt)
+  if(rLevel > 0) rLevel += 2
   let units = pObj?.rosterUnit?.filter(x=>x.relic?.currentTier >= rLevel && x.currentTier >= gLevel)?.map((u)=>{
     let baseId = u?.definitionId?.split(':')[0]
     return {

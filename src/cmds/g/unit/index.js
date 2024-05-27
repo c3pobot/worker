@@ -35,17 +35,6 @@ module.exports = async(obj = {}, opt = {})=>{
         relic: m.roster[uInfo.baseId].relicTier || 0
       }
     })
-    /*
-    units = gObj.member.filter(r=>r.rosterUnit?.some(u=>u.definitionId?.startsWith(uInfo.baseId+':') && u.currentTier >= gLevel && u.relic.currentTier >= rLevel)).map(m=>{
-      return Object.assign({}, {
-        member: m.name,
-        rarity: m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':') && x.currentTier >= gLevel && x.relic.currentTier >= rLevel).currentRarity,
-        gp: m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':') && x.currentTier >= gLevel && x.relic.currentTier >= rLevel).gp,
-        gear: +m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':') && x.currentTier >= gLevel && x.relic.currentTier >= rLevel).currentTier || 0,
-        relic: +(m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':') && x.currentTier >= gLevel && x.relic.currentTier >= rLevel).relic.currentTier - 2) || 0
-      })
-    })
-    */
   }
   if(uInfo.combatType == 2){
     units = gObj.member.filter(r=>r.roster && r.roster[uInfo.baseId])?.map(m=>{
@@ -55,15 +44,6 @@ module.exports = async(obj = {}, opt = {})=>{
         gp: m.roster[uInfo.baseId].gp
       }
     })
-    /*
-    units = gObj.member.filter(r=>r?.rosterUnit?.some(u=>u.definitionId.startsWith(uInfo.baseId+':'))).map(m=>{
-      return Object.assign({}, {
-        member: m.name,
-        rarity: m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':')).currentRarity,
-        gp: m.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':')).gp
-      })
-    })
-    */
   }
   if(units?.length > 0) units = sorter([{column: 'gp', order: 'descending'}], units)
   if(!units) return { content: 'error getting guild units...' }
@@ -125,7 +105,11 @@ module.exports = async(obj = {}, opt = {})=>{
         embedMsg.description = embedMsg.description.replace('<UNITCOUNT>', unitCount)
         if(msg2send.embeds.length < 11) msg2send.embeds.push(JSON.parse(JSON.stringify(embedMsg)))
         embedMsg.fields = []
-        embedMsg.description = uInfo.nameKey+' (<UNITCOUNT>/'+array.length+')'+(+rLevel > 0 && uInfo.combatType == 1 ? ' - Relic >= '+(+rLevel):'')+(+gLevel > 0 && uInfo.combatType == 1 ? ' - Gear >= '+gLevel:'')
+        embedMsg.description = uInfo.nameKey+' (<UNITCOUNT>/'+units.length+')'
+        if(uInfo.combatType == 1){
+          if(rLevel) embedMsg.description += ` - Relic >= ${rLevel}`
+          if(!rLevel && gLevel) embedMsg.description += ` - Gear >= ${gLevel}`
+        }
         tempObj.name = array[i].rarity+"★ : "
         tempObj.value = "```autohotkey\n GP   : "+(uInfo.combatType ==  1 ? 'G/R : ':'')+"Player\n"
         count = 0,

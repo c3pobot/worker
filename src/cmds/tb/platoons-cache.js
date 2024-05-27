@@ -10,8 +10,8 @@ module.exports = async(obj ={}, opt = {})=>{
   let pObj = await getGuildId({dId: obj.member.user.id}, {}, opt)
   if(!pObj?.guildId) return { content: 'you do not have discord id linked to allyCode' }
 
-  if(!obj.confirm?.tbDay){
-    await mongo.del('tbPlatoonCache', {guildId: pObj.guildId, tbDay: obj.confirm.tbDay})
+  if(obj.confirm?.tbDay){
+    await mongo.del('tbPlatoonCache', {guildId: pObj.guildId, tbDay: obj.confirm?.tbDay})
     return { content: 'tb platoon cache for Round '+obj.confirm.tbDay+' has been cleared' }
   }
 

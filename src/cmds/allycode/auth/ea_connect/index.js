@@ -6,7 +6,8 @@ const requestCode = require('./requestCode')
 const { getDiscordAC, replyComponent } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {})=>{
-  if(opt.confirm?.cancel) return { content: 'command canceled' }
+  
+  if(obj.confirm?.cancel) return { content: 'command canceled' }
   let allyCode = opt.allyCode, email = opt.email || obj.confirm?.email, code = opt.code || obj.confirm?.code
   if(!allyCode){
     let dObj = await getDiscordAC(obj.member.user.id, opt)

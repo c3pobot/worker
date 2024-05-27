@@ -4,12 +4,13 @@ const json2xls = require('json2xls');
 
 module.exports = async( obj = {} )=>{
   try{
-    let dObj = await getPlayerAC(obj, opt)
+
+    let dObj = await getPlayerAC(obj, obj.data?.options)
     let allyCode = dObj?.allyCode
     if(dObj?.mentionError) return { content: 'that user does not have allyCode linked to discordId' }
     if(!allyCode) return { content: 'Your discord id is not linked to allyCode'}
 
-    let pObj = await getGuildId(allyCode)
+    let pObj = await getGuildId({}, { allyCode: +allyCode })
     if(!pObj?.guildId) return { content: 'error findig guildId' }
 
     let gObj = await fetchGuild({ guildId: pObj.guildId })

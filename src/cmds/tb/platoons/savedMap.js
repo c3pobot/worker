@@ -31,13 +31,13 @@ function getUnits(baseId, members = [], playerUnitCount = {}, preAssigned, maxUn
   let res = members.filter(x=>(!playerUnitCount[x?.playerId] || maxUnit > playerUnitCount[x.playerId]) && (!preAssigned || !preAssigned?.has(x.playerId)))
   return res.filter(x=>x.rosterUnit?.filter(u=>u.definitionId?.startsWith(`${baseId}:`))?.length > 0).map(x=>{
     let unit = x.rosterUnit.find(y=>y.definitionId?.startsWith(baseId+':'))
-    return { player: x.name, playerId: x.playerId, baseId: baseId, relicTier: +(unit?.relic?.currentTier || 0), rarity: +(unit.currentRarity || 0), level: +(unit.currentLevel || 0), tier: +(unit.currentTier || 0), sort: unit.sort }
+    return { player: x.name, playerId: x.playerId, allyCode: +x?.allyCode, baseId: baseId, relicTier: +(unit?.relic?.currentTier || 0), rarity: +(unit.currentRarity || 0), level: +(unit.currentLevel || 0), tier: +(unit.currentTier || 0), sort: unit.sort }
   })
 }
 function getAssignedUnit(baseId, member, rarity, unitRelicTier){
   let unit = member?.rosterUnit.find(x=>x.definitionId?.startsWith(`${baseId}:`))
   if(!unit || unit?.currentRarity < rarity) return
-  if(!unit.relic || unit.relic?.currentTier >= unitRelicTier) return { player: member.name, playerId: member.playerId, baseId: baseId, relicTier: +(unit?.relic?.currentTier || 0), rarity: +(unit.currentRarity || 0), level: +(unit.currentLevel || 0), tier: +(unit.currentTier || 0), sort: +(unit.relic?.currentTier || 0) + +(unit.currentTier || 0) }
+  if(!unit.relic || unit.relic?.currentTier >= unitRelicTier) return { player: member.name, playerId: member.playerId, allyCode: +member?.allyCode, baseId: baseId, relicTier: +(unit?.relic?.currentTier || 0), rarity: +(unit.currentRarity || 0), level: +(unit.currentLevel || 0), tier: +(unit.currentTier || 0), sort: +(unit.relic?.currentTier || 0) + +(unit.currentTier || 0) }
 }
 function getNumUnits(member = [], baseId, relicTier = 1, rarity = 1, combatType = 1){
   return +(member.filter(x=>x.rosterUnit.filter(y=>y.definitionId?.startsWith(baseId+':') && y.currentRarity >= 0 && (combatType === 2 || y.relic?.currentTier >= relicTier)).length > 0).length || 0)
@@ -56,6 +56,7 @@ function mapUnits(unit = {}, platoon = {}, squad = {}, data = {}){
       let tempUnit = getAssignedUnit(unit.baseId, data.members?.find(x=>x.playerId === assigned[i]), unit.rarity, unit.unitRelicTier)
       if(!tempUnit) continue
       tempUnit.nameKey = unit.nameKey
+
       tempUnit.assigned = true
       tempUnit.player += ' (A)'
       squad.units.push(tempUnit)

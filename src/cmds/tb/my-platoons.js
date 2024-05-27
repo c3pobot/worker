@@ -3,6 +3,7 @@ const mongo = require('mongoclient')
 
 const getPlatoonConfig = require('./getPlatoonConfig')
 const { getPlayerAC, fetchPlayer, replyComponent, getGuildId } = require('src/helpers')
+const swgohClient = require('src/swgohClient')
 
 module.exports = async(obj ={}, opt = [])=>{
   if(obj.confirm?.cancel) return { content: 'Command canceled' }
@@ -11,7 +12,7 @@ module.exports = async(obj ={}, opt = [])=>{
   let allyCode = allyObj?.allyCode
   if(!allyCode) return { content: "You do not have allyCode linked to discord Id" }
 
-  let pObj = await getGuildId({ dId: obj.member?.id}, {allyCode: allyCode})
+  let pObj = await fetchPlayer({ allyCode: +allyCode})
   if(!pObj?.guildId) return { content: 'Error getting guildId' }
 
   let tbId = opt['tb-name']?.value || 't05D', tbDay = obj.confirm?.tbDay

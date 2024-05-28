@@ -27,7 +27,7 @@ module.exports = async(uInfo, unit = {})=>{
   if(unit?.stats){
     res.stats = await getUnitStats(unit.stats, uInfo.combatType)
     res.damage = await getAblityDmg(unit, uInfo)
-    res.specStats = await specStats(unit)
+    res.specStat = await specStats(unit)
   }
   if(uInfo.combatType == 1){
     if(unit?.stats){

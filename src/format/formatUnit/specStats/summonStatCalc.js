@@ -100,6 +100,5 @@ module.exports = async(unit = {})=>{
 
   }
   sInfo.stats = cleanStats
-  console.log(sInfo)
   return(sInfo)
 }

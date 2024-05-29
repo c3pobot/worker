@@ -21,7 +21,6 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
   let auth = await checkShardAdmin(obj, shard)
   if(!auth) return { content: 'Only shard admins are able to remove players' }
 
-  msg2send.content = 'You did not provide the correct information'
   let allyCode = opt.allycode?.value?.toString().trim()?.replace(/-/g, '')
   if(!allyCode) return { content: 'you did not provide an allyCode' }
 

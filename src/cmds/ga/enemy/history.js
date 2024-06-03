@@ -1,4 +1,5 @@
 'use strict'
+const mongo = require('mongoclient')
 const getImg = require('src/cmds/ga/history/getImg')
 const { getDiscordAC } = require('src/helpers')
 

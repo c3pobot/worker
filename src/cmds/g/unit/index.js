@@ -15,7 +15,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let uInfo = await findUnit(obj, unit)
   if(uInfo === 'GETTING_CONFIRMATION') return
   if(uInfo?.msg2send) return uInfo.msg2send
-  if(!uInfo.baseId) return { content: `Error finding unit **${unit}**` }
+  if(!uInfo?.baseId) return { content: `Error finding unit **${unit}**` }
 
   let pObj = await getGuildId({}, { allyCode: allyCode })
   if(!pObj?.guildId) return { content: 'error finding guildId...' }

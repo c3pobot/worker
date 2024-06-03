@@ -12,6 +12,7 @@ const checkServerAdmin = async(obj = {})=>{
   if(!roles || roles?.length == 0) return [ false, null ]
 
   if(server?.admin?.filter(x=>roles?.includes(x.id)).length > 0) return [ true, server ]
+  return [ false, null ]
 }
 
 module.exports = async(obj = {}, opt = {}, gObj)=>{

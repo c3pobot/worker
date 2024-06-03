@@ -25,6 +25,7 @@ module.exports = async(obj = {}, opt = {})=>{
       })
       if(msg2send.components[x].components.length == 5) x++;
     }
+    if(!msg2send.components[x]) msg2send.components[x] = { type:1, components: []}
     msg2send.components[x].components.push({
       type: 2,
       label: 'Cancel',

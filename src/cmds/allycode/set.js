@@ -1,6 +1,6 @@
 'use strict'
 const mongo = require('mongoclient')
-
+const { replyComponent } = require('src/helpers')
 module.exports = async(obj = {}, opt = {})=>{
   if(obj.confirm?.cancel) return { content: 'command canceled...' }
 
@@ -20,25 +20,26 @@ module.exports = async(obj = {}, opt = {})=>{
               type: 2,
               label: 'Primary',
               style: 1,
-              custom_id: JSON.stringify({dId: obj.members?.user?.id, opt: 'primary'})
+              custom_id: JSON.stringify({dId: obj.members?.user?.id, opt: 'primary', id: obj.id })
             },
             {
               type: 2,
               label: 'Alt',
               style: 1,
-              custom_id: JSON.stringify({dId: obj.members?.user?.id, opt: 'alt'})
+              custom_id: JSON.stringify({dId: obj.members?.user?.id, opt: 'alt', id: obj.id })
             },
             {
               type: 2,
               label: 'Cancel',
               style: 4,
-              custom_id: JSON.stringify({dId: obj.members?.user?.id, cancel: true})
+              custom_id: JSON.stringify({dId: obj.members?.user?.id, cancel: true, id: obj.id })
             }
           ]
         }
       ]
     }
-    return msg2send
+    await replyComponent(obj, msg2send)
+    return
   }
 
   if(!allyCode){
@@ -53,7 +54,7 @@ module.exports = async(obj = {}, opt = {})=>{
         type: 2,
         label: dObj.allyCodes[i].name+' ('+dObj.allyCodes[i].allyCode+')',
         style: 1,
-        custom_id: JSON.stringify({dId: obj.members?.user?.id, opt: option, allyCode: dObj.allyCodes[i].allyCode})
+        custom_id: JSON.stringify({dId: obj.members?.user?.id, opt: option, allyCode: dObj.allyCodes[i].allyCode, id: obj.id })
       })
       if(msg2send.components[x].components.length == 5) x++;
     }
@@ -61,9 +62,10 @@ module.exports = async(obj = {}, opt = {})=>{
       type: 2,
       label: 'Cancel',
       style: 4,
-      custom_id: JSON.stringify({dId: obj.members?.user?.id, cancel: true})
+      custom_id: JSON.stringify({dId: obj.members?.user?.id, cancel: true, id: obj.id})
     })
-    return msg2send
+    await replyComponent(obj, msg2send)
+    return
   }
 
   if(dObj.allyCodes.find(x=>x.opt == option)) delete dObj.allyCodes.filter(x=>x.opt == option)[0].opt

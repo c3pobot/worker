@@ -7,8 +7,8 @@ const { getImg } = require('src/helpers')
 module.exports = async(uInfo = {}, pObj = {}, eObj = {})=>{
   try{
     let [ pUnit, eUnit ] = await Promise.allSettled([
-      formatUnit(uInfo, pObj.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':'))),
-      formatUnit(uInfo, eObj.rosterUnit.find(x=>x.definitionId.startsWith(uInfo.baseId+':')))
+      formatUnit(uInfo, pObj?.rosterUnit?.find(x=>x.definitionId.startsWith(uInfo.baseId+':'))),
+      formatUnit(uInfo, eObj?.rosterUnit?.find(x=>x.definitionId.startsWith(uInfo.baseId+':')))
     ])
     if(!pUnit?.value?.nameKey && !eUnit?.value?.nameKey) return { content: 'Neither player has **'+uInfo.nameKey+'**' }
 

@@ -10,10 +10,10 @@ const fetchHistory = async(playerId, key, season)=>{
 module.exports = async(playerId, key, season)=>{
   if(!playerId || !key || !season) return
   let res = await fetchHistory(playerId, key, season)
-  if(res) return {
+  if(res?.matchResult) return {
     date: res.date,
     mode: res.mode,
-    matchResult: res.matchResult.map(x=>{
+    matchResult: res?.matchResult?.map(x=>{
       return {
         matchId: x.matchId,
         home: x.home,

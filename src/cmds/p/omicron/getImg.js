@@ -14,7 +14,7 @@ module.exports = async(pObj = {}, opt = {})=>{
     let omiType = +(opt.type?.value || 0), omiFilter
     if(omiType){
       omiFilter = (x=>x.omicronMode === omiType)
-      if(OmiFilter[omiType]?.filter) omiFilter = OmiFilter[omiType]?.filter
+      if(omiFilter[omiType]?.filter) omiFilter = omiFilter[omiType]?.filter
     }
     let omiData = await mongo.find('omicronList', {})
     if(!omiData || omiData?.length == 0) return { content: 'error getting omicrons from db' }

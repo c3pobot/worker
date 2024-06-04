@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 
 module.exports = async(obj = {}, opt = {})=>{
   let trigger = opt.trigger?.value?.toString()?.trim()?.toLowerCase()
-  let response = opt.response?.value?.toString()?.trim()?.toLowerCase()
+  let response = opt.response?.value?.toString()?.trim()
   let crca = opt.anywhere?.value
 
   if(!trigger || !response) return { content: 'You did not provide the correct information' }

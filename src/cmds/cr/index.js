@@ -6,7 +6,7 @@ Cmds.clear = require('./clear')
 Cmds.edit = require('./edit')
 Cmds.list = require('./list')
 Cmds.remove = require('./remove')
-const { checkServerAdmin, replyError, adminNoAuth } = require('src/helpers')
+const { checkServerAdmin, replyError, adminNotAuth } = require('src/helpers')
 module.exports = async(obj = {})=>{
   try{
     let auth = await checkServerAdmin(obj)
@@ -17,7 +17,7 @@ module.exports = async(obj = {})=>{
       msg2send = await Cmds[tempCmd](obj, opt)
       return msg2send
     }
-    await adminNotAuth(obj)
+    return { content: `this command requires a server admin role registered to the bot...`}
   }catch(e){
     replyError(obj)
     throw(e)

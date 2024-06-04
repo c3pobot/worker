@@ -23,6 +23,6 @@ module.exports = async(obj = {}, dObj, channelId)=>{
       limit: 10000
     }]
   }
-  let logs = await swgohClient.post('getChannelEvents', payload, identity)
+  let logs = await swgohClient.oauthPost('getChannelEvents', payload, identity)
   if(logs?.event) return logs
 }

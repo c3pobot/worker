@@ -13,7 +13,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let allyObj = await getPlayerAC(obj, opt)
   if(allyObj?.mentionError) return { content: 'that user does not have allyCode linked to discordId' }
   let allyCode = allyObj?.allyCode
-  if(!allyCode) return msg2send
+  if(!allyCode) return { content: 'your allyCode is not linked to your discordId' }
 
   let unit = opt.unit?.value?.toString()?.trim()
   if(!unit) return { content: 'you did not provide a unit' }

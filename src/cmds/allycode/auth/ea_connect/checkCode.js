@@ -27,7 +27,7 @@ module.exports = async(obj = {}, opt = {}, allyCode, email, authCode)=>{
     androidId: tempAuth.deviceId,
     platform: 'Android'
   }
-  let pObj = await swgohClient.post('getInitialData', {}, identity)
+  let pObj = await swgohClient.oauthPost('getInitialData', {}, identity)
   if(!pObj?.player?.allyCode) return { content: 'error trying to get player data' }
   if(pObj.player.allyCode.toString() !== allyCode.toString()){
     log.error(`ea connect error: Requested: ${allyCode} From game: ${pObj.player.allyCode}`)

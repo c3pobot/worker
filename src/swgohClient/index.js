@@ -11,3 +11,4 @@ module.exports.post = async(method, opt = {}, identity = null)=>{
 }
 module.exports.oauth = require('./oauth')
 module.exports.Google = require('./oauth/google')
+module.exports.oauthPost = require('./oauthPost')

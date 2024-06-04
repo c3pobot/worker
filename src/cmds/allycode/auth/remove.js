@@ -6,7 +6,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let pObj = await getDiscordAC(obj.member.user.id, opt)
   let dObj = (await mongo.find('discordId', { _id: obj.member?.user?.id }))[0]
   if(!pObj?.allyCode || !dObj.allyCodes) return { content: 'Your allyCode is not linked to your discord id...' }
-  if(!pObj.uId || pObj.type) return { content: `**${allyCode}** does not have bot login auth set up...`}
+  if(!pObj.uId || pObj.type) return { content: `**${pObj?.allyCode}** does not have bot login auth set up...`}
 
   if(opt.confirm?.value !== 1) return { content: 'command canceled...'}
 

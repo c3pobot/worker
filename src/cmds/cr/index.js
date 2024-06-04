@@ -17,7 +17,7 @@ module.exports = async(obj = {})=>{
       msg2send = await Cmds[tempCmd](obj, opt)
       return msg2send
     }
-    await adminNoAuth(obj)
+    await adminNotAuth(obj)
   }catch(e){
     replyError(obj)
     throw(e)

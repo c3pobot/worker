@@ -42,6 +42,7 @@ module.exports = async(obj = {}, opt = {})=>{
     return
   }
   let battleLog = await getChannelLogs(obj, dObj, zoneChannelId)
+  //if(battleLog) await mongo.set('tempCache', { _id: 'battleLog' }, { data: battleLog })
   if(battleLog === 'GETTING_CONFIRMATION') return;
   if(!battleLog?.event || battleLog?.event?.length == 0){
     await replyComponent(obj, { content: `Error getting battle log for ${zoneMap[zoneId]?.nameKey}`, components: buttons }, method)

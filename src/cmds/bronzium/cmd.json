@@ -3,7 +3,7 @@
   "worker": "oauth",
   "cmd": {
     "name": "bronzium",
-    "description": "open multiple Bronzium Data Cards (default 100)",
+    "description": "Requires google/EA connect link",
     "options": [
       {
         "type": 4,

@@ -12,23 +12,19 @@ const damageTypes = {
   'MAX_HEALTH': 'Max Health'
 }
 const cleanDesc = (string)=>{
-  try{
-    let retString = '', array = []
-    string = string.replace(/\[c\]/g, '**')
-    string = string.replace(/\[\/c]/g, '**')
-    string = string.replace(/\[-\]/g, '')
-    string = string.replace(/\[\w{1,6}\]/g, '')
-    /*
-    string = string.replace(/\[ffff33\]/g, '')
-    string = string.replace(/\[f0ff23\]/g, '')
-    string = string.replace(/\[FFCC33\]/g, '')
-    */
-    array = string.split('\\n')
-    for(let i in array) retString += array[i].replace('\\n', '')+'\n'
-    return retString
-  }catch(e){
-    console.log(e)
-  }
+  let retString = '', array = []
+  string = string.replace(/\[c\]/g, '**')
+  string = string.replace(/\[\/c]/g, '**')
+  string = string.replace(/\[-\]/g, '')
+  string = string.replace(/\[\w{1,6}\]/g, '')
+  /*
+  string = string.replace(/\[ffff33\]/g, '')
+  string = string.replace(/\[f0ff23\]/g, '')
+  string = string.replace(/\[FFCC33\]/g, '')
+  */
+  array = string.split('\\n')
+  for(let i in array) retString += array[i].replace('\\n', '')+'\n'
+  return retString
 }
 const enumSkill = {
   b: 'Basic',
@@ -46,6 +42,7 @@ module.exports = async(obj = {}, opt = [])=>{
 
   let uInfo = await findUnit(obj, unit)
   if(uInfo === 'GETTING_CONFIRMATION') return
+  if(uInfo?.baseId) uInfo = (await mongo.find('skills', { _id: uInfo.baseId }))[0]
   if(!uInfo?.baseId) return { content: 'Error finding unit **'+unit+'**' }
 
   let skillType = opt.type?.value, skillIndex = obj.confirm?.skillIndex
@@ -90,7 +87,11 @@ module.exports = async(obj = {}, opt = [])=>{
 
   if(!skill) return { content: `Error getting skill for **${uInfo.nameKey}**`}
 
-  let aInfo = await getAbilityDamage(skill)
+  let aInfo = getAbilityDamage(skill), maxTierIndex = 0, skillCoolDown
+  if(skill?.tiers?.length > 0){
+    maxTierIndex = skill.tiers.length - 1
+    skillCoolDown = skill.tiers[maxTierIndex]?.cooldownMaxOverride || 0
+  }
   let msgTitle = enumSkill[skill.abilityId.charAt(0)]
   if(skill.abilityId.startsWith('ult')) msgTitle = 'Ultimate'
   msgTitle += ' - '+skill.nameKey
@@ -103,7 +104,10 @@ module.exports = async(obj = {}, opt = [])=>{
     color: 15844367,
     title: uInfo.nameKey+'\n'+msgTitle,
   }
-  embedMsg.description = await cleanDesc(skill.descKey)
+  if(skillCoolDown) embedMsg.description = `**${skillCoolDown} turn cooldown**\n\n`
+  if(!embedMsg.description) embedMsg.description = ''
+  embedMsg.description += cleanDesc(skill.descKey)
+
   if(aInfo?.length > 0){
     embedMsg.description += '\n**Ability Multiper**\n'
     for(let i in aInfo) embedMsg.description += aInfo[i].type+' x '+numeral(aInfo[i].multipler).format('0.000')+'\n'

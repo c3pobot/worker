@@ -14,11 +14,10 @@ module.exports = (units = [], roster = [], combatType = 3, foundUnits = [], foun
   let res = []
   for(let i in units){
     let uInfo = dataList?.unitList[units[i].baseId]
-
     if(foundUnits.filter(x=>x.baseId === units[i].baseId).length == 0 && foundFactionUnits.filter(x=>x.baseId === units[i].baseId).length === 0){
       if(uInfo.name && (combatType === 3 || uInfo?.combatType === combatType)){
-        const pUnit = roster.find(x=>x.definitionId.startsWith(uInfo.baseId+':'))
-        const tempObj = formatWebUnit(pUnit, uInfo)
+        let pUnit = roster.find(x=>x.definitionId.startsWith(uInfo.baseId+':'))
+        let tempObj = formatWebUnit(pUnit, uInfo)
         if(tempObj){
           tempObj.notMet = 0
           tempObj.equipment = pUnit?.equipment

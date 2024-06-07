@@ -13,7 +13,7 @@ module.exports = async(template = {}, roster = [])=>{
     if(gUnits?.length > 0) res = res.concat(gUnits)
   }
   if(template?.factions?.length > 0){
-    let fUnits = checkFactions(template.factions, roster, res)
+    let fUnits = await checkFactions(template.factions, roster, res)
     if(fUnits?.length > 0) res = res.concat(fUnits)
   }
   if(res.length > 0) info.unitCount = +res.length

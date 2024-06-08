@@ -15,7 +15,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!uInfo?.baseId) return { content: 'Error finding unit **'+unit+'**' }
 
   let rarity = +(opt.rarity?.value || 7)
-  let { gLevel, rLevel } = getRelicLevel(opt, botSettings.maxRelic || 11, 13)
+  let { gLevel, rLevel } = getRelicLevel(opt, +(botSettings.maxRelic || 11), 13)
   if(rLevel > 0) rLevel += 2
   let webUnit = await getFakeUnit(uInfo, +gLevel, +rLevel, +rarity, true)
   if(webUnit) webUnit = await formatUnit(uInfo, webUnit)

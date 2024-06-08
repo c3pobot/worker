@@ -28,7 +28,7 @@ module.exports = async(obj = {})=>{
 
     let socialTotal = pObj.data.inventory.currencyItem.find(x=>x.currency == 4)?.quantity
     if(!socialTotal) return { content: 'You do not have enough allypoints' }
-
+    
     socialTotal = +socialTotal
     let packId = getPackId(pObj.data)
     if(!packId) return { content: 'Error getting pack Id' }

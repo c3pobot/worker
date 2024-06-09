@@ -38,6 +38,7 @@ const getFakeUnit = async(uInfo = {}, gLevel = 0, rLevel = 0, rarity = 0, calcSt
   if(!tempUnit) return
   //add gp for max mods to char units.
   if(uInfo.combatType === 1) tempUnit.gp += 2295
+  mongo.set('fakeUnitCache', { _id: uInfo.baseId }, tempUnit)
   return tempUnit
 }
 module.exports = getFakeUnit

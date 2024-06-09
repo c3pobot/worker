@@ -20,6 +20,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let fInfo2, fInfo = await findFaction(obj, faction)
   if(fInfo === 'GETTING_CONFIRMATION') return
   if(fInfo?.msg2send) return fInfo?.msg2send
+  
   if(!fInfo?.units || fInfo?.units?.length == 0) return { content: `Error finding faction **${faction}**` }
 
   if(fInfo.units) fInfo.units = fInfo.units.filter(x=>x.combatType === combatType)

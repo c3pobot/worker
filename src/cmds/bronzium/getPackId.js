@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 const log = require('logger')
 module.exports = (data = {})=>{
   if(data?.player?.allyCode && data?.store){
-    mongo.set('bronziumCache', { _id: data?.player?.allyCode }, data)
+    mongo.set('bronziumCache', { _id: data?.player?.allyCode }, { store: data.store, player: data.player, purchaseStats: data.purchaseStats, cooldownStatus: data.cooldownStatus })
   }else{
     log.info('something is wrong with the data')
   }

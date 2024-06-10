@@ -18,5 +18,9 @@ module.exports = (data = {})=>{
       packId = obj.id.split(':')[1]
     }
   }
+  if(!packId){
+    packId = 'premium-pack-silver'
+    if(data?.player?.countryCode === 'JP') packId = 'premium-pack-silver_JP'
+  }
   if(packId?.includes('premium-pack-silver')) return packId
 }

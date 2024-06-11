@@ -43,11 +43,12 @@ module.exports = async(obj = {}, opt = {})=>{
   let msg2send = { content: null, embeds: [] }
   let embedMsg = {
     color: 15844367,
-    timestamp: new Date()
+    timestamp: new Date(),
+    title: ''
   }
+  if(fInfo?.nameKey) embedMsg.title += `${fInfo.nameKey} `
   if(show !== 'ships' && chars?.length > 0){
-    embedMsg.title = 'Characters : '+effects.nameKey+' ('+chars.length+')'
-    if(fInfo?.nameKey) embedMsg.title += `\n${fInfo.nameKey}`
+    embedMsg.title += 'Characters : '+effects.nameKey+' ('+chars.length+')'
     embedMsg.description = ''
     if(skillType) embedMsg.description += `Ability Type : ${skillType}\n\n`
     embedMsg.description += effects.descKey+'\n```'
@@ -56,7 +57,7 @@ module.exports = async(obj = {}, opt = {})=>{
     msg2send.embeds.push(JSON.parse(JSON.stringify(embedMsg)))
   }
   if(show !== 'chars' && ships?.length > 0){
-    embedMsg.title = 'Ships : '+effects.nameKey+' ('+ships.length+')'
+    embedMsg.title += 'Ships : '+effects.nameKey+' ('+ships.length+')'
     embedMsg.description = effects.descKey+'\n```'
     for(let i in ships) embedMsg.description += ships[i].nameKey+' : '+enumSkill(ships[i]?.skill?.id)+' : '+ships[i].skill?.nameKey+'\n'
     embedMsg.description += '```'

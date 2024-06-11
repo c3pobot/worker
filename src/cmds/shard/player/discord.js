@@ -1,4 +1,5 @@
 'use strict'
+const mongo = require('mongoclient')
 const swgohClient = require('src/swgohClient')
 
 const { addPlayer } = require('./helper')

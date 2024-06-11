@@ -9,10 +9,10 @@ const deleteCachedPlayer = async(pId, count)=>{
     let obj = (await mongo.find('shardRankCache', {_id: pId}))[0]
     if(obj) await mongo.del('shardRankCache', {_id: pId})
     count--
-    if(count > 0) setTimeout(()=>DeleteCachedPlayer(pId, count), 10000)
+    if(count > 0) setTimeout(()=>deleteCachedPlayer(pId, count), 10000)
   }catch(e){
     log.error(e)
-    setTimeout(()=>DeleteCachedPlayer(pId, count), 10000)
+    setTimeout(()=>deleteCachedPlayer(pId, count), 10000)
   }
 }
 

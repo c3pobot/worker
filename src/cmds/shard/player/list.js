@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 const sorter = require('json-array-sorter')
 
 const { getShardName, truncateString } = require('src/helpers')
-const { WebHookMsg } = require('src/helpers/discordmsg')
+const { webHookMsg } = require('src/helpers/discordmsg')
 
 module.exports = async(obj = {}, shard = {}, opt = {})=>{
   let shardPlayers = await mongo.find('shardPlayers', {shardId: shard._id}, {_id: 1, name: 1, allyCode: 1, notify: 1, emoji: 1})
@@ -33,7 +33,7 @@ module.exports = async(obj = {}, shard = {}, opt = {})=>{
     count++
     if(+i + 1 == shardPlayers.length && count < fieldLength) count = +fieldLength
     if(count == fieldLength){
-      await WebHookMsg(obj.token, {  embeds: [JSON.parse(JSON.stringify(embedMsg))] }, 'POST')
+      await webHookMsg(obj.token, {  embeds: [JSON.parse(JSON.stringify(embedMsg))] }, 'POST')
       delete embedMsg.title
       embedMsg.description = 'allyCode : notify : name\n'
       count = 0

@@ -1,6 +1,6 @@
 'use strict'
 const { getPayouts, getShardName } = require('src/helpers')
-const { WebHookMsg } = require('src/helpers/discordmsg')
+const { webHookMsg } = require('src/helpers/discordmsg')
 
 module.exports = async(obj = {}, shard = {}, opt = {})=>{
   let fields = await getPayouts(shard)
@@ -28,7 +28,7 @@ module.exports = async(obj = {}, shard = {}, opt = {})=>{
       embedMsg.footer = {text: 'Updated'}
     }
     if(count == fieldLength){
-      await WebHookMsg(obj.token, { embeds: [JSON.parse(JSON.stringify(embedMsg))] }, 'POST')
+      await webHookMsg(obj.token, { embeds: [JSON.parse(JSON.stringify(embedMsg))] }, 'POST')
       delete embedMsg.title
       delete embedMsg.description
       embedMsg.fields = []

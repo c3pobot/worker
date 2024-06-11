@@ -3,6 +3,7 @@ const mongo = require('mongoclient')
 const sorter = require('json-array-sorter')
 const timeTillPayout = require('../timeTillPayout')
 const getLeadName = require('./getLeadName')
+const { dataList } = require('src/helpers/dataList')
 
 module.exports = async(obj, players = [], auto = false) => {
   if(players.length == 0) players = await mongo.find('shardRankCache', {shardId: obj._id}, {name: 1, poOffSet: 1, rank: 1, emoji: 1, arena: 1, allyCode: 1})
@@ -22,8 +23,8 @@ module.exports = async(obj, players = [], auto = false) => {
       if(obj.rankLeader && players[p].arena && players[p].arena[obj.type] && players[p].arena[obj.type].squad && players[p].arena[obj.type].squad.length > 0){
         tempObj.value += '**'+players[p].name+'**'
         let lead = players[p].arena[obj.type].squad.find(x=>x.squadUnitType == (obj.type == 'char' ? 2:3))
-        if(lead?.unitDefId && unitList[lead.unitDefId.split(':')[0]]){
-          let uInfo =  unitList[lead.unitDefId.split(':')[0]]
+        if(lead?.unitDefId && dataList?.unitList[lead.unitDefId.split(':')[0]]){
+          let uInfo =  dataList?.unitList[lead.unitDefId.split(':')[0]]
           if(uInfo){
             let leadName = getLeadName(uInfo, obj.alias, obj.truncateRankLeader)
             tempObj.value += ' ('+leadName+')'

@@ -2,6 +2,7 @@
 const Cmds = {}
 Cmds.check = require('./check')
 Cmds.compare = require('./compare')
+Cmds.default = require('./default')
 Cmds.list = require('./list')
 Cmds.stats = require('./stats')
 const { replyError } = require('src/helpers')

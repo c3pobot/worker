@@ -157,6 +157,104 @@
             ]
           }
         ]
+      },
+      {
+        "type": 2,
+        "name": "default",
+        "description": "manage player default squad",
+        "options": [
+          {
+            "type": 1,
+            "name": "add-unit",
+            "description": "add unit to player default squad",
+            "options": [
+              {
+                "type": 3,
+                "name": "unit",
+                "description": "unit to add",
+                "required": true,
+                "autocomplete": true,
+                "focused": true
+              },
+              {
+                  "type": 4,
+                  "name": "relic_level",
+                  "description": "Relic Level (default 5)",
+                  "required": false,
+                  "min_value": 1
+              },
+              {
+                  "type": 4,
+                  "name": "gear_level",
+                  "description": "Gear level (default 13)",
+                  "required": false,
+                  "min_value": 1
+              },
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "required": false,
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "remove-unit",
+            "description": "remove unit from player default squad",
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "required": false,
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "show-units",
+            "description": "show units for player default squad",
+            "options": [
+              {
+                "type": 3,
+                "name": "allycode_option",
+                "description": "primary or alt allycode",
+                "required": false,
+                "choices": [
+                  {
+                    "name": "Primary",
+                    "value": "primary"
+                  },
+                  {
+                    "name": "Alt",
+                    "value": "alt"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   },

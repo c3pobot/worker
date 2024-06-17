@@ -64,6 +64,39 @@
             "focused": true
           },
           {
+            "type": 5,
+            "name": "include_reward_unit",
+            "description": "include mats needed for guide unit (defaults to false)"
+          },
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "required": false,
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "squad",
+        "description": "Check inventory for mats needed for squad readiness (requires google link)",
+        "options": [
+          {
+            "type": 3,
+            "name": "squad",
+            "description": "squad name (default to save units from /inventory add-unit)"
+          },
+          {
             "type": 3,
             "name": "allycode_option",
             "description": "primary or alt allycode",

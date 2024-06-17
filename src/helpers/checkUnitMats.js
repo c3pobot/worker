@@ -5,7 +5,7 @@ const { dataList } = require('src/helpers/dataList')
 
 const getRelicMats = (unit = {}, relicRecipe = [], res = {}, inventory = [])=>{
   let neededRelicMats = getNeededRelicMats([], relicRecipe.filter(x=>(unit.reqRelic - 2) >= x.tier), (unit.relic - 2) || 0, unit.reqRelic - 2)
-  
+
   for(let i in neededRelicMats){
     if(neededRelicMats[i]?.count > 0){
       if(!res[neededRelicMats[i].id]){
@@ -38,12 +38,18 @@ const getGear = async(unit, res, inventory = [])=>{
     }
   }
 }
-module.exports = async(units = [], relicRecipe = [], inventory)=>{
-  let res = {relicMats: {}, gear: {}}
+module.exports = async(units = [], relicRecipe = [], inventory, guideUnit)=>{
+  let res = { relicMats: {}, gear: {} }
   for(let i in units){
     if(units[i].combatType === 2) continue;
-    if(units[i].reqRelic > 2 && units[i].reqRelic > units[i].relic) getRelicMats( units[i], relicRecipe, res.relicMats, inventory?.material )
-    if((units[i].reqGear > 0 && units[i].reqGear > units[i].gear) || (units[i].reqRelic > 2 && units[i].gear < 13)) await getGear( units[i], res.gear, inventory?.equipment )
+    if(units[i].reqRelic > 2 && units[i].reqRelic > units[i].relic) getRelicMats( units[i], relicRecipe, res.relicMats, inventory?.material)
+    if((units[i].reqGear > 0 && units[i].reqGear > units[i].gear) || (units[i].reqRelic > 2 && units[i].gear < 13)) await getGear( units[i], res.gear, inventory?.equipment)
+  }
+  if(guideUnit){
+    let relicMats = {}, gearMats = {}
+    getRelicMats({ reqRelic: 7 }, relicRecipe, relicMats, inventory?.material)
+    await getGear({ equipment: [], baseId: guideUnit, gear: 0 }, gearMats, inventory?.equipment)
+    res.guideUnit = { relicMats: relicMats, gear: gearMats }
   }
   return res
 }

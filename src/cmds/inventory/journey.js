@@ -23,6 +23,11 @@ module.exports = async(obj = {}, opt = {}, pObj = {})=>{
   let guideUnits = squadData.units.filter(x=>x.notMet && x.combatType === 1)
   if(guideUnits?.length === 0) return { content: 'All units are at the required gear/relic level for the event'}
 
+  let checkGuideUnit = false
+  if(opt.include_reward_unit?.value){
+    let guideUnit = (await mongo.find('units', { _id: guideTemplate.id }))[0]
+    if(guideUnit?.combatType === 1) guideUnits.push({ baseId: guideTemplate.id, reqRelic: 7, reqGear: 13, equipment: [], gear: 0, relic: 0, combatType: 1 })
+  }
   let mats = await checkUnitMats( guideUnits, relicRecipe, pObj?.inventory)
   if(!mats) return { content: 'Error Calcuting data'}
   let webData = {
@@ -31,7 +36,9 @@ module.exports = async(obj = {}, opt = {}, pObj = {})=>{
       player: pObj?.player?.name,
       nameKey: guideTemplate.name,
       updated: Date.now(),
-      includeInventory: true
+      includeInventory: true,
+      isJourneyGuide: true,
+      includeGuideUnit: opt.include_reward_unit?.value
     }
   }
   let imgHtml = await getHTML.journey(webData)

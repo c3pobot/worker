@@ -35,8 +35,8 @@ module.exports = async(obj = {}, opt = {})=>{
     msg2send.components[x].components.push({
       type: 2,
       label: 'Cancel',
-      style: 1,
-      custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user?.id, tbDay: 'none' })
+      style: 4,
+      custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user?.id, cancel: true })
     })
     await replyComponent(obj, msg2send)
     return

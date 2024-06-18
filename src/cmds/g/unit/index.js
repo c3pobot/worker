@@ -23,7 +23,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let gObj = await fetchGuild({ guildId: pObj.guildId, projection: { playerId: 1, name: 1, roster: { [uInfo.baseId]: 1 } } })
   if(!gObj?.member || gObj?.member?.length == 0) return { content: `error finding guild...` }
 
-  let { gLevel, rLevel } = getRelicLevel(opt, 0, 0), units = []
+  let { gLevel, rLevel } = getRelicLevel(opt, 2, 0), units = []
 
   if(uInfo.combatType == 1){
     units = gObj.member.filter(r=>r.roster && r.roster[uInfo.baseId] && r.roster[uInfo.baseId].gearTier >= gLevel && r.roster[uInfo.baseId].relicTier >= rLevel)?.map(m=>{
@@ -45,6 +45,7 @@ module.exports = async(obj = {}, opt = {})=>{
       }
     })
   }
+  if(opt.rarity?.value) units = units.filter(x=>x.rarity >= opt.rarity?.value)
   if(units?.length > 0) units = sorter([{column: 'gp', order: 'descending'}], units)
   if(!units) return { content: 'error getting guild units...' }
   if(units?.length == 0) return { content: `no one in the guild has **${uInfo.nameKey}** at the requested gear/relic level...` }
@@ -83,7 +84,7 @@ module.exports = async(obj = {}, opt = {})=>{
     if(rLevel) embedMsg.description += ` - Relic >= ${rLevel}`
     if(!rLevel && gLevel) embedMsg.description += ` - Gear >= ${gLevel}`
   }
-
+  if(opt.rarity?.value) embedMsg.description += ` - Rarity >= ${opt.rarity.value}`
   embedMsg.fields = []
   for(let i in array){
     let count = 0, unitCount = 0

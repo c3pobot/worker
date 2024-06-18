@@ -26,6 +26,14 @@
         "min_value": 1
     },
     {
+        "type": 4,
+        "name": "rarity",
+        "description": "Rarity",
+        "required": false,
+        "min_value": 1,
+        "max_value": 7
+    },
+    {
       "type": 6,
       "name": "user",
       "description": "@user to lookup",

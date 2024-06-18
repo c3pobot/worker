@@ -1,6 +1,6 @@
 'use strict'
 const { botSettings } = require('src/helpers/botSettings')
-module.exports = (opt = {}, default_relic = 5, default_gear = 13)=>{
+module.exports = (opt = {}, default_relic = 7, default_gear = 13)=>{
   let gLevel, rLevel
   if(!opt.relic_level?.value && !opt.gear_level?.value) return { gLevel: +default_gear, rLevel: +default_relic - 2 }
   if(opt.relic_level?.value){

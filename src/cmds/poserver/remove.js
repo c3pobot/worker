@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 const { removeShardCmds } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {})=>{
-  if(obj.confirm?.response !== 'yes') return { content: 'command canceled' }
+  if(obj.confirm?.response && obj.confirm.response !== 'no') return { content: 'command canceled' }
 
   let shardId = opt.shardid?.value || `${obj.guild_id}-${obj.channel?.parent_id}`
   let shard = (await mongo.find('payoutServers', {_id: shardId}))[0]

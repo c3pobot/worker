@@ -82,6 +82,39 @@
             "description": "show syncguild (Bot owner only)"
           }
         ]
+      },
+      {
+        "type": 2,
+        "name": "ga-clear",
+        "description": "clear ga history and counters (bot owner only)",
+        "options": [
+          {
+            "type": 1,
+            "name": "history",
+            "description": "clear ga history for given season (bot owner only)",
+            "options": [
+              {
+                "type": 4,
+                "name": "season",
+                "description": "season to clear",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "counters",
+            "description": "clear ga counters for given season (bot owner only)",
+            "options": [
+              {
+                "type": 4,
+                "name": "season",
+                "description": "season to clear",
+                "required": true
+              }
+            ]
+          }
+        ]
       }
     ]
   },

@@ -27,7 +27,13 @@ module.exports = (units = [], roster = [], combatType = 3, foundUnits = [], foun
             if(units[i].gear.name == 'gear') tempObj.reqGear = +units[i].gear.value
             if(units[i].gear.name == 'relic') tempObj.reqRelic = +units[i].gear.value
           }
-          if(tempObj.reqRarity && tempObj.rarity < tempObj.reqRarity) tempObj.notMet++
+          if(tempObj.reqRarity){
+            if(tempObj.rarity < tempObj.reqRarity){
+              tempObj.notMet++
+            }else{
+              tempObj.rarityMet = true
+            }
+          }
           if(tempObj.reqGear && tempObj.gear < tempObj.reqGear) tempObj.notMet++
           if(tempObj.reqRelic && tempObj.relic < tempObj.reqRelic) tempObj.notMet++
           if(tempObj.reqRarity && tempObj.reqRarity > 1) addRequirement(tempObj, tempObj.reqRarity.toString(), '*')

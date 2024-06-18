@@ -111,6 +111,7 @@ module.exports = async(obj = {}, opt = {})=>{
           if(rLevel) embedMsg.description += ` - Relic >= ${rLevel}`
           if(!rLevel && gLevel) embedMsg.description += ` - Gear >= ${gLevel}`
         }
+        if(opt.rarity?.value) embedMsg.description += ` - Rarity >= ${opt.rarity.value}`
         tempObj.name = array[i].rarity+"★ : "
         tempObj.value = "```autohotkey\n GP   : "+(uInfo.combatType ==  1 ? 'G/R : ':'')+"Player\n"
         count = 0,

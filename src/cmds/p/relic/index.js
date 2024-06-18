@@ -18,7 +18,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let gType = opt.option?.value, gValue = opt.value?.value, sort = opt.sort?.value || 'nameKey', order = 'ascending'
   if(sort == 'gp') order = 'descending'
 
-  let { rLevel, gLevel } = getRelicLevel(opt)
+  let { rLevel, gLevel } = getRelicLevel(opt, 7, 5)
   if(rLevel > 0) rLevel += 2
   let units = pObj?.rosterUnit?.filter(x=>x.relic?.currentTier >= rLevel && x.currentTier >= gLevel)?.map((u)=>{
     let baseId = u?.definitionId?.split(':')[0]

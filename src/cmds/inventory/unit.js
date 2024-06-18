@@ -19,7 +19,7 @@ module.exports = async(obj = {}, opt = {}, pObj = {})=>{
   if(uInfo?.msg2send) return uInfo.msg2send
   if(!uInfo?.baseId) return { content: `Error finding **${unit}**` }
   if(uInfo.combatType === 2) return { content: 'Ships don\'t have gear' }
-  let { gLevel, rLevel } = getRelicLevel(opt)
+  let { gLevel, rLevel } = getRelicLevel(opt, 7, 13)
 
   let unitGear = dataList?.gameData.unitData[uInfo.baseId]?.gearLvl
   if(!unitGear || !unitGear[gLevel]) return { content: `error getting ${uInfo.nameKey} gear data` }

@@ -70,6 +70,63 @@
             ]
           }
         ]
+      },
+      {
+        "type": 1,
+        "name": "units",
+        "description": "Show units available for raid (will limit to max of 50 units)",
+        "options": [
+          {
+            "type": 3,
+            "name": "raid",
+            "description": "Raid name (defaults to newest raid)",
+            "autocomplete": true,
+            "focused": true
+          },
+          {
+            "type": 3,
+            "name": "faction",
+            "description": "Faction to limit to",
+            "autocomplete": true,
+            "focused": true
+          },
+          {
+              "type": 4,
+              "name": "relic_level",
+              "description": "Relic Level",
+              "required": false,
+              "min_value": 1
+          },
+          {
+              "type": 4,
+              "name": "gear_level",
+              "description": "Gear level",
+              "required": false,
+              "min_value": 1
+          },
+          {
+            "type": 6,
+            "name": "user",
+            "description": "@user to lookup",
+            "required": false
+          },
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "required": false,
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
       }
     ]
   }

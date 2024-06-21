@@ -2,7 +2,7 @@
 const Cmds = {}
 Cmds.status = require('./status')
 Cmds.history = require('./history')
-Cmds['my-units'] = require('./my-units')
+Cmds.units = require('./units')
 
 const { replyError } = require('src/helpers')
 

@@ -7,7 +7,7 @@ module.exports = async(factions = [], roster = [], foundUnits = [])=>{
   for(let i in factions){
     let faction = (await mongo.find('factions', { _id: factions[i].baseId }))[0]
     if(!faction?.units || faction?.units?.length === 0) continue
-    let factionUnits = faction.units?.map(x=>{ return { baseId: x } })
+    let factionUnits = faction.units?.map(x=>{ return { baseId: x, rarity: factions[i].rarity || 0, gp: factions[i].gp || 0, gear: factions[i].gear || {} } })
 
     let req = JSON.parse(JSON.stringify(factions[i]))
     delete req.units

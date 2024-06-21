@@ -5,8 +5,8 @@ const formatUnequippedDiscs = require('./formatUnequippedDiscs')
 const { getImg } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {}, pObj = {})=>{
-  
-  let discDef = {}, discOpt = opt.options?.value || 1, res = { name: pObj.name, allyCode: pObj.allyCode, guild: pObj.guild, updated: pObj?.updated }
+
+  let discDef = {}, discOpt = opt.option?.value || 1, res = { name: pObj.name, allyCode: pObj.allyCode, guild: pObj.guild, updated: pObj?.updated }
   if(discOpt == 1 || discOpt == 2) res.equippedDisc = await formatEquppiedDiscs(pObj.conquestStatus.equippedArtifact, discDef)
   if(discOpt == 1 || discOpt == 3) res.unequppedDisc = await formatUnequippedDiscs(pObj.conquestStatus.unequippedArtifact, discDef)
   if(!res.equippedDisc && !res.unequppedDisc) return { content: 'Error getting disc info' }

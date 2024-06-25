@@ -1,0 +1,18 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "mods",
+    "description": "Show recommended mods for unit",
+    "options": [
+      {
+        "type": 3,
+        "name": "unit",
+        "description": "unit to check",
+        "required": true,
+        "autocomplete": true,
+        "focused": true
+      }
+    ]
+  },
+  "worker": "swgoh"
+}

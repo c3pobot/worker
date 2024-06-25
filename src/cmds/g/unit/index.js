@@ -64,17 +64,17 @@ module.exports = async(obj = {}, opt = {})=>{
   if(array?.length > 0) array = sorter([{column: 'rarity', order: 'descending'}], array)
   if(!array || array.length == 0) return { content: 'error sorting guild units...' }
 
-  let msg2send = { content: null, embeds: [] }
+  let msg2send = { content: null, embeds: [] }, iconURL = `https://game-assets.swgoh.gg/textures/${uInfo.thumbnailName}.png`
   let embedMsg = {
     color: 15844367,
     title: gObj.name+' ('+gObj.member.length+')',
     timestamp: new Date(gObj.updated),
     description: uInfo.nameKey+' (<UNITCOUNT>/'+units.length+')',
     author: {
-      icon_url: "https://swgoh.gg/static/img/assets/"+uInfo.thumbnailName+".png"
+      icon_url: iconURL
     },
     thumbnail:{
-      url: "https://swgoh.gg/static/img/assets/"+uInfo.thumbnailName+".png"
+      url: iconURL
     },
     footer:{
       text: 'Data Updated'

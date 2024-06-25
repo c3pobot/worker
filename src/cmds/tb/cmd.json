@@ -217,6 +217,29 @@
         ]
       },
       {
+        "type": 1,
+        "name": "special-mission",
+        "description": "check special mission pass/fail",
+        "options": [
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "required": false,
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      },
+      {
         "type": 2,
         "name": "gp",
         "description": "TB GP info",

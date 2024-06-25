@@ -8,6 +8,7 @@ Cmds.platoons = require('./platoons')
 Cmds['platoons-cache'] = require('./platoons-cache')
 Cmds['platoons-export'] = require('./platoons-export')
 Cmds['my-platoons'] = require('./my-platoons')
+Cmds['special-mission'] = require('./special-mission')
 const { replyError } = require('src/helpers')
 module.exports = async(obj = {})=>{
   try{

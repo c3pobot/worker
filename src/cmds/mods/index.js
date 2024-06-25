@@ -1,6 +1,7 @@
 'use strict'
 const mongo = require('mongoclient')
 const numeral = require('numeral')
+const { dataList } = require('src/helpers/dataList')
 const { findUnit, replyError } = require('src/helpers')
 const enumSlots = { 2: 'Square', 3: 'Arrow', 4: 'Diamond', 5: 'Triangle', 6: 'Circle', 7: 'Cross' }
 const enumStats = require('src/helpers/enum/stats')
@@ -39,8 +40,13 @@ module.exports = async(obj = {})=>{
     if(!mods?.sets) return { content: `error find mods for ${uInfo.nameKey}` }
 
     let iconURL = `https://game-assets.swgoh.gg/textures/${uInfo.thumbnailName}.png`
-    let embedMsg = { color: 15844367, author: { icon_url: iconURL }, thumbnail:{ url: iconURL } }
-    embedMsg.title = `${uInfo.nameKey} best mods based on ${mods.totalCount} units`
+    let embedMsg = { color: 15844367, author: { icon_url: iconURL }, thumbnail:{ url: iconURL }, description: '' }
+    if(dataList?.swgohgg[uInfo.baseId]?.url){
+      embedMsg.description += `[${uInfo.nameKey}](${dataList?.swgohgg[uInfo.baseId]?.url}best-mods)`
+    }else{
+      embedMsg.description += `${uInfo.nameKey}`
+    }
+    embedMsg.description += ` best mods based on ${mods.totalCount} units`
     embedMsg.fields = []
     let setsField = { name: 'ModSets', value: '' }
     for(let i=0;i<5;i++){

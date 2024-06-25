@@ -2,7 +2,8 @@ let dataList = {
   unitList: {},
   factionList: {},
   gameData: {},
-  gameVersion: ''
+  gameVersion: '',
+  swgohgg: {}
 }
 
 module.exports = { dataList }

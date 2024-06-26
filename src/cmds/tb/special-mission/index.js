@@ -80,28 +80,34 @@ module.exports = async(obj = {}, opt = {})=>{
   let events = await getData(obj, opt, dObj, mission, zoneId)
   if(events?.content) return { content: events.content }
   if(events === 'GETTING_CONFIRMATION') return
-  if(!events?.missionLogs || events?.missionLogs?.length === 0) return { content: 'there are no logs available for the event' }
+  if(!events?.attempt || events?.attempt?.length === 0) return { content: 'there are no logs available for the event' }
 
   let zoneDef = tbDef.conflictZoneDefinition?.find(x=>x.zoneDefinition?.zoneId === zoneId)?.zoneDefinition
-  let pass = [], fail = [], passSet = new Set(events.mainLogs)
-  for(let i in events.missionLogs){
-    if(passSet.has(events.missionLogs[i].id)){
-      pass.push(events.missionLogs[i])
+  let pass = [], fail = [], passSet = new Set(events.success)
+  for(let i in events.attempt){
+    if(passSet.has(events.attempt[i])){
+      pass.push(events.attempt[i])
     }else{
-      fail.push(events.missionLogs[i])
+      fail.push(events.attempt[i])
     }
   }
   let embedMsg = { color: 15844367, title: `${events.profile?.name} ${zoneDef.phase}-${zoneDef.conflict} ${zoneDef.nameKey} SM-${mission.slice(-1) || '1'} (${events.covert.successfulAttempts}/${events.covert.playersParticipated})`, description: '' }
   if(fail?.length > 0){
     embedMsg.description += '**Failed**\n```\n'
-    for(let i in fail) embeMsg.description += `${fail[i].name}\n`
+    for(let i in fail){
+      let member = events?.member?.find(x=>x.id === fail[i])
+      if(member?.name) embedMsg.description += `${member.name}\n`
+    }
     embedMsg.description += '```\n'
   }
   if(pass?.length > 0){
     embedMsg.description += '**Success**\n```\n'
-    for(let i in pass) embeMsg.description += `${pass[i].name}\n`
+    for(let i in pass){
+      let member = events?.member?.find(x=>x.id === pass[i])
+      if(member?.name) embedMsg.description += `${member?.name}\n`
+    }
     embedMsg.description += '```\n'
   }
-  embedMsg.description += 'Note: the results may be inaccurate because of the way the logs are only kept for a certain amount of time. Interpret it as you wish.'
-  return { content: null, embeds: [embeMsg], components: []}
+  //embedMsg.description += 'Note: the results may be inaccurate because of the way the logs are only kept for a certain amount of time. Interpret it as you wish.'
+  return { content: null, embeds: [embedMsg], components: []}
 }

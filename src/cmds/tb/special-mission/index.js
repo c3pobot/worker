@@ -12,7 +12,6 @@ const mapSpecialMissions = (coverts = [], conflicts = [], obj)=>{
     let conflict = conflicts.find(x=>x?.zoneDefinition?.zoneId === coverts[i].zoneDefinition.linkedConflictId)?.zoneDefinition
     if(!conflict) continue
     if(!res[conflict.phase]) res[conflict.phase] = { phase: conflict.phase, missions: [] }
-    //if(res[conflict.phase]) res[conflict.phase].missions.push({ phase: conflict.phase, conflict: conflict.conflict, zoneId: converts[i].zoneDefinition.zoneId, num: converts[i].zoneDefinition.zoneId?.slice(-1) || '1' })
     if(res[conflict.phase]) res[conflict.phase].missions.push({
       type: 2,
       label: `${conflict.phase}-${conflict.conflict} ${conflict.nameKey} SM-${coverts[i].zoneDefinition.zoneId?.slice(-1) || '1'}`,
@@ -41,9 +40,9 @@ module.exports = async(obj = {}, opt = {})=>{
     guildData.profile = gObj.profile
     await mongo.set('tbSMCache', { _id: dObj.uId }, guildData)
   }
-
-  let tbDef = (await mongo.find('tbDefinition', { _id:  guildData.definitionId }))[0]
-  if(!tbDef?._id) return { content: 'Error getting TB definition from db...' }
+  let tbSM = await mongo.find('tbSpecialMission', { tbId: guildData.definitionId})
+  tbSM = sorter([{ column: 'phaseNum', order: 'ascending'}], tbSM || [])
+  if(!tbSM || tbSM?.length === 0) return { content: 'Error getting TB definition from db...' }
 
   let mission = opt.mission?.value || obj.confirm?.sm
   if(mission){
@@ -51,20 +50,25 @@ module.exports = async(obj = {}, opt = {})=>{
     delete obj.confirm.sm
   }
   if(!mission){
-    let coverts = mapSpecialMissions(tbDef.covertZoneDefinition, tbDef.conflictZoneDefinition, obj)
-    if(!coverts || coverts?.length === 0) return { content: 'Error mapping special missions' }
+
     let x = 0, msg2send = {
       content: 'please select the Special Mission from below.',
       components: []
     }
-    for(let i in coverts){
-      if(!coverts[i].missions || coverts[i]?.missions?.length === 0) continue
-      for(let m in coverts[i].missions){
-        if(!msg2send.components[x]) msg2send.components[x] = { type:1, components: [] }
-        msg2send.components[x].components.push(coverts[i].missions[m])
-        if(msg2send.components[x].components.length == 5) x++;
-      }
+    for(let i in tbSM){
+      if(!msg2send.components[x]) msg2send.components[x] = { type:1, components: [] }
+      let buttonLabel = `${tbSM[i].phase}-${tbSM[i].conflict} ${tbSM[i].zoneName} SM-${tbSM[i].id?.slice(-1) || '1'}`
+      if(tbSM[i].rewardZone) buttonLabel = `${tbSM[i].phase} ${tbSM[i].rewardZone} unlock`
+      if(tbSM[i].rewardUnit?.nameKey) buttonLabel = `${tbSM[i].phase} ${tbSM[i].rewardUnit.nameKey} shard`
+      msg2send.components[x].components.push({
+        type: 2,
+        label: buttonLabel,
+        style: 1,
+        custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user.id, sm: tbSM[i].id })
+      })
+      if(msg2send.components[x].components.length == 5) x++;
     }
+
     if(!msg2send.components[x]) msg2send.components[x] = { type:1, components: [] }
     msg2send.components[x].components.push({
       type: 2,
@@ -75,14 +79,14 @@ module.exports = async(obj = {}, opt = {})=>{
     await replyComponent(obj, msg2send)
     return
   }
-  let zoneId = tbDef?.covertZoneDefinition?.find(x=>x?.zoneDefinition?.zoneId === mission)?.zoneDefinition?.linkedConflictId
-  if(!zoneId) return { content: 'Error getting zoneId'}
-  let events = await getData(obj, opt, dObj, mission, zoneId)
+  let specialMission = tbSM.find(x=>x.id === mission)
+  if(!specialMission?.zoneId) return { content: 'error finding that mission' }
+
+  let events = await getData(obj, opt, dObj, mission, specialMission.zoneId)
   if(events?.content) return { content: events.content }
   if(events === 'GETTING_CONFIRMATION') return
-  if(!events?.attempt || events?.attempt?.length === 0) return { content: 'there are no logs available for the event' }
+  if(!events?.attempt || events?.attempt?.length === 0) return { content: 'No one has attempted the mission yet' }
 
-  let zoneDef = tbDef.conflictZoneDefinition?.find(x=>x.zoneDefinition?.zoneId === zoneId)?.zoneDefinition
   let pass = [], fail = [], passSet = new Set(events.success)
   for(let i in events.attempt){
     if(passSet.has(events.attempt[i])){
@@ -91,7 +95,10 @@ module.exports = async(obj = {}, opt = {})=>{
       fail.push(events.attempt[i])
     }
   }
-  let embedMsg = { color: 15844367, title: `${events.profile?.name} ${zoneDef.phase}-${zoneDef.conflict} ${zoneDef.nameKey} SM-${mission.slice(-1) || '1'} (${events.covert.successfulAttempts}/${events.covert.playersParticipated})`, description: '' }
+  let msgTitle = `-${specialMission.conflict} ${specialMission.zoneName} SM-${mission.slice(-1) || '1'}`
+  if(specialMission.rewardZone) msgTitle = ` ${specialMission.rewardZone} unlock`
+  if(specialMission.rewardUnit?.nameKey) msgTitle = ` ${specialMission.rewardUnit.nameKey} shard`
+  let embedMsg = { color: 15844367, title: `${events.profile?.name} ${specialMission.phase}${msgTitle} (${events.covert.successfulAttempts}/${events.covert.playersParticipated})`, description: '' }
   if(fail?.length > 0){
     embedMsg.description += '**Failed**\n```\n'
     for(let i in fail){
@@ -108,6 +115,6 @@ module.exports = async(obj = {}, opt = {})=>{
     }
     embedMsg.description += '```\n'
   }
-  //embedMsg.description += 'Note: the results may be inaccurate because of the way the logs are only kept for a certain amount of time. Interpret it as you wish.'
+  
   return { content: null, embeds: [embedMsg], components: []}
 }

@@ -3,6 +3,7 @@ const log = require('logger')
 const mongo = require('mongoclient')
 const swgohClient = require('src/swgohClient')
 const playerCache = require('src/helpers/cache/player')
+const { replyComponent } = require('src/helpers')
 const getPlayer = async(allyCode)=>{
   try{
     if(!allyCode) return
@@ -14,10 +15,11 @@ const getPlayer = async(allyCode)=>{
     log.error(e)
   }
 }
+
 module.exports = async(obj = {}, patreon = {}, opt = {})=>{
   if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
 
-  let usr = opt.user.data, allyCode = obj.confirm?.allyCode || opt.allycode?.value?.toString()?.trim()?.replace(/-/g, '-'), count = 0
+  let usr = opt.user?.data, allyCode = obj.confirm?.allyCode || opt.allycode?.value?.toString()?.trim()?.replace(/-/g, '-'), count = 0
   if(!usr && !allyCode) return { content: 'You did not provide the correct information' }
 
   if(patreon.users) count += +patreon.users.length
@@ -41,7 +43,7 @@ module.exports = async(obj = {}, patreon = {}, opt = {})=>{
           type: 2,
           label: dObj.allyCodes[i].name+' ('+dObj.allyCodes[i].allyCode+')',
           style: 1,
-          custom_id: JSON.stringify({ dId: obj.member?.user?.id, allyCode: dObj.allyCodes[i].allyCode })
+          custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, allyCode: dObj.allyCodes[i].allyCode })
         })
         if(msg2send.components[x].components.length == 5) x++;
       }
@@ -49,14 +51,15 @@ module.exports = async(obj = {}, patreon = {}, opt = {})=>{
         type: 2,
         label: 'Cancel',
         style: 4,
-        custom_id: JSON.stringify({ dId: obj.member?.user?.id, cancel: true })
+        custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
       })
-      return msg2send
+      await replyComponent(obj, msg2send)
+      return
     }
   }
 
   allyCode = +allyCode
-  if(patreon?.users?.filter(x=+x.allyCode == +allyCode).length > 0) return { content: `${allyCode} is already in your list...`}
+  if(patreon?.users?.filter(x=>x.allyCode == +allyCode).length > 0) return { content: `${allyCode} is already in your list...`}
 
   let pObj = await getPlayer(allyCode)
   if(!pObj?.allyCode) return { content: `${allyCode} is not valid...`}

@@ -1,11 +1,12 @@
 'use strict'
 const mongo = require('mongoclient')
+const { replyComponent } = require('src/helpers')
 
 module.exports = async(obj = {}, patreon = {}, opt = [])=>{
   if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
   if(!patreon.users || patreon?.users?.length == 0) return { content: 'there are no users in your list...' }
 
-  let usr = opt.user.data, allyCode = obj.confirm?.allyCode || opt.allycode?.value?.toString()?.trim()?.replace(/-/g, '-')
+  let usr = opt.user?.data, allyCode = obj.confirm?.allyCode || opt.allycode?.value?.toString()?.trim()?.replace(/-/g, '-')
   if(!allyCode && usr){
     let dObj = (await mongo.find('discordId', { _id: usr.id }))[0]
     if(dObj?.allyCodes?.length === 0) return { content: 'That user does not have allyCode linked to discordId' }
@@ -23,7 +24,7 @@ module.exports = async(obj = {}, patreon = {}, opt = [])=>{
           type: 2,
           label: dObj.allyCodes[i].name+' ('+dObj.allyCodes[i].allyCode+')',
           style: 1,
-          custom_id: JSON.stringify({allyCode: dObj.allyCodes[i].allyCode})
+          custom_id: JSON.stringify({id: obj.id, dId: obj.member?.user?.id, allyCode: dObj.allyCodes[i].allyCode})
         })
         if(msg2send.components[x].components.length == 5) x++;
       }
@@ -31,12 +32,14 @@ module.exports = async(obj = {}, patreon = {}, opt = [])=>{
         type: 2,
         label: 'Cancel',
         style: 4,
-        custom_id: JSON.stringify({ dId: obj.member?.user?.id, cancel: true })
+        custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
       })
-      return msg2send
+      await replyComponent(obj, msg2send)
+      return
     }
   }
 
+  if(!allyCode) return { content: 'you must provide an allyCode or @user'}
   allyCode = +allyCode
   if(patreon.users?.filter(x=>+x.allyCode == allyCode).length == 0) return { content: `${allyCode} is not in your list...`}
 

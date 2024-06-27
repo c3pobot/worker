@@ -23,6 +23,8 @@ const mapSpecialMissions = (coverts = [], conflicts = [], obj)=>{
 }
 
 module.exports = async(obj = {}, opt = {})=>{
+  if(obj.confirm?.response === 'no' || obj.confirm?.cancel) return { content: 'command canceled', components: [] }
+
   let dObj = await getDiscordAC(obj.member.user.id, opt)
   if(!dObj?.uId || !dObj?.type) return { content: 'You do not have google auth linked to your discordId' }
 
@@ -115,6 +117,6 @@ module.exports = async(obj = {}, opt = {})=>{
     }
     embedMsg.description += '```\n'
   }
-  
+
   return { content: null, embeds: [embedMsg], components: []}
 }

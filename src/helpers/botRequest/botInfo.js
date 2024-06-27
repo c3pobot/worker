@@ -11,7 +11,6 @@ const start = async()=>{
     if(res?.body?.totalShards > 0 && res?.body?.totalShards !== NUM_SHARDS){
       NUM_SHARDS = +res.body.totalShards
       log.info(`Set Number of bot shards to ${NUM_SHARDS}...`)
-      return
     }
     setTimeout(start, 5000)
   }catch(e){

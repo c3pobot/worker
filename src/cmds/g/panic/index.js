@@ -62,7 +62,7 @@ module.exports = async(obj = {}, opt = {})=>{
   data = sorter([{ column: 'name', order: 'ascending'}], data)
   data = sorter([{ column: 'notMet', order: 'ascending'}], data)
   if(!data || data?.length === 0) return { content: 'error calcuating data' }
-
+  await mongo.set('tempCache', { _id: 'g-panic' }, { guideTemplate: guideTemplate, unitList: unitList, profile: gObj.profile, member: data, updated: gObj.updated })
   let webHTML = getHTML.panic({ guideTemplate: guideTemplate, unitList: unitList, profile: gObj.profile, member: data, updated: gObj.updated })
   if(!webHTML) return { content: 'error getting html' }
 

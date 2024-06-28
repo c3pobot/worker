@@ -46,7 +46,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let gObj = await fetchGuild({ guildId: pObj.guildId, projection: { playerId: 1, name: 1, roster: rosterProject } })
   if(!gObj?.member || gObj?.member?.length == 0) return { content: `error finding guild...` }
 
-  let factionList = {}, unitList = { count: 0 }, data = []
+  let unitList = { count: 0 }, data = []
 
   if(guideTemplate.factions?.length > 0){
     for(let i in guideTemplate.factions){
@@ -54,7 +54,7 @@ module.exports = async(obj = {}, opt = {})=>{
     }
   }
   for(let i in gObj.member){
-    let tempObj = await checkMember(gObj.member[i].roster, guideTemplate, factionList, unitList)
+    let tempObj = await checkMember(gObj.member[i].roster, guideTemplate, unitList)
     if(!tempObj.requiredUnits) continue
     tempObj.name = gObj.member[i].name
     data.push(tempObj)

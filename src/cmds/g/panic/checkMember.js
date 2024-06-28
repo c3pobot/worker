@@ -65,7 +65,7 @@ const getFactionUnits = (units = [], req = {})=>{
   }
   return res
 }
-module.exports = async(roster = {}, guideTemplate = {}, factionList = {}, unitList = {})=>{
+module.exports = async(roster = {}, guideTemplate = {}, unitList = {})=>{
   let requiredUnits = [], groups = {}, factions = {}, notMet = 0
   if(guideTemplate.units?.length > 0){
     let tempUnits = getUnits(guideTemplate.units, roster, unitList, true)

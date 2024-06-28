@@ -2,7 +2,9 @@
 const mongo = require('mongoclient')
 const swgohClient = require('src/swgohClient')
 const sorter = require('json-array-sorter')
+
 const getData = require('./getData')
+const getMissing = require('./getMissing')
 
 const { getDiscordAC, replyTokenError, replyComponent } = require('src/helpers')
 const mapSpecialMissions = (coverts = [], conflicts = [], obj)=>{
@@ -89,6 +91,10 @@ module.exports = async(obj = {}, opt = {})=>{
   if(events === 'GETTING_CONFIRMATION') return
   if(!events?.attempt || events?.attempt?.length === 0) return { content: 'No one has attempted the mission yet' }
 
+  let missing = await getMissing(specialMission, guildData.profile.id, new Set(events.attempt || []))
+  if(missing?.content) return missing
+
+
   let pass = [], fail = [], passSet = new Set(events.success)
   for(let i in events.attempt){
     if(passSet.has(events.attempt[i])){
@@ -117,6 +123,13 @@ module.exports = async(obj = {}, opt = {})=>{
     }
     embedMsg.description += '```\n'
   }
-
+  if(missing?.length > 0){
+    embedMsg.description += '**Missing**\n```\n'
+    for(let i in missing){
+      let member = events?.member?.find(x=>x.id === missing[i])
+      if(member?.name) embedMsg.description += `${member?.name}\n`
+    }
+    embedMsg.description += '```\n'
+  }
   return { content: null, embeds: [embedMsg], components: []}
 }

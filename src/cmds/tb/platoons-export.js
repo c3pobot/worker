@@ -3,6 +3,7 @@ const mongo = require('mongoclient')
 const swgohClient = require('src/swgohClient')
 const sorter = require('json-array-sorter')
 const json2xls = require('json2xls');
+const { dataList } = require('src/helpers/dataList')
 
 const { getPlayerAC, getGuildId } = require('src/helpers')
 
@@ -24,7 +25,7 @@ const mapUnits = (units = [], platoons = {}, pId, phase, type)=>{
 }
 
 module.exports = async(obj = {}, opt = {})=>{
-  let excelPlats, excelUnits
+  let excelPlats, excelUnits, excelAltUnits
 
   let tbId = opt['tb-name']?.value || 't05D'
   let platoonDef = (await mongo.find('tbPlatoons', {_id: tbId}))[0]
@@ -64,16 +65,26 @@ module.exports = async(obj = {}, opt = {})=>{
     let gObj = await swgohClient.post('fetchGuild', { guildId: pObj?.guildId, projection: { playerId: 1, name: 1, rosterUnit: { definitionId: 1, currentRarity: 1, relic: 1, gp: 1} }}, null)
     if(!gObj?.member || gObj?.member?.length === 0) return { content: 'error getting guild data' }
 
-    let rosterUnits = []
+    let rosterUnits = [], altExport = `BaseId,Name,Stars,RelicLevel,CombatType\n`
     for(let i in gObj?.member){
       let units = gObj.member[i].rosterUnit?.map(x=>{
-        return Object.assign({
+
+        let tempUnit = {
           player: gObj.member[i].name,
           baseId: x.definitionId?.split(':')[0],
           rarity: +(x.currentRarity || 0),
           relic: +(x.relic?.currentTier ? +x.relic.currentTier - 2:0),
           gp: +(x.gp || 0)
-        })
+        }
+        if(tempUnit.relic < 0) tempUnit.relic = 0
+        let combatType = dataList?.unitList[tempUnit.baseId].combatType
+        altExport += `${tempUnit.baseId},${tempUnit.player},${tempUnit.rarity},`
+        if(combatType === 1){
+          altExport += `${tempUnit.relic},Character\n`
+        }else{
+          altExport += `NA,Ship\n`
+        }
+        return tempUnit
       })
       if(units?.length > 0) rosterUnits = rosterUnits.concat(units)
     }
@@ -86,10 +97,12 @@ module.exports = async(obj = {}, opt = {})=>{
       gp: 'number'
     }})
     if(tempObj) excelUnits = Buffer.from(tempObj, 'binary')
+    if(altExport) excelAltUnits = Buffer.from(altExport, 'utf8')
     if(!excelUnits) return { content: 'Error mapping excel player data'}
   }
   let msg2send = { content: null, files: [] }
   msg2send.files.push({file: excelPlats, fileName: tbId+'-platoons.xlsx'})
   if(excelUnits) msg2send.files.push({file: excelUnits, fileName: 'rosterUnits.xlsx'})
+  if(excelAltUnits) msg2send.files.push({file: excelAltUnits, fileName: 'roster.csv'})
   return msg2send
 }

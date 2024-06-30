@@ -31,7 +31,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!requiredUnits || !optionalUnits) return { content: 'error getting guide' }
   if(requiredUnits?.length === 0 && optionalUnits.length === 0) return { content: 'error getting guide units' }
 
-  if(optionalUnits?.length > 15) return { content: 'there is more than 15 units possible for this guide, i refuse to do this' }
+  if(optionalUnits?.length > 15) return { content: 'there are more than 15 units possible for this guide, i refuse to do this' }
 
   let rosterProject = {}
   for(let i in requiredUnits){

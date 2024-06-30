@@ -20,7 +20,7 @@ module.exports = async(obj = {}, opt = {}, pObj = {})=>{
     if(!squad) return { content: 'Error finding squad **'+squadName+'**' }
   }else{
     squad = (await mongo.find('defaultUnits', { _id: allyCode?.toString() }))[0]
-    if(!squad?.units || squad.units?.length === 0) return { content: 'you do not have any default units set. Use `/inventory add-unit` to set some' }
+    if(!squad?.units || squad.units?.length === 0) return { content: 'you do not have any default units set. Use `/squad default add-unit` to set some' }
   }
 
   if(!squad) return { content: 'Error finding squad **'+squadName+'**' }

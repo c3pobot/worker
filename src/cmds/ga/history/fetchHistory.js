@@ -5,7 +5,7 @@ const GA_HIST_OBJECT_STORAGE_ENDPOINT = process.env.GA_HIST_OBJECT_STORAGE_ENDPO
 const fetchHistory = async(playerId, key, season)=>{
   if(!GA_HIST_OBJECT_STORAGE_ENDPOINT) return
   let res = await fetch(`${GA_HIST_OBJECT_STORAGE_ENDPOINT}:ga-history-season-${season}/${playerId}-${key}.json`, { timeout: 30000, compress: true, method: 'GET' })
-  if(res?.headers?.get('Content-Type')?.includes('application/json')) return await res.json()
+  if(res?.headers?.get('Content-Type')?.includes('application/json') || res?.headers?.get('Content-Type')?.includes('binary/octet-stream')) return await res.json()
 }
 module.exports = async(playerId, key, season)=>{
   if(!playerId || !key || !season) return

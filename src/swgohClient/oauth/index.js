@@ -72,7 +72,7 @@ const getIdentity = async(uid, type, newIdentity = false)=>{
 
 module.exports = async(obj = {}, method, dObj = {}, payload)=>{
   if(dObj.type === 'google'){
-    await replyMsg(obj, 'CG broke the bots ability to do google auth commands. please use `/allycode auth ea_connect` until it can be updated.')
+    await replyMsg(obj, 'The bots ability to do google auth commands has been removed. please use `/allycode auth ea_connect` until further notice.')
     return 'GETTING_CONFIRMATION'
   }
   let data, status = 'ok', forceNewIdentity = false

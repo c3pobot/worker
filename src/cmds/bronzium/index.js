@@ -28,7 +28,7 @@ module.exports = async(obj = {})=>{
 
     let socialTotal = pObj.data.inventory.currencyItem.find(x=>x.currency == 4)?.quantity
     if(!socialTotal) return { content: 'You do not have enough allypoints' }
-    
+
     socialTotal = +socialTotal
     let packId = getPackId(pObj.data)
     if(!packId) return { content: 'Error getting pack Id' }
@@ -84,7 +84,7 @@ module.exports = async(obj = {})=>{
       type: 2,
       label: 'Pull '+qty+' again',
       style: 3,
-      custom_id: JSON.stringify({ id: obj.id, qty: qty })
+      custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, qty: qty })
     })
     if(qty < 100){
       msg2send.components[0].components.push({

@@ -4,7 +4,7 @@ Cmds.add = require('./add')
 Cmds.show = require('./show')
 Cmds.remove = require('./remove')
 
-module.exports = async(obj = {}, shard = {}, options = {}, auth)=>{
+module.exports = async(obj = {}, shard = {}, opt = {}, auth)=>{
   let tempCmd = obj.subCmd
   let msg2send = { content: 'command not recongnized' }
   if(tempCmd !== 'show' && !auth) return { content: 'This command require Shard admin rights' }

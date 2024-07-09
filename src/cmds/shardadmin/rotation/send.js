@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 const { forceMessage } = require('./helper')
 const { getOptValue } = require('src/helpers')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
   let msg2send = {content: 'Rotation schedule not found'}
   let schedule = getOptValue(opt, 'schedule')?.toUpperCase()
   if(!schedule) return { content: 'you did not provide a rotation schedule name'}

@@ -2,7 +2,7 @@
 const mongo = require('mongoclient')
 const showEnemyWatch = require('./show')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
   let allyCode = opt.allycode?.value?.toString()?.replace(/-/g, ''), emoji = opt.emoji?.value
   if(shard.enemyWatch){
     if(allyCode) shard.enemyWatch.allyCodes = shard.enemyWatch.allyCodes.filter(x=>x !== +allyCode)

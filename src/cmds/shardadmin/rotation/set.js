@@ -3,9 +3,9 @@ const mongo = require('mongoclient')
 const { getOptValue, getDiscordAC } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
   let msg2send = {content: 'You did not provide the correct information'}, pObj, allyCode, dId
-  let schedule = getOptValue(opt, 'schedule')?.toUpperCase()  
+  let schedule = getOptValue(opt, 'schedule')?.toUpperCase()
   if(!schedule) return { content: 'you did not provide a rotation schedule name'}
   let tempRot = {
     id: schedule,

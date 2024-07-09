@@ -2,8 +2,8 @@
 const mongo = require('mongoclient')
 const { getOptValue, confirmButton } = require('src/helpers')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
-  if(obj.confirm?.response !== 'yes') return { content: 'command canceled...', components: [] }
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
+  if(obj.confirm?.response == 'no') return { content: 'command canceled...', components: [] }
 
   let alias = opt.value?.alias?.toString()?.trim()
   if(!alias) return { content: 'you did not provide an alias' }

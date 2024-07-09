@@ -2,7 +2,7 @@
 const mongo = require('mongoclient')
 const { getRole } = require('src/helpers')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
   if(!shard.enemyWatch) return { content: 'Enemy group watch is not configured' }
 
   let embedMsg = {

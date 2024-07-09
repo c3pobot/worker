@@ -1,7 +1,7 @@
 'use strict'
 const mongo = require('mongoclient')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
   let rankSort = opt.sort?.value, rankLimit = opt.limit?.value, rankLeader = opt.leader?.value, rankTruncate = opt.truncate?.value
   let msg2send = { content: ''}
   if(rankSort){

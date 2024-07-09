@@ -5,7 +5,7 @@ Cmds.general = require('./general')
 Cmds.payouts = require('./payouts')
 Cmds.ranks = require('./ranks')
 
-module.exports = async(obj = {}, shard = {}, options = [], auth)=>{
+module.exports = async(obj = {}, shard = {}, opt = {}, auth)=>{
   let tempCmd = obj.subCmd
   let msg2send = { content: 'command not recongnized' }
   if(tempCmd !== 'show' && !auth) return { content: 'This command require Shard admin rights' }

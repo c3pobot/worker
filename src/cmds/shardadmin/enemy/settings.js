@@ -2,7 +2,7 @@
 const mongo = require('mongoclient')
 const showEnemyWatch = require('./show')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
   let role = opt.role?.value, rank = opt.rank?.value, chId = opt.channel?.value, trigger = opt.trigger?.value, notifyStatus = opt.status?.value
   let tempEnemy = {
     emoji: [],

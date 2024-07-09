@@ -1,7 +1,7 @@
 'use strict'
 const mongo = require('mongoclient')
 
-module.exports = async(obj = {}, shard = {}, opt = [])=>{
+module.exports = async(obj = {}, shard = {}, opt = {})=>{
   let schedule = opt.schedule?.value?.toString()?.trim()?.toUpperCase()
   if(!schedule) return { content: 'you did not provide a rotation schedule name' }
 

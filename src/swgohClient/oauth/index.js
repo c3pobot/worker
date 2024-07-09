@@ -4,6 +4,7 @@ const mongo = require('mongoclient')
 const google = require('./google')
 const codeAuth = require('./codeAuth')
 const confirmButton = require('src/helpers/confirmButton')
+const replyMsg = require('src/helpers/replyMsg')
 
 const reAuthCodes = {
   4: 'SESSIONEXPIRED',
@@ -49,8 +50,10 @@ const getIdentity = async(uid, type, newIdentity = false)=>{
   if(newIdentity){
     if(type === 'google'){
       let accessToken = await google.GetAccessToken(uid);
+      console.log(accessToken)
       if(accessToken?.error) return accessToken
       if(accessToken) auth = await getGoogleAuth(uid, accessToken)
+      console.log(auth)
     }
     if(type === 'facebook'){
       let encrypted_ssaid = (await mongo.find('facebook', {_id: uid}))[0]
@@ -68,6 +71,10 @@ const getIdentity = async(uid, type, newIdentity = false)=>{
 }
 
 module.exports = async(obj = {}, method, dObj = {}, payload)=>{
+  if(dObj.type === 'google'){
+    await replyMsg(obj, 'CG broke the bots ability to do google auth commands. please use `/allycode auth ea_connect` until it can be updated.')
+    return 'GETTING_CONFIRMATION'
+  }
   let data, status = 'ok', forceNewIdentity = false
   let loginConfirm = obj.confirm?.response
   if(loginConfirm === 'no') return { msg2send: { content: 'Command Canceled' } }

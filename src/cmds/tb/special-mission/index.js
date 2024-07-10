@@ -108,7 +108,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(specialMission.rewardUnit?.nameKey) msgTitle = ` ${specialMission.rewardUnit.nameKey} shard`
   let embedMsg = { color: 15844367, title: `${events.profile?.name} ${specialMission.phase}${msgTitle} (${events.covert.successfulAttempts}/${events.covert.playersParticipated})`, description: '' }
   if(fail?.length > 0){
-    embedMsg.description += '**Failed**\n```\n'
+    embedMsg.description += '**Failed ('+fail.length+')**\n```\n'
     for(let i in fail){
       let member = events?.member?.find(x=>x.id === fail[i])
       if(member?.name) embedMsg.description += `${member.name}\n`
@@ -116,7 +116,7 @@ module.exports = async(obj = {}, opt = {})=>{
     embedMsg.description += '```\n'
   }
   if(pass?.length > 0){
-    embedMsg.description += '**Success**\n```\n'
+    embedMsg.description += '**Success ('+pass.length+')**\n```\n'
     for(let i in pass){
       let member = events?.member?.find(x=>x.id === pass[i])
       if(member?.name) embedMsg.description += `${member?.name}\n`
@@ -124,7 +124,7 @@ module.exports = async(obj = {}, opt = {})=>{
     embedMsg.description += '```\n'
   }
   if(missing?.length > 0){
-    embedMsg.description += '**Missing**\n```\n'
+    embedMsg.description += '**Missing ('+missing.length+')**\n```\n'
     for(let i in missing){
       let member = events?.member?.find(x=>x.id === missing[i])
       if(member?.name) embedMsg.description += `${member?.name}\n`

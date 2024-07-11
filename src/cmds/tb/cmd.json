@@ -34,6 +34,11 @@
         "description": "(requires google/code auth link) Check which players have units for missing platoons",
         "options": [
           {
+            "type": 5,
+            "name": "include-prohibited",
+            "description": "include Prohibited platoons (default is false)"
+          },
+          {
             "type": 3,
             "name": "allycode_option",
             "description": "primary or alt allycode",

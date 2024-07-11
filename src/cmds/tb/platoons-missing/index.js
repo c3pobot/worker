@@ -6,7 +6,7 @@ const getHtml = require('webimg').tb
 
 const getUnitMap = require('./getUnitMap')
 const getMissingUnitMap = require('./getMissingUnitMap')
-const { fetchGuild, getDiscordAC, replyTokenError, getImg } = require('src/helpers')
+const { fetchGuild, getDiscordAC, replyTokenError, getImg, replyComponent } = require('src/helpers')
 const getTimeTillEnd = (timestamp)=>{
   let timeNow = Date.now()
   if(+timeNow < +timestamp){
@@ -46,10 +46,23 @@ module.exports = async(obj = {}, opt = {})=>{
   let tbDef = (await mongo.find('tbDefinition', { _id: territoryBattleData.definitionId }))[0]
   if(!tbDef.id) return { content: 'Error getting TB definition' }
 
-  let commandState = obj.confirm?.commandState || 4, showPlayers = true
+  let commandState = obj.confirm?.commandState || 3, showPlayers = true, replyMethod = 'PATCH'
+  if(obj.confirm?.commandState) replyMethod = 'POST'
+  if(!obj.confirm?.commandState && opt['include-prohibited']?.value == true) commandState = 4
   let tempData = getUnitMap(territoryBattleData?.reconZoneStatus.filter(x=>x.zoneStatus.zoneState === 3 && x.zoneStatus.commandState < commandState), tbDef.reconZoneDefinition)
   if(!tempData.unitMap) return { content: 'Error getting unit map' }
-  if(tempData.missingUnits == 0) return { content: 'all platoons are filled' }
+  if(tempData.missingUnits == 0){
+    if(commandState > 3) { content: 'all platoons are filled' }
+    let reply2send = { content: 'All Non Prohibited platoons are filled', components: [ { type: 1, components: [] }] }
+    reply2send.components[0].components.push({
+      type: 2,
+      label: 'Included Prohibited',
+      style: 1,
+      custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user.id, commandState: 4})
+    })
+    await replyComponent(obj, reply2send, replyMethod)
+    return
+  }
 
   let unitMap = tempData.unitMap
   await mongo.set('tempCache', { _id: 'unitMap' }, unitMap)
@@ -64,12 +77,19 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!missingUnitMap || missingUnitMap.length === 0) return { content: 'error getting missing unit map' }
 
   missingUnitMap = sorter([{column: 'sort', order: 'ascending'}], missingUnitMap)
-  
+
   let webData = getHtml.missing({ name: gObj.profile.name, tbName: tbDef.nameKey, currentRound: territoryBattleData.currentRound, timeTillEnd: getTimeTillEnd(territoryBattleData.currentRoundEndTime), data: missingUnitMap, showPlayers: showPlayers })
   if(!webData) return { content: 'Error getting html' }
 
   let webImg = await getImg(webData, obj.id, 900, false)
   if(!webImg) return { content: 'Error getting image' }
-
-  return { content: null, file: webImg, fileName: 'missing-platoons.png' }
+  let msg2send = { content: null, file: webImg, fileName: 'missing-platoons.png', components: [ { type: 1, components: [] }] }
+  msg2send.components[0].components.push({
+    type: 2,
+    label: commandState === 3 ? 'Included Prohibited':'Exlude Prohibited',
+    style: 1,
+    custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user.id, commandState: (commandState === 3 ? 4:3)})
+  })
+  await replyComponent(obj, msg2send, replyMethod)
+  return
 }

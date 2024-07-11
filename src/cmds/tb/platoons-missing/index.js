@@ -64,7 +64,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!missingUnitMap || missingUnitMap.length === 0) return { content: 'error getting missing unit map' }
 
   missingUnitMap = sorter([{column: 'sort', order: 'ascending'}], missingUnitMap)
-  await mongo.set('tempCache', { _id: 'platoons' }, { name: gObj.profile.name, tbName: tbDef.nameKey, currentRound: territoryBattleData.currentRound, timeTillEnd: getTimeTillEnd(territoryBattleData.currentRoundEndTime), data: missingUnitMap, showPlayers: showPlayers })
+  
   let webData = getHtml.missing({ name: gObj.profile.name, tbName: tbDef.nameKey, currentRound: territoryBattleData.currentRound, timeTillEnd: getTimeTillEnd(territoryBattleData.currentRoundEndTime), data: missingUnitMap, showPlayers: showPlayers })
   if(!webData) return { content: 'Error getting html' }
 

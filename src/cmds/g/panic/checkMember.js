@@ -30,7 +30,7 @@ const getUnits = (units = [], roster = {}, unitList = {}, requiredUnits = false)
         unitList[uInfo.baseId].relic = units[i].gear.value
         unitList[uInfo.baseId].gear = 13
       }
-      if(units[i].gear.name == 'gear' && units[i].gear.value > (tempUnit.gearTier || 0)){
+      if(units[i].gear.name == 'gear' && units[i].gear.value > (tempUnit.gear || 0)){
         if(units[i].gear.value > 11 && tempUnit.rarity < 7){
           if(units[i].rarity < 2 || !units[i].rarity){
             tempUnit.notMet++

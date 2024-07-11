@@ -30,6 +30,29 @@
       },
       {
         "type": 1,
+        "name": "platoons-missing",
+        "description": "(requires google/code auth link) Check which players have units for missing platoons",
+        "options": [
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "required": false,
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
         "name": "platoons-export",
         "description": "export platoon requirements to excel file (RotE only right now)",
         "options": [

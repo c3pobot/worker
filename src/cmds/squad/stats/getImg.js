@@ -12,9 +12,9 @@ module.exports = async(squad = {}, pObj = {})=>{
 
     let squadData = { squads: [], info: { tdSpan: 0 } }
     for(let i in tempArray){
-      let unitIds = squad.units.map(x=>x.baseId)
+      let unitIds = tempArray[i]?.units?.map(x=>x.baseId)
       let squadUnits = pObj.rosterUnit.filter(x=> unitIds.includes(x.definitionId.split(':')[0]))
-      let tempSquad = await formatPlayerSquad(squad.units, squadUnits)
+      let tempSquad = await formatPlayerSquad(tempArray[i].units, squadUnits)
       if(!tempSquad) continue
       squadData.squads.push({units: tempSquad, note: tempArray[i].note})
       if(tempSquad?.length > squadData.info.tdSpan) squadData.info.tdSpan = +tempSquad.length

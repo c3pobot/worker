@@ -9,7 +9,6 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!dObj?.uId || !dObj?.type) return { msg2send: { content: 'You must have you google or code auth linked to your discordId' } }
 
   if(opt.cache?.value === true){
-    msg2send = 'There was no cached data in the db'
     cqData = (await mongo.find('conquestCache', {_id: dObj?.allyCode}))[0]
     if(!cqData) return { msg2send: { content: 'There was no cached data in the db' } }
     return { data: cqData }

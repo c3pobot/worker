@@ -1,25 +1,11 @@
 'use strict'
-module.exports = (raidResult = [], raidId)=>{
-  if(raidResult.length === 0) return
-  let res = {}
-  for(let i in raidResult){
-    if(raidResult[i].raidId !== raidId) continue;
-    if(!res.guild) res.guildTotal = {playerId: 'guildTotal', playerName: 'Guild Total', high: 0, low: 0, scores: [], dates: []}
-    res.guildTotal.scores.push(+raidResult[i].guildRewardScore)
-    if(+raidResult[i].guildRewardScore > res.guildTotal.high) res.guildTotal.high = +raidResult[i].guildRewardScore
-    if(+raidResult[i].guildRewardScore < res.guildTotal.low || res.guildTotal.low == 0) res.guildTotal.low = +raidResult[i].guildRewardScore
-    res.guildTotal.dates.push(raidResult[i].endTime)
-    for(let m in raidResult[i].raidMember){
-      if(!res[raidResult[i].raidMember[m].playerId]) res[raidResult[i].raidMember[m].playerId] = {playerId: raidResult[i].raidMember[m].playerId, high: 0, low: 0, scores: []}
-      res[raidResult[i].raidMember[m].playerId].scores.push(+(raidResult[i].raidMember[m].memberProgress || 0))
-      if(+raidResult[i].raidMember[m].memberProgress > res[raidResult[i].raidMember[m].playerId].high ) res[raidResult[i].raidMember[m].playerId].high = +raidResult[i].raidMember[m].memberProgress
-      if(+raidResult[i].raidMember[m].memberProgress < res[raidResult[i].raidMember[m].playerId].low || res[raidResult[i].raidMember[m].playerId].low === 0) res[raidResult[i].raidMember[m].playerId].low = +raidResult[i].raidMember[m].memberProgress
-    }
-  }
-  for(let i in res){
-    if(!res[i]?.playerId) continue;
-    let total = res[i].scores?.reduce((partialSum, a)=> partialSum + a, 0)
-    res[i].avg = Math.floor(total / +res[i].scores?.length)
+module.exports = (raid = {})=>{
+  if(!raid.raidId) return
+
+  let res = { guildRewardScore: +(raid.guildRewardScore || 0), scores: {}, endTime: +raid.endTime  }
+  for(let i in raid.raidMember){
+    if(res.scores[raid.raidMember[i].playerId]) continue
+    res.scores[raid.raidMember[i].playerId] = { playerId: raid.raidMember[i].playerId, score: +(raid.raidMember[i].memberProgress || 0), rank: raid.raidMember[i].rank }
   }
   return res
 }

@@ -12,6 +12,21 @@
         "options": [
           {
             "type": 3,
+            "name": "sort",
+            "description": "sort by score or name (default is score)",
+            "choices": [
+              {
+                "name": "score",
+                "value": "score"
+              },
+              {
+                "name": "name",
+                "value": "name"
+              }
+            ]
+          },
+          {
+            "type": 3,
             "name": "allycode_option",
             "description": "primary or alt allycode",
             "required": false,
@@ -40,6 +55,79 @@
               "required": false,
               "autocomplete": true,
               "focused": true
+          },
+          {
+            "type": 3,
+            "name": "sort",
+            "description": "sort by score or name (default is score)",
+            "choices": [
+              {
+                "name": "score",
+                "value": "score"
+              },
+              {
+                "name": "name",
+                "value": "name"
+              }
+            ]
+          },
+          {
+            "type": 6,
+            "name": "user",
+            "description": "@user to lookup",
+            "required": false
+          },
+          {
+            "type": 3,
+            "name": "allycode",
+            "description": "allyCode to lookup",
+            "required": false
+          },
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "required": false,
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "history-export",
+        "description": "export raid history for the guild to excel or json (default is excel)",
+        "options": [
+          {
+              "type": 3,
+              "name": "raid",
+              "description": "Raid name (defaults to last run raid)",
+              "required": false,
+              "autocomplete": true,
+              "focused": true
+          },
+          {
+            "type": 3,
+            "name": "format",
+            "description": "Export format (default is excel)",
+            "choices": [
+              {
+                "name": "excel",
+                "value": "excel"
+              },
+              {
+                "name": "json",
+                "value": "json"
+              }
+            ]
           },
           {
             "type": 6,

@@ -2,6 +2,7 @@
 const Cmds = {}
 Cmds.status = require('./status')
 Cmds.history = require('./history')
+Cmds['history-export'] = require('./history-export')
 Cmds.units = require('./units')
 
 const { replyError } = require('src/helpers')

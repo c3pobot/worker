@@ -2,9 +2,9 @@
 const mongo = require('mongoclient')
 const swgohClient = require('src/swgohClient')
 const sorter = require('json-array-sorter')
-
+const json2xls = require('json2xls');
 const getMemberPrevious = require('./getMemberPrevious')
-const getHTML = require('webimg').raid
+
 
 const getGuild = async(guildId)=>{
   let guild = (await mongo.find('guildCache', {_id: guildId}, { recentRaidResult: 1, gp: 1, name: 1, member: { playerId: 1, playerName: 1}}))[0]
@@ -20,7 +20,7 @@ const getGuild = async(guildId)=>{
 }
 const { getPlayerAC, getGuildId, getImg } = require('src/helpers')
 
-module.exports = async(obj = {}, opt= {})=>{
+module.exports = async(obj = {}, opt = {})=>{
   let allyObj = await getPlayerAC(obj, opt)
   let allyCode = allyObj?.allyCode
   if(allyObj?.mentionError) return { content: 'that user does not have allyCode linked to discordId' }
@@ -41,23 +41,26 @@ module.exports = async(obj = {}, opt= {})=>{
   let raidDef = (await mongo.find('raidDef', {_id: raidId}))[0]
   if(!raidDef?.nameKey) return { content: 'Error getting raid definition' }
 
-  let previousScores = getMemberPrevious(raids.find(x=>x.raidId === raidId))
-  if(!previousScores?.guildRewardScore) return { content: 'Error getting previous scores'}
+  let raid = getMemberPrevious(raids.find(x=>x.raidId === raidId))
+  if(!raid?.guildRewardScore) return { content: 'Error getting previous scores'}
 
-  let raidData = { name: gObj.name, gp: gObj.gp, nameKey: raidDef.nameKey, guildTotal: previousScores?.guildRewardScore, leaderBoard: [], date: previousScores.endTime }
+  let data = []
   for(let i in gObj.member){
-    raidData.leaderBoard.push({ playerId: gObj.member[i].playerId, name: gObj.member[i].playerName, score: +(previousScores.scores[gObj.member[i].playerId]?.score || 0) })
+    data.push({ name: gObj.member[i].playerName, score: +(raid.scores[gObj.member[i].playerId]?.score || 0) })
   }
-  let sort = opt.sort?.value || 'score', sortOrder = 'descending'
-  if(sort !== 'score') sortOrder = 'ascending'
-  raidData.leaderBoard = sorter([{ column: sort, order: sortOrder}], raidData.leaderBoard || [])
-  if(!raidData?.leaderBoard || raidData?.leaderBoard?.length === 0) return { content: 'error calculating data' }
+  if(!data || data?.length === 0) return { content: 'Error calculating data' }
+  let exportFormat = opt.format?.value || 'excel'
 
-  let webHtml = await getHTML.history(raidData)
-  if(!webHtml) return { content: 'Error getting html' }
+  let date = (new Date(raid.endTime * 1000))?.toLocaleDateString()?.replace(/\//g, '-')
+  if(exportFormat === 'json'){
+    let fileData = Buffer.from(JSON.stringify(data))
+    return { content: 'JSON data attached', file: fileData, fileName: `${gObj.name}-raid-history-${date}.json` }
+  }
+  let excelData = await json2xls(data, { name: 'string', score: 'number' })
+  if(!excelData) return { content: 'Error converting to excel' }
 
-  let webImg = await getImg(webHtml, obj.id, 100, false)
-  if(!webImg) return { content: 'error getting image' }
 
-  return { content: null, file: webImg, fileName: gObj?.name+'-'+raidId+'-raid.png' }
+  let fileData = Buffer.from(excelData, 'binary')
+  if(!fileData) return { content: 'Error converting to buffer' }
+  return { content: 'Excel data attached', file: fileData, fileName: `${gObj.name}-raid-history-${date}.xlsx` }
 }

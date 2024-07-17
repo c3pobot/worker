@@ -34,36 +34,36 @@ module.exports = async(obj = {}, opts = [])=>{
 
   gObj = gObj.data.guild
   if(!gObj?.raidStatus || gObj?.raidStatus?.length === 0) return { content: 'There is not a raid in progress'}
+  let raid = gObj.raidStatus[0], raidMember = gObj.raidStatus[0].raidMember
+  if(!raidMember || raidMember?.length === 0) return { content: 'Error getting raid members' }
+  
+  let raidData = { id: raid.raidId, profile: gObj.profile, mission: raid.identifier?.campaignMissionId, endTime: raid.expireTime, leaderBoard: [], score: +(raid.guildRewardScore || 0), reward: {} }
+  if(!raidData?.id) return { content: 'error getting raid'}
 
-  let raid = {id: gObj.raidStatus[0].raidId, profile: gObj.profile, mission: gObj.raidStatus[0].identifier?.campaignMissionId, endTime: gObj.raidStatus[0].expireTime, leaderBoard: [], score: +(gObj.raidStatus[0].guildRewardScore || 0), reward: {} }
-  if(!raid?.id) return { content: 'error getting raid'}
-
-  let raidDef = (await mongo.find('raidDef', {_id: raid.id}))[0]
+  let raidDef = (await mongo.find('raidDef', {_id: raidData.id}))[0]
   if(!raidDef?.nameKey) return { content: 'Error getting raid definition...'}
 
-  let previousScores = getMemberPrevious(gObj.raidResult, raid.id)
+  let previousScores = getMemberPrevious(gObj.raidResult?.find(x=>x.raidId === raidData.id))
+  raidData.previous = +(previousScores?.guildRewardScore || 0)
+  let raidRewards = raidDef.mission.find(x=>x.id === raidData?.mission)?.rewards
+  raidData.nameKey = raidDef.nameKey
+  raid.footer = timeTillEnd(raidDef.endTime)
 
-  let raidRewards = raidDef.mission.find(x=>x.id === raid?.mission)?.rewards
-  raid.nameKey = raidDef.nameKey
-  for(let i in gObj.raidStatus[0].raidMember){
-    let player = gObj.member.find(x=>x.playerId === gObj.raidStatus[0].raidMember[i].playerId)
+  for(let i in raidMember){
+    let player = gObj.member.find(x=>x.playerId === raidMember[i].playerId)
     if(!player?.playerName) continue
-    let tempObj = {name: player.playerName, previous: {low: 0, avg: 0, high: 0}}
-    if(previousScores && previousScores[player.playerId]) tempObj.previous = previousScores[player.playerId]
-    raid.leaderBoard.push({...gObj.raidStatus[0].raidMember[i],...tempObj})
+    raidData.leaderBoard.push({ name: player.playerName, score: +(raidMember[i].memberProgress || 0), rank: raidMember[i].memberRank, attempt: raidMember[i].memberAttempt, previous: +(previousScores?.scores[raidMember[i].playerId]?.score || 0) })
   }
-  if(raid.score > 0 && raidRewards?.length > 0){
-    raid.reward.current = raidRewards?.find(x=>raid.score >= x.rankStart && (x.rankEnd > raid.score || x.rankEnd === 0))
-    raid.reward.next = raidRewards?.find(x=>x.rankStart === (raid.reward?.current?.rankEnd || 0) + 1)
+  if(raidData.score > 0 && raidRewards?.length > 0){
+    raidData.reward.current = raidRewards?.find(x=>raidData.score >= x.rankStart && (x.rankEnd > raidData.score || x.rankEnd === 0))
+    raidData.reward.next = raidRewards?.find(x=>x.rankStart === (raidData.reward?.current?.rankEnd || 0) + 1)
   }
-  if(raid.leaderBoard?.length > 0){
-    raid.leaderBoard = await sorter([{column: 'memberRank', order: 'ascending'}], raid.leaderBoard)
-    if(previousScores.guildTotal) raid.leaderBoard.unshift({...{name: 'Guild Total', memberProgress: raid.score},...{previous: previousScores.guildTotal}})
-  }
-  raid.footer = await timeTillEnd(raid.endTime)
-  if(!raid?.leaderBoard || raid?.leaderBoard?.length === 0) return { content: 'error calculating data' }
+  let sort = opts.sort?.value || 'score', sortOrder = 'descending'
+  if(sort !== 'score') sortOrder = 'ascending'
+  raidData.leaderBoard = await sorter([{column: sort, order: sortOrder}], raidData.leaderBoard || [])
+  if(!raidData?.leaderBoard || raidData?.leaderBoard?.length == 0) return { content: 'error calculating data' }
 
-  let webHtml = await getHTML.status(raid)
+  let webHtml = await getHTML.status(raidData)
   if(!webHtml) return { content: 'Error getting HTML'}
 
   let webImg = await getImg(webHtml, obj.id, 900, false)

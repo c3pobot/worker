@@ -36,7 +36,7 @@ module.exports = async(obj = {}, opts = [])=>{
   if(!gObj?.raidStatus || gObj?.raidStatus?.length === 0) return { content: 'There is not a raid in progress'}
   let raid = gObj.raidStatus[0], raidMember = gObj.raidStatus[0].raidMember
   if(!raidMember || raidMember?.length === 0) return { content: 'Error getting raid members' }
-  
+
   let raidData = { id: raid.raidId, profile: gObj.profile, mission: raid.identifier?.campaignMissionId, endTime: raid.expireTime, leaderBoard: [], score: +(raid.guildRewardScore || 0), reward: {} }
   if(!raidData?.id) return { content: 'error getting raid'}
 
@@ -47,8 +47,8 @@ module.exports = async(obj = {}, opts = [])=>{
   raidData.previous = +(previousScores?.guildRewardScore || 0)
   let raidRewards = raidDef.mission.find(x=>x.id === raidData?.mission)?.rewards
   raidData.nameKey = raidDef.nameKey
-  raid.footer = timeTillEnd(raidDef.endTime)
-
+  raidData.footer = timeTillEnd(raidData.endTime)
+  
   for(let i in raidMember){
     let player = gObj.member.find(x=>x.playerId === raidMember[i].playerId)
     if(!player?.playerName) continue

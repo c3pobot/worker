@@ -71,10 +71,12 @@ const getIdentity = async(uid, type, newIdentity = false)=>{
 }
 
 module.exports = async(obj = {}, method, dObj = {}, payload)=>{
+  /*
   if(dObj.type === 'google'){
     await replyMsg(obj, 'The bots ability to do google auth commands has been removed. please use `/allycode auth ea_connect` until further notice.')
     return 'GETTING_CONFIRMATION'
   }
+  */
   let data, status = 'ok', forceNewIdentity = false
   let loginConfirm = obj.confirm?.response
   if(loginConfirm === 'no') return { msg2send: { content: 'Command Canceled' } }

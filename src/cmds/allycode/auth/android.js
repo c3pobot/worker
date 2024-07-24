@@ -3,7 +3,7 @@ const authMsg = "EA TOS link: <https://tos.ea.com/legalapp/WEBTERMS/US/en/PC/>\n
 const { getDiscordAC, replyMsg } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {})=>{
-  return { content: 'The bots ability to do google auth commands has been removed. please use `/allycode auth ea_connect` until further notice' }
+  //return { content: 'The bots ability to do google auth commands has been removed. please use `/allycode auth ea_connect` until further notice' }
   let dObj = await getDiscordAC(obj.member.user.id, opt)
   if(!dObj.allyCode) return { content: 'Your allyCode is not linked to your discord id' }
   await replyMsg(obj, { content: 'Sending Private message' })

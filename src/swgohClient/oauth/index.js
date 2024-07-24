@@ -50,10 +50,8 @@ const getIdentity = async(uid, type, newIdentity = false)=>{
   if(newIdentity){
     if(type === 'google'){
       let accessToken = await google.GetAccessToken(uid);
-      console.log(accessToken)
       if(accessToken?.error) return accessToken
       if(accessToken) auth = await getGoogleAuth(uid, accessToken)
-      console.log(auth)
     }
     if(type === 'facebook'){
       let encrypted_ssaid = (await mongo.find('facebook', {_id: uid}))[0]

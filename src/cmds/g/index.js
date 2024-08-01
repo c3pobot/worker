@@ -11,6 +11,7 @@ Cmds['missing-unit'] = require('./missing-unit')
 Cmds.report = require('./report')
 Cmds.unit = require('./unit')
 Cmds.unlink = require('./unlink')
+Cmds.waitlist = require('./waitlist')
 const { replyError } = require('src/helpers')
 
 module.exports = async(obj = {})=>{

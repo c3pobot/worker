@@ -34,9 +34,8 @@ const enumSkill = {
   u: 'Unique'
 }
 
-module.exports = async(obj = {}, opt = [])=>{
+module.exports = async(obj = {}, opt = {})=>{
   if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
-
   let unit = opt.unit?.value?.toString()?.trim()
   if(!unit) return { content: 'unit not provided' }
 
@@ -44,7 +43,8 @@ module.exports = async(obj = {}, opt = [])=>{
   if(uInfo === 'GETTING_CONFIRMATION') return
   if(uInfo?.baseId) uInfo = (await mongo.find('skills', { _id: uInfo.baseId }))[0]
   if(!uInfo?.baseId) return { content: 'Error finding unit **'+unit+'**' }
-
+  
+  obj.data.options.unit = { value: uInfo?.baseId }
   let skillType = opt.type?.value, skillIndex = obj.confirm?.skillIndex
 
   let skills = Object.values(uInfo.skills) || [], skill
@@ -70,7 +70,7 @@ module.exports = async(obj = {}, opt = [])=>{
         type: 2,
         label: skillLabel,
         style: 1,
-        custom_id: JSON.stringify({id: obj.id, dId: obj.member?.user?.id, baseId: uInfo.baseId, skillIndex: +i})
+        custom_id: JSON.stringify({id: obj.id, dId: obj.member?.user?.id, skillIndex: +i})
       })
       if(msg2send.components[x].components.length == 5) x++;
     }

@@ -32,13 +32,17 @@ module.exports = (events = [], squad = {})=>{
   for(let i in battleStart){
     let complete = battleFinish?.find(x=>x.playerId === battleStart[i].playerId && x.battleNum === battleStart[i].battleNum)
     if(!complete){
-      complete = {
-        finishUnits: battleStart[i].startUnits,
-        totalUnits: battleStart[i].totalUnits,
-        finsihTM: battleStart[i].startTM,
-        squadStatus: 'UNKNOWN'
+      complete = battleFinish?.find(x=>x.playerId === battleStart[i].playerId && x.battleNum === 0 && x.timestamp > battleStart[i].timestamp)
+      if(complete){
+        complete.squadStatus = 'RETREAT'
+      }else{
+        complete = { squadStatus: 'UNKNOWN' }
       }
+      complete.finishUnits = battleStart[i].startUnits
+      complete.totalUnits = battleStart[i].totalUnits
+      complete.finsihTM = battleStart[i].startTM
     }
+    if(complete) console.log(complete)
     let tempObj = {...battleStart[i],...complete}
     tempObj.playerPreloaded = false
     tempObj.dateTime = formatDate(battleStart[i].timestamp)

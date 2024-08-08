@@ -18,7 +18,7 @@ const mapSpecialMissions = (coverts = [], conflicts = [], obj)=>{
       type: 2,
       label: `${conflict.phase}-${conflict.conflict} ${conflict.nameKey} SM-${coverts[i].zoneDefinition.zoneId?.slice(-1) || '1'}`,
       style: 1,
-      custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user?.id, sm: coverts[i].zoneDefinition.zoneId })
+      custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, sm: coverts[i].zoneDefinition.zoneId })
     })
   }
   return sorter([{column: 'phase', order: 'ascending'}], Object.values(res) || [])
@@ -68,7 +68,7 @@ module.exports = async(obj = {}, opt = {})=>{
         type: 2,
         label: buttonLabel,
         style: 1,
-        custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user.id, sm: tbSM[i].id })
+        custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user.id, sm: tbSM[i].id })
       })
       if(msg2send.components[x].components.length == 5) x++;
     }
@@ -78,7 +78,7 @@ module.exports = async(obj = {}, opt = {})=>{
       type: 2,
       label: 'Cancel',
       style: 4,
-      custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user?.id, cancel: true })
+      custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
     })
     await replyComponent(obj, msg2send)
     return

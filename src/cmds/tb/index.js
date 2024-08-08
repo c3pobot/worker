@@ -3,6 +3,7 @@ const Cmds = {}
 Cmds.export = require('./export')
 Cmds.gp = require('./gp')
 Cmds.status = require('./status')
+Cmds.history = require('./history')
 Cmds.info = require('./info')
 Cmds.platoons = require('./platoons')
 Cmds['platoons-cache'] = require('./platoons-cache')

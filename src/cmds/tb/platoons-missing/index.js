@@ -58,7 +58,7 @@ module.exports = async(obj = {}, opt = {})=>{
       type: 2,
       label: 'Included Prohibited',
       style: 1,
-      custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user.id, commandState: 4})
+      custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user.id, commandState: 4})
     })
     await replyComponent(obj, reply2send, replyMethod)
     return
@@ -88,7 +88,7 @@ module.exports = async(obj = {}, opt = {})=>{
     type: 2,
     label: commandState === 3 ? 'Included Prohibited':'Exlude Prohibited',
     style: 1,
-    custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user.id, commandState: (commandState === 3 ? 4:3)})
+    custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user.id, commandState: (commandState === 3 ? 4:3)})
   })
   await replyComponent(obj, msg2send, replyMethod)
   return

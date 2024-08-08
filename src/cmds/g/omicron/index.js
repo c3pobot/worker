@@ -44,7 +44,7 @@ module.exports = async(obj = {}, opt = {})=>{
         type: 2,
         label: skillLabel,
         style: 1,
-        custom_id: JSON.stringify({id: obj.id, dId: obj.members?.user?.id, unit: uInfo.baseId, skillId: skills[i].id})
+        custom_id: JSON.stringify({id: obj.id, dId: obj.member?.user?.id, unit: uInfo.baseId, skillId: skills[i].id})
       })
     }
     msg2send.components[0].components.push({

@@ -29,7 +29,7 @@ module.exports = async(obj = {}, opt = {})=>{
         type: 2,
         label: (gaInfo.currentEnemy == enemies[i].playerId ? 'Current - ':'')+enemies[i].name+' ('+enemies[i].allyCode+')',
         style: 1,
-        custom_id: JSON.stringify({ dId: obj.members?.user?.id, allyCode: enemies[i].allyCode})
+        custom_id: JSON.stringify({ dId: obj.member?.user?.id, allyCode: enemies[i].allyCode})
       })
       if(msg2send.components[x].components.length == 5) x++;
     }

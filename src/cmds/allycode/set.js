@@ -20,19 +20,19 @@ module.exports = async(obj = {}, opt = {})=>{
               type: 2,
               label: 'Primary',
               style: 1,
-              custom_id: JSON.stringify({dId: obj.members?.user?.id, opt: 'primary', id: obj.id })
+              custom_id: JSON.stringify({dId: obj.member?.user?.id, opt: 'primary', id: obj.id })
             },
             {
               type: 2,
               label: 'Alt',
               style: 1,
-              custom_id: JSON.stringify({dId: obj.members?.user?.id, opt: 'alt', id: obj.id })
+              custom_id: JSON.stringify({dId: obj.member?.user?.id, opt: 'alt', id: obj.id })
             },
             {
               type: 2,
               label: 'Cancel',
               style: 4,
-              custom_id: JSON.stringify({dId: obj.members?.user?.id, cancel: true, id: obj.id })
+              custom_id: JSON.stringify({dId: obj.member?.user?.id, cancel: true, id: obj.id })
             }
           ]
         }
@@ -54,7 +54,7 @@ module.exports = async(obj = {}, opt = {})=>{
         type: 2,
         label: dObj.allyCodes[i].name+' ('+dObj.allyCodes[i].allyCode+')',
         style: 1,
-        custom_id: JSON.stringify({dId: obj.members?.user?.id, opt: option, allyCode: dObj.allyCodes[i].allyCode, id: obj.id })
+        custom_id: JSON.stringify({dId: obj.member?.user?.id, opt: option, allyCode: dObj.allyCodes[i].allyCode, id: obj.id })
       })
       if(msg2send.components[x].components.length == 5) x++;
     }
@@ -62,7 +62,7 @@ module.exports = async(obj = {}, opt = {})=>{
       type: 2,
       label: 'Cancel',
       style: 4,
-      custom_id: JSON.stringify({dId: obj.members?.user?.id, cancel: true, id: obj.id})
+      custom_id: JSON.stringify({dId: obj.member?.user?.id, cancel: true, id: obj.id})
     })
     await replyComponent(obj, msg2send)
     return

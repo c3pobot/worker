@@ -27,7 +27,7 @@ module.exports = async(obj = {}, opt = {})=>{
         type: 2,
         label: pObj.units[i].nameKey,
         style: 1,
-        custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user?.id, baseId: pObj.units[i].baseId })
+        custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, baseId: pObj.units[i].baseId })
       })
       if(msg2send.components[x].components.length == 5) x++;
     }
@@ -36,7 +36,7 @@ module.exports = async(obj = {}, opt = {})=>{
       type: 2,
       label: 'Cancel',
       style: 4,
-      custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user?.id, cancel: true })
+      custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
     })
     await replyComponent(obj, msg2send)
     return

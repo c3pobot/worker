@@ -33,7 +33,7 @@ module.exports = async(obj ={}, opt = {})=>{
         type: 2,
         label: 'Round-'+pConfig[i].round,
         style: 1,
-        custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user?.id, tbDay: +pConfig[i].round })
+        custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, tbDay: +pConfig[i].round })
       })
       if(msg2send.components[x].components.length == 5) x++;
     }
@@ -42,7 +42,7 @@ module.exports = async(obj ={}, opt = {})=>{
       type: 2,
       label: 'Cancel',
       style: 1,
-      custom_id: JSON.stringify({ id: obj.id, dId: obj.members?.user?.id, tbDay: 'none' })
+      custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, tbDay: 'none' })
     })
     await replyComponent(obj, msg2send)
     return

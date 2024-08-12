@@ -39,9 +39,9 @@ module.exports = async(obj = {}, opt = {})=>{
   let allyObj = dObj.allyCodes.find(x=>x.allyCode === allyCode)
   if(!allyObj?.allyCode) return { content: `${allyCode} is not registerd to your account...` }
 
-  if(allyObj.type == 'google' || allyObj.type == 'codeAuth') mongo.del('tokens', {_id: allyObj.uId})
-  if(allyObj.type == 'facebook') mongo.del('facebook', {_id: allyObj.uId})
-  if(allyObj.uId) mongo.del('identity', {_id: allyObj.uId})
+  await mongo.del('tokens', {_id: allyObj.uId})
+  await mongo.del('facebook', {_id: allyObj.uId})
+  await mongo.del('identity', {_id: allyObj.uId})
   await mongo.set('discordId', { _id: obj.member.user.id }, { allyCodes: dObj.allyCodes.filter(x=>x.allyCode !== allyCode) })
   return { content: `**${allyCode}** was unlinked...`}
 }

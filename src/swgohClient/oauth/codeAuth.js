@@ -61,5 +61,6 @@ module.exports = async(uid)=>{
     let encryptedToken = await google.Encrypt(newAuth.refreshToken)
     if(encryptedToken) await mongo.set('tokens', {_id: uid}, {refreshToken: encryptedToken})
   }
+  if(!newAuth?.refreshToken) return { error: 'expired' }
   return newAuth
 }

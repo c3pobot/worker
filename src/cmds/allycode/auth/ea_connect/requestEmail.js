@@ -1,7 +1,16 @@
 'use strict'
+const eaTOSUrl = 'https://tos.ea.com/legalapp/WEBTERMS/US/en/PC/'
 const { replyComponent } = require('src/helpers')
 module.exports = async(obj = {}, opt = {})=>{
-  await replyComponent(obj, { flags: 64, content: `Please click button below to input the EA Connect email for ${obj.data?.options?.allyCode}\nYou can also go the website and link`, components: [{ type: 1, components: [
+  let msg2send = `By clicking on the \`Enter EA Connect email\` button below you will be allowing a discord bot\nto login to your Star Wars Galaxy of Heroes Account on your behalf for allyCode ${obj.data?.options?.allyCode}\n`
+  msg2send += 'This may be in violation of EA Terms of Service (TOS)'
+  await replyComponent(obj, { flags: 64, content: msg2send, components: [{ type: 1, components: [
+    {
+      type: 2,
+      label: 'EA Terms of Service',
+      style: 5,
+      url: eaTOSUrl
+    },
     {
       type: 2,
       label: 'Enter EA Connect email',

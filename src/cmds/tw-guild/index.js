@@ -1,5 +1,6 @@
 'use strict'
 const Cmds = {}
+Cmds.datacron = require('./datacron')
 Cmds.enemy = require('./enemy')
 Cmds.omicron = require('./omicron')
 Cmds.report = require('./report')

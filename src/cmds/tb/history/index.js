@@ -5,6 +5,7 @@ Cmds.show = require('./show')
 
 const { getGuildId, checkGuildAdmin } = require('src/helpers')
 module.exports = async(obj = {}, opt = {})=>{
+  return { content: 'coming soon (tm)'}
   let pObj = await getGuildId({ dId: obj.member?.user?.id }, {}, opt)
   if(!pObj?.guildId) return { content: 'You allyCode is not linked to your discordId or you are not part of a guild...' }
 

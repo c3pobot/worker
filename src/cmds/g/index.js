@@ -1,5 +1,6 @@
 'use strict'
 const Cmds = {}
+Cmds.datacron = require('./datacron')
 Cmds['gear-relic'] = require('./relic')
 Cmds.quality = require('./quality')
 Cmds['report-units'] = require('./report-units')

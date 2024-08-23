@@ -6,6 +6,7 @@ const { calcRosterStats } = require('statcalc')
 const modifyUnit = async(uInfo = {}, roster = [], gLevel = null, rLevel = null, rarity = null, calcStats = true)=>{
   if(!uInfo.baseId || !roster || roster?.length === 0) return
   let units = []
+
   let tempUnit = roster.find(x=>x.definitionId.startsWith(uInfo.baseId + ':'))
   if(!tempUnit) return
   let unit = JSON.parse(JSON.stringify(tempUnit))
@@ -39,6 +40,7 @@ const modifyUnit = async(uInfo = {}, roster = [], gLevel = null, rLevel = null, 
       if(tempCrew) units.push(tempCrew)
     }
   }
+
   if(units.length > 0 && calcStats) calcRosterStats(units)
   if(units.length > 0) unit = units.find(x=>x.definitionId.startsWith(uInfo.baseId + ':'))
   return unit

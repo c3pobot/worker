@@ -63,5 +63,5 @@ module.exports = async(obj = {}, patreon = {}, opt = {})=>{
   }
   patreon.guilds.push(tempGuild)
   await mongo.set('patreon', { _id: patreon._id }, { guilds: patreon.guilds })
-  return { content: `guild **${guild.name} was addd to your list...` }
+  return { content: `guild **${tempGuild?.name}** was addd to your list...` }
 }

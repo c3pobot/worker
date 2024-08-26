@@ -1,6 +1,6 @@
 'use strict'
 const mongo = require('mongoclient')
-const { getGuildName } = require('src/helpers')
+const { getGuildName, replyComponent } = require('src/helpers')
 
 module.exports = async(obj = {}, patreon = {}, opt = {})=>{
   if(obj.confirm?.cancel) return { content: 'command canceled...', components: [] }
@@ -30,7 +30,7 @@ module.exports = async(obj = {}, patreon = {}, opt = {})=>{
         type: 2,
         label: patreon.guilds[i].name,
         style: 1,
-        custom_id: JSON.stringify({ dId: obj.member?.user?.id, guildName: patreon.guilds[i].name, guildId: patreon.guilds[i].id })
+        custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, guildId: patreon.guilds[i].id })
       })
       if(msg2send.components[x].components.length == 5) x++;
     }
@@ -38,12 +38,19 @@ module.exports = async(obj = {}, patreon = {}, opt = {})=>{
       type: 2,
       label: 'Cancel',
       style: 4,
-      custom_id: JSON.stringify({ dId: obj.member?.user?.id, cancel: true })
+      custom_id: JSON.stringify({ id: obj.id, dId: obj.member?.user?.id, cancel: true })
     })
     if(dataChange) await mongo.set('patreon', { _id: patreon._id }, { guild: patreon.guilds })
-    return msg2send
+    await replyComponent(obj, msg2send)
+    return
   }
 
+  let guild = patreon.guilds.find(x=>x.id === guildId)
+  if(!guild){
+    let guildName = await getGuildName(guildId)
+    return { content: `${guildName || 'that guild'} is not in your list` }
+  }
+  if(!guild.name) guild.name = await getGuildName(guildId)
   await mongo.set('patreon', { _id: patreon?._id}, { guilds: patreon.guilds.filter(x=>x.id !== guildId) })
-  return { content: `${guildName} was removed from your list...` }
+  return { content: `${guild.name || 'that guild'} was removed from your list...` }
 }

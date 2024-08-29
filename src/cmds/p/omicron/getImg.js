@@ -4,7 +4,7 @@ const mongo = require('mongoclient')
 const sorter = require('json-array-sorter')
 const getOmiUnits = require('./getOmiUnits')
 const getHTML = require('webimg').omicron
-const omiFilter = require('./omiFilter')
+const omiTypeFilter = require('./omiFilter')
 const Enums = require('src/helpers/enum')
 
 const { getImg  } = require('src/helpers')
@@ -14,7 +14,7 @@ module.exports = async(pObj = {}, opt = {})=>{
     let omiType = +(opt.type?.value || 0), omiFilter
     if(omiType){
       omiFilter = (x=>x.omicronMode === omiType)
-      if(omiFilter[omiType]?.filter) omiFilter = omiFilter[omiType]?.filter
+      if(omiTypeFilter[omiType]?.filter) omiFilter = omiTypeFilter[omiType]?.filter
     }
     let omiData = await mongo.find('omicronList', {})
     if(!omiData || omiData?.length == 0) return { content: 'error getting omicrons from db' }
@@ -29,7 +29,7 @@ module.exports = async(pObj = {}, opt = {})=>{
 
     let units = await getOmiUnits(pUnits, omiData)
     if(!units) return { content: 'Error checking for omis' }
-    if(units.length == 0) return { content: 'Player has no '+(omiType ? '**'+Enums?.omicro[omiType]+'**':'')+' omicron(s)' }
+    if(units.length == 0) return { content: 'Player has no '+(omiType ? '**'+Enums?.omicron[omiType]+'**':'')+' omicron(s)' }
 
     units = sorter([{order: 'descending', column: 'count'}], units)
     let webData = await getHTML?.player(units, {

@@ -21,7 +21,6 @@ module.exports = async(obj = {}, opt = {}, dObj = {}, missionId, zoneId)=>{
   let battleStats = await swgohClient.oauth(obj, 'getMapStats', dObj, { territoryMapId: guildData.instanceId })
   if(battleStats === 'GETTING_CONFIRMATION') return battleStats
   if(battleStats?.error) return await replyTokenError(obj, dObj.allyCode, gObj.error)
-  if(battleStats?.msg2send) return { content: battleStats.msg2send }
   if(!battleStats?.data?.currentStat) return { content: 'error getting battle stats'}
 
   let attempedStats = battleStats?.data?.currentStat?.find(x=>x.mapStatId === `covert_round_attempted_mission_${missionId}`)

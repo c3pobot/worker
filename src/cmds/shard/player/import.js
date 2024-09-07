@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 const swgohClient = require('src/swgohClient')
 
 const { addPlayer } = require('./helper')
-const { checkShardAdmin, getDiscordAC, replyButton } = require('src/helpers')
+const { checkShardAdmin, getDiscordAC, replyButton, replyTokenError } = require('src/helpers')
 
 const importPlayer = async(shard = {}, obj = {}, emoji = null)=>{
   let count

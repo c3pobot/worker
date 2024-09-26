@@ -10,7 +10,7 @@ let QUE_NAME = `${NAME_SPACE}.${POD_NAME}.topic`
 let DATA_EXCHANGE_NAME = process.env.GAME_DATA_EXCHANGE || `data-sync`
 let DATA_ROUTING_KEY = process.env.GAME_DATA_TOPIC || `${NAME_SPACE}.${DATA_EXCHANGE_NAME}.game-data`
 
-let exchanges = [{ exchange: DATA_EXCHANGE_NAME, durable: true, type: 'topic'}]
+let exchanges = [{ exchange: DATA_EXCHANGE_NAME, type: 'topic'}]
 let queueBindings = [{ exchange: DATA_EXCHANGE_NAME, routingKey: DATA_ROUTING_KEY, queue: QUE_NAME }]
 let consumer
 const cmdProcessor = (msg = {})=>{

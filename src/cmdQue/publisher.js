@@ -9,7 +9,7 @@ let PRIVATE_QUES = process.env.PRIVATE_QUES || false, POD_NAME = process.env.POD
 
 module.exports.start = async()=>{
   let payload = { confirm: true, queues: [] }
-  for(let i in queues) payload.queues.push({ queue: `${WORKER_QUE_NAME_SPACE}.worker.${queues[i]}`, durable: true, arguments: { 'x-queue-type': 'quorum', 'x-message-ttl': 600000 }})
+  for(let i in queues) payload.queues.push({ queue: `${WORKER_QUE_NAME_SPACE}.worker.${queues[i]}`, arguments: {  'x-message-ttl': 600000 }})
   publisher = rabbitmq.createPublisher(payload)
   publisherReady = true
   return true

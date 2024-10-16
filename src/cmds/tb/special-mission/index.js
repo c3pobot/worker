@@ -25,7 +25,7 @@ const mapSpecialMissions = (coverts = [], conflicts = [], obj)=>{
 }
 
 module.exports = async(obj = {}, opt = {})=>{
-  
+
   if(obj.confirm?.response === 'no' || obj.confirm?.cancel) return { content: 'command canceled', components: [] }
 
   let dObj = await getDiscordAC(obj.member.user.id, opt)
@@ -36,6 +36,10 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!guildData){
     let gObj = await swgohClient.oauth(obj, 'guild', dObj, {})
     if(gObj === 'GETTING_CONFIRMATION') return
+    if(gObj?.error == 'invalid_grant'){
+      await replyTokenError(obj, dObj.allyCode)
+      return;
+    }
     if(gObj?.error) return await replyTokenError(obj, dObj.allyCode, gObj.error)
     if(!gObj?.data?.guild) return { content: 'Error getting guild data' }
 
@@ -89,8 +93,13 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!specialMission?.zoneId) return { content: 'error finding that mission' }
 
   let events = await getData(obj, opt, dObj, mission, specialMission.zoneId)
-  if(events?.content) return { content: events.content }
   if(events === 'GETTING_CONFIRMATION') return
+  if(events?.error == 'invalid_grant'){
+    await replyTokenError(obj, dObj.allyCode)
+    return;
+  }
+  if(events?.content) return { content: events.content }
+
   if(!events?.attempt || events?.attempt?.length === 0) return { content: 'No one has attempted the mission yet' }
 
   let missing = await getMissing(specialMission, guildData.profile.id, new Set(events.attempt || []))

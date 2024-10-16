@@ -4,8 +4,8 @@ const swgohClient = require('src/swgohClient')
 module.exports = async(obj = {}, opt = {}, dObj = {}, missionId, zoneId)=>{
   let res = {}
   let gObj = await swgohClient.oauth(obj, 'guild', dObj, {})
-  if(gObj === 'GETTING_CONFIRMATION') return gObj
-  if(gObj?.error) return await replyTokenError(obj, dObj.allyCode, gObj.error)
+  if(gObj === 'GETTING_CONFIRMATION') return 'GETTING_CONFIRMATION'
+  if(gObj?.error) return gObj
   if(!gObj?.data?.guild) return { content: 'Error getting guild data' }
 
   gObj = gObj.data.guild
@@ -19,8 +19,8 @@ module.exports = async(obj = {}, opt = {}, dObj = {}, missionId, zoneId)=>{
   if(!res.conflict?.channelId) return { content: 'error finding zone data' }
 
   let battleStats = await swgohClient.oauth(obj, 'getMapStats', dObj, { territoryMapId: guildData.instanceId })
-  if(battleStats === 'GETTING_CONFIRMATION') return battleStats
-  if(battleStats?.error) return await replyTokenError(obj, dObj.allyCode, gObj.error)
+  if(battleStats === 'GETTING_CONFIRMATION') return 'GETTING_CONFIRMATION'
+  if(battleStats?.error) return battleStats
   if(!battleStats?.data?.currentStat) return { content: 'error getting battle stats'}
 
   let attempedStats = battleStats?.data?.currentStat?.find(x=>x.mapStatId === `covert_round_attempted_mission_${missionId}`)

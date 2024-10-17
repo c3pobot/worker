@@ -21,11 +21,11 @@ const modifyUnit = async(uInfo = {}, roster = [], gLevel = null, rLevel = null, 
     }
     if(uInfo.combatType === 1 && (gLevel || rLevel)){
       unit.equipment = []
-      if(gLevel){
+      if(gLevel && gLevel > unit.currentTier){
         unit.currentTier = gLevel
         unit.relic = {currentTier: (gLevel == 13 ? 1:0)}
       }
-      if(rLevel){
+      if(rLevel && (!unit.relic?.currentTier || rLevel > unit.relic?.currentTier)){
         unit.currentTier = 13
         unit.relic = {currentTier: rLevel}
         unit.rarity = 7

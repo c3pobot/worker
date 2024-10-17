@@ -15,7 +15,7 @@ const modifyUnit = async(uInfo = {}, roster = [], gLevel = null, rLevel = null, 
     delete unit.stats
     delete unit.gp
     unit.currentLevel = 85
-    if(rarity){
+    if(rarity && rarity > unit.currentRarity){
       unit.currentRarity = rarity
       unit.definitionId = unit.definitionId.split(':')[0] + ':'+(enum_stars[rarity] ? enum_stars[rarity]:'SEVEN_STAR')
     }

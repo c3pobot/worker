@@ -30,12 +30,7 @@ module.exports = async(obj = {}, opt = {})=>{
     if(rarity > 7 || 0 >= rarity) rarity = 7
     rarity = +rarity
   }
-  let rLevel, gLevel
-  if(opt.relic_level?.value || opt.gear_level?.value){
-    let { rLevelTemp, gLevelTemp } = getRelicLevel(opt)
-    rLevel = rLevelTemp
-    gLevel = gLevelTemp
-  }
+  let { rLevel, gLevel } = getRelicLevel(opt)
   if(rLevel) rLevel += 2
   return await getImg(uInfo, pObj, gLevel, rLevel, rarity)
 }

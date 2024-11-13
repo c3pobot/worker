@@ -10,7 +10,7 @@ module.exports = async(uInfo = {}, pObj = {}, gLevel, rLevel, rarity)=>{
     let webUnit1 = pObj.rosterUnit.find(x => x.definitionId.startsWith(uInfo.baseId + ':'))
     if(!webUnit1) { content: '**'+uInfo.nameKey+'** is not activated' }
 
-    let webUnit2 = await modifyUnit(uInfo, pObj.rosterUnit, gLevel, rLevel, rarity, true)
+    let webUnit2 = await modifyUnit(uInfo, pObj.rosterUnit, gLevel, rLevel, rarity, true, uInfo.combatType)
     if(!webUnit2?.stats) return { content: `Error modifying **${uInfo.nameKey}**` }
     let [ unit1, unit2 ] = await Promise.allSettled([
       formatUnit(uInfo, webUnit1),

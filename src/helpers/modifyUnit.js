@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 const enum_stars = require('./enumStars')
 const { calcRosterStats } = require('statcalc')
 
-const modifyUnit = async(uInfo = {}, roster = [], gLevel = null, rLevel = null, rarity = null, calcStats = true)=>{
+const modifyUnit = async(uInfo = {}, roster = [], gLevel = null, rLevel = null, rarity = null, calcStats = true, mainUnitType = 1)=>{
   if(!uInfo.baseId || !roster || roster?.length === 0) return
   let units = []
 
@@ -21,11 +21,11 @@ const modifyUnit = async(uInfo = {}, roster = [], gLevel = null, rLevel = null, 
     }
     if(uInfo.combatType === 1 && (gLevel || rLevel)){
       unit.equipment = []
-      if(gLevel && gLevel > unit.currentTier){
+      if(gLevel && (gLevel > unit.currentTier || mainUnitType === 1)){
         unit.currentTier = gLevel
         unit.relic = {currentTier: (gLevel == 13 ? 1:0)}
       }
-      if(rLevel && (!unit.relic?.currentTier || rLevel > unit.relic?.currentTier)){
+      if(rLevel && (!unit.relic?.currentTier || (rLevel > unit.relic?.currentTier || mainUnitType === 1))){
         unit.currentTier = 13
         unit.relic = {currentTier: rLevel}
         unit.rarity = 7
@@ -36,7 +36,7 @@ const modifyUnit = async(uInfo = {}, roster = [], gLevel = null, rLevel = null, 
   if(calcStats && uInfo.combatType === 2 && uInfo.crew?.length > 0){
     let crewInfos = await mongo.find('units', {_id: {$in: uInfo.crew}})
     for(let i in uInfo.crew){
-      let tempCrew = await modifyUnit(crewInfos.find(x=>x._id === uInfo.crew[i]), roster, gLevel, rLevel, rarity, false)
+      let tempCrew = await modifyUnit(crewInfos.find(x=>x._id === uInfo.crew[i]), roster, gLevel, rLevel, rarity, false, mainUnitType)
       if(tempCrew) units.push(tempCrew)
     }
   }

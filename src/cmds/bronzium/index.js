@@ -35,7 +35,7 @@ module.exports = async(obj = {})=>{
 
     let spendRequest = qty * 250
     if(spendRequest > socialTotal) qty = Math.floor(socialTotal / 250)
-    let tObj = await swgohClient.oauth(obj, 'buyItem', dObj, { itemId: packId, paymentCurrency: 4, quantity: qty })
+    let tObj = await swgohClient.oauth(obj, 'buyItem', dObj, { itemId: packId, paymentCurrency: 4, quantity: qty, inboxReceipt: true, storePlatform: 5 })
     if(tObj === 'GETTING_CONFIRMATION') return
     if(tObj?.error == 'invalid_grant'){
       await replyTokenError(obj, dObj.allyCode)

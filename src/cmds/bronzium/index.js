@@ -45,6 +45,7 @@ module.exports = async(obj = {})=>{
     if(!tObj?.data?.purchasedResult || tObj?.data?.purchasedResult?.length === 0) return { content: 'Error opening bronzium packs' }
 
     let data = await formatItems(tObj.data.purchasedResult)
+
     if(!data?.spent) return { content: 'Packs where opened however i had an error figuring out what you got..'}
     let embedMsg = {
       color: 15844367,

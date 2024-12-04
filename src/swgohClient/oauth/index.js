@@ -3,6 +3,7 @@ const processAPIRequest = require('./processOauthRequest');
 const mongo = require('mongoclient')
 const google = require('./google')
 const codeAuth = require('./codeAuth')
+const eaconnectAuth = require('./eaconnectAuth')
 const confirmButton = require('src/helpers/confirmButton')
 const replyMsg = require('src/helpers/replyMsg')
 
@@ -60,6 +61,7 @@ const getIdentity = async(uid, type, newIdentity = false)=>{
       if(ssaid) auth = await getGuestAuth(ssaid)
     }
     if(type === 'codeAuth') auth = await codeAuth(uid)
+    if(type === 'eaconnect') auth = await eaconnectAuth(uid)
   }else{
     let tempAuth = (await mongo.find('identity', {_id: uid}, {_id:0, TTL: 0}))[0]
     if(tempAuth?.auth?.authId && tempAuth?.auth?.authToken) auth = tempAuth?.auth

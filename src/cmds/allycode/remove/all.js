@@ -4,6 +4,7 @@ const { confirmButton } = require('src/helpers')
 const cleanAllyCode = async(obj = {})=>{
   if(!obj.uId) return
   await mongo.del('tokens', {_id: obj.uId })
+  await mongo.del('eaconnectTokens', {_id: obj.uId})
   await mongo.del('facebook', {_id: obj.uId})
   await mongo.del('identity', {_id: obj.uId})
 }

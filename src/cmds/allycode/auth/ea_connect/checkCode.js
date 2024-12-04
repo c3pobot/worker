@@ -3,28 +3,26 @@ const log = require('logger')
 const mongo = require('mongoclient')
 const swgohClient = require('src/swgohClient')
 const fetch = require('./fetch')
+const getIdentity = require('./getIdentity')
 const { v5: uuidv5 } = require('uuid')
 
-module.exports = async(obj = {}, opt = {}, allyCode, email, authCode)=>{
+module.exports = async(obj = {}, opt = {}, allyCode, email, authCode, googleId)=>{
   if(!authCode || !allyCode || !email) return { content: 'no authcode or allycode provided' }
 
-  let cache = (await mongo.find('codeAuthCache', { _id: allyCode?.toString() }))[0]
-  mongo.del('codeAuthCache', {_id: allyCode?.toString() })
-  if(!cache?.authId || !cache?.authToken) return { content: 'command timed out.' }
+  let cache = (await mongo.find('eaconnectCache', { _id: allyCode?.toString() }))[0]
+  mongo.del('eaconnectCache', {_id: allyCode?.toString() })
+  if(!cache || !cache?.initref || !cache?.executionId || !cache?.fId || !cache?.JSESSIONID) return { content: 'command timed out.' }
 
-  let tempAuth = await fetch('auth/code_check', { code: authCode?.toString(), email: email, rememberMe: true }, { 'X-Rpc-Auth-Id': cache.authId, 'Cookie': `authToken=${cache.authToken}` })
-  if(!tempAuth?.authId || !tempAuth?.authToken || !tempAuth?.refreshToken) return { content: 'error getting auth from code' }
+  let data = await getIdentity(cache, authCode)
+  if(!data?.auth || !data?.remid || !data._nx_mpcid || !data?.auth?.authToken || !data?.auth?.authId) return { content: 'error getting auth from code' }
 
-  tempAuth.deviceId = uuidv5(tempAuth.authId, uuidv5.URL)
-  if(!tempAuth.deviceId) return { content: 'error generating a UUID' }
+  data.deviceId = uuidv5(data.auth.authId, uuidv5.URL)
+  if(!data.deviceId) return { content: 'error generating a UUID' }
 
   let identity = {
-    auth: {
-      authId: tempAuth.authId,
-      authToken: tempAuth.authToken,
-    },
-    deviceId: tempAuth.deviceId,
-    androidId: tempAuth.deviceId,
+    auth: data.auth,
+    deviceId: data.deviceId,
+    androidId: data.deviceId,
     platform: 'Android'
   }
   let pObj = await swgohClient.oauthPost('getInitialData', {}, identity)
@@ -33,9 +31,14 @@ module.exports = async(obj = {}, opt = {}, allyCode, email, authCode)=>{
     log.error(`ea connect error: Requested: ${allyCode} From game: ${pObj.player.allyCode}`)
     return { content: `the allyCode from the game did not match ${allyCode}. Make sure you are using the correct allyCode and email` }
   }
-  let encryptedToken = await swgohClient.Google.Encrypt(tempAuth.refreshToken)
+  let encryptedToken = await swgohClient.Google.Encrypt(data.remid)
   await mongo.set('identity', { _id: identity.deviceId }, identity)
-  await mongo.set('tokens', { _id: identity.deviceId }, { refreshToken: encryptedToken })
-  await mongo.set('discordId', { _id: obj.member?.user?.id, 'allyCodes.allyCode': +allyCode }, { 'allyCodes.$.uId': tempAuth.deviceId, 'allyCodes.$.type': 'codeAuth' })
+  await mongo.del('tokens', { _id: identity.deviceId})
+  if(googleId){
+    await mongo.del('tokens', { _id: googleId })
+    await mongo.del('identity', { _id: googleId })
+  }
+  await mongo.set('eaconnectTokens', { _id: identity.deviceId }, { _nx_mpcid: data._nx_mpcid, remid: encryptedToken })
+  await mongo.set('discordId', { _id: obj.member?.user?.id, 'allyCodes.allyCode': +allyCode }, { 'allyCodes.$.uId': data.deviceId, 'allyCodes.$.type': 'eaconnect' })
   return { content: `Successfully linked EA Connect auth for ${allyCode}` }
 }

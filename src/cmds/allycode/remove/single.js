@@ -40,6 +40,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!allyObj?.allyCode) return { content: `${allyCode} is not registerd to your account...` }
 
   await mongo.del('tokens', {_id: allyObj.uId})
+  await mongo.del('eaconnectTokens', {_id: allyObj.uId})
   await mongo.del('facebook', {_id: allyObj.uId})
   await mongo.del('identity', {_id: allyObj.uId})
   await mongo.set('discordId', { _id: obj.member.user.id }, { allyCodes: dObj.allyCodes.filter(x=>x.allyCode !== allyCode) })

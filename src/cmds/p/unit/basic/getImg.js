@@ -1,4 +1,5 @@
 'use strict'
+const mongo = require('mongoclient')
 const log = require('logger')
 const getHTML = require('webimg').unit
 
@@ -13,7 +14,7 @@ module.exports = async(uInfo = {}, pObj = {})=>{
 
     let webData = await getHTML.stats(webUnit, {footer: pObj.name + '\'s ' + uInfo.nameKey + ' | Data Updated ' + (new Date(pObj.updated)).toLocaleString('en-US', {timeZone: 'America/New_York'})})
     if(!webData?.html) return { content: 'error getting html' }
-
+    mongo.set('webCache', { _id: 'test' }, { footer: pObj.name + '\'s ' + uInfo.nameKey + ' | Data Updated ' + (new Date(pObj.updated)).toLocaleString('en-US', {timeZone: 'America/New_York'}), webUnit: webUnit })
     let webImg = await getImg(webData.html, null, (webUnit.equippedStatMod?.length > 0 ? 1118 : 758), false)
     if(!webImg) return { content: 'error getting image..' }
 

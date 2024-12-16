@@ -30,11 +30,11 @@ module.exports = async(unit = {})=>{
   for(let i in sUnit.gearLvl[unit.currentTier]){
     stats[i] = sUnit.gearLvl[unit.currentTier][i] / div
   }
-
-  stats[2] += Math.floor( (sUnit.growthModifiers[unit.currentRarity][2] / div) * unit.currentLevel )
-  stats[3] += Math.floor( (sUnit.growthModifiers[unit.currentRarity][3] / div) * unit.currentLevel )
-  stats[4] += Math.floor( (sUnit.growthModifiers[unit.currentRarity][4] / div) * unit.currentLevel )
-
+  if(sUnit.growthModifiers[unit.currentRarity]){
+    stats[2] += Math.floor( (sUnit.growthModifiers[unit.currentRarity][2] / div) * unit.currentLevel )
+    stats[3] += Math.floor( (sUnit.growthModifiers[unit.currentRarity][3] / div) * unit.currentLevel )
+    stats[4] += Math.floor( (sUnit.growthModifiers[unit.currentRarity][4] / div) * unit.currentLevel )
+  }
   stats[1] = Math.floor( (stats[1] || 0) + (stats[2] * 18) )
   stats[6] = Math.floor( (stats[6] || 0) + (stats[sUnit.primaryStat] * 1.4) )
   stats[7] = Math.floor( (stats[7] || 0) + (stats[4] * 2.4) )

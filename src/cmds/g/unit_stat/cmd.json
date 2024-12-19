@@ -1,0 +1,100 @@
+{
+  "type": 1,
+  "name": "unit_stat",
+  "description": "shows unit stat info for the guild",
+  "options": [
+    {
+      "type": 3,
+      "name": "unit",
+      "description": "Unit to query",
+      "required": true,
+      "autocomplete": true,
+      "focused": true
+    },
+    {
+      "type": 3,
+      "name": "stat",
+      "description": "stat to query",
+      "required": true,
+      "choices":[
+        {
+          "name": "speed",
+          "value": "speed"
+        },
+        {
+          "name": "offense",
+          "value": "offense"
+        },
+        {
+          "name": "defense",
+          "value": "defense"
+        },
+        {
+          "name": "potency",
+          "value": "potency"
+        },
+        {
+          "name": "tenacity",
+          "value": "tenacity"
+        },
+        {
+          "name": "health",
+          "value": "health"
+        },
+        {
+          "name": "protection",
+          "value": "protection"
+        }
+      ]
+    },
+    {
+        "type": 4,
+        "name": "relic_level",
+        "description": "Relic Level",
+        "required": false,
+        "min_value": 1
+    },
+    {
+        "type": 4,
+        "name": "gear_level",
+        "description": "Gear level",
+        "required": false,
+        "min_value": 1
+    },
+    {
+        "type": 4,
+        "name": "rarity",
+        "description": "Rarity",
+        "required": false,
+        "min_value": 1,
+        "max_value": 7
+    },
+    {
+      "type": 6,
+      "name": "user",
+      "description": "@user to lookup",
+      "required": false
+    },
+    {
+      "type": 3,
+      "name": "allycode",
+      "description": "allyCode to lookup",
+      "required": false
+    },
+    {
+      "type": 3,
+      "name": "allycode_option",
+      "description": "primary or alt allycode",
+      "choices": [
+        {
+          "name": "Primary",
+          "value": "primary"
+        },
+        {
+          "name": "Alt",
+          "value": "alt"
+        }
+      ]
+    }
+  ]
+}

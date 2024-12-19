@@ -1,4 +1,5 @@
 'use strict'
+const mongo = require('mongoclient')
 const twStats = require('./helper/twStats')
 const getHtml = require('webimg').tw
 
@@ -35,6 +36,7 @@ module.exports = async(obj = {}, opt = {})=>{
 
   guildData.currentStat = battleStats.data.currentStat
   guildData.instanceInfo = gObj.data.guild.guildEvents.find(x=>x.id == guildData.instanceId.split(':')[0])
+  await mongo.set('tempCache', { _id: 'twStatus' }, { data: guildData })
   let webData = twStats(guildData, gObj.data.guild.profile.id)
   if(!webData) return { content: 'Error calculating stats...'}
 

@@ -52,10 +52,10 @@ module.exports = async(obj = {}, opt = {})=>{
   for(let i in squads) getBattles(battleLog.event, squads[i])
   squads = squads.filter(x=>x.log?.length > 0)
   if(squads?.length == 0){
-    await replyComponent(obj, { content: `I could not find info for attackes in ${zoneMap[zoneId]?.nameKey} maybe no battles have happened yet`, components: buttons }, method)
+    await replyComponent(obj, { content: `I could not find info for attacks in ${zoneMap[zoneId]?.nameKey} maybe no battles have happened yet`, components: buttons }, method)
     return
   }
-
+  mongo.set('tempCache', { _id: 'squadBattles' }, { data: squads })
   guild.zone = zoneMap[zoneId]?.nameKey
   let webHTML = getHtml.battleLog({squads: squads, profile: guild})
   if(!webHTML){

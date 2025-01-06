@@ -14,7 +14,7 @@ module.exports = async(obj = {}, opt = {})=>{
 
   if(trigger) tempObj.trigger = trigger
   if(response) tempObj.response = response
-  if(crca >= 0) tempObj.crca = crca
+  if(crca >= 0) tempObj.anywhere = crca
   await mongo.set('reactions', { _id: 'global', 'cr.id': id }, { 'cr.$': tempObj })
   let embedMsg = {
     color: 15844367,

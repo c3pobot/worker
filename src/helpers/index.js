@@ -17,6 +17,7 @@ Cmds.checkServerAdmin = require('./checkServerAdmin')
 Cmds.checkShardAdmin = require('./checkShardAdmin')
 Cmds.checkSuperAdmin = require('./checkSuperAdmin')
 Cmds.checkUnitMats = require('./checkUnitMats')
+Cmds.checkVIP = require('./checkVIP')
 Cmds.confirmButton = require('./confirmButton')
 Cmds.createIntialMessage = require('./createIntialMessage')
 

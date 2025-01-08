@@ -18,6 +18,17 @@
         "min_value": 1
     },
     {
+        "type": 4,
+        "name": "max_relic",
+        "description": "Limit max relic level",
+        "min_value": 1
+    },
+    {
+        "type": 5,
+        "name": "exact_match",
+        "description": "Limit results to exact relic or gear match"
+    },
+    {
       "type": 3,
       "name": "sort",
       "description": "sort results by unit name or gp (default is name)",

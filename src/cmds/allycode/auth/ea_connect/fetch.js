@@ -6,7 +6,10 @@ const getCookie = (cookie, res = {})=>{
   if(!array || array?.length == 0) return
   let data = array[0].split('=')
   if(!data || data?.length == 0) return
-  res[data[0]] = data[1]?.replace(/\"/g, '')
+  let cookieData = data[1]?.replace(/\"/g, '')
+  if(!cookieData) return
+  res[data[0]] = cookieData
+  //res[data[0]] = data[1]?.replace(/\"/g, '')
 }
 const mapCookies = (cookies)=>{
   let res = {}

@@ -14,4 +14,14 @@ Cmds.getMissingGP = (member, gpDeployed)=>{
   tempObj.value += '```'
   return tempObj
 }
+Cmds.getMemberGP = (member = {}, gpDeployed = 0)=>{
+  return {
+      name: member.name,
+      gp: numeral(member.gp || 0).format('0,0'),
+      gpChar: numeral(member.gpChar || 0).format('0,0'),
+      gpShip: numeral(member.gpShip || 0).format('0,0'),
+      gpDeployed: numeral(gpDeployed || 0).format('0,0'),
+      gpNotDeployed: numeral( +(member.gp || 0) - +(gpDeployed || 0)).format('0,0')
+   }
+}
 module.exports = Cmds

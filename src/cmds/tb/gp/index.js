@@ -1,7 +1,7 @@
 'use strict'
 const Cmds = {}
 Cmds.char = require('./char')
-Cmds.low = require('./low')
+//Cmds.low = require('./low')
 Cmds.total = require('./total')
 
 module.exports = async(obj = {}, opt = {})=>{

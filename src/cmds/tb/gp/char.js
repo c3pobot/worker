@@ -1,8 +1,11 @@
 'use strict'
 const mongo = require('mongoclient')
 const numeral = require('numeral')
-const { getMissingGP } = require('./helper')
+const sorter = require('json-array-sorter')
+const { getMemberGP } = require('./helper')
 const getData = require('../getData')
+const getHTML = require('webimg').tb.gpTotal
+const { getImg } = require('src/helpers')
 
 module.exports = async(obj = {}, opt = {})=>{
   let tbObj = await getData(obj, opt)
@@ -13,35 +16,31 @@ module.exports = async(obj = {}, opt = {})=>{
   let gObj = (await mongo.find('tbCache', {_id: tbObj.data.guildId}))[0]
   if(!gObj?.currentStat) return { content: 'Error getting data from db' }
 
-  let embedMsg = {
-    color: 15844367,
-    timestamp: new Date(),
-    title: gObj.name + " Members with possible missing deployment",
-    fields: []
-  }
-  let gpDeployed = gObj.currentStat?.find(x=>x.mapStatId == ('power_round_'+gObj.currentRound)), memberCount = 0, missingDeployment = 0
+  let gpDeployed = gObj.currentStat?.find(x=>x.mapStatId == ('power_round_'+gObj.currentRound))
+  let memberCount = 0, missingDeployment = 0, lowMembers = []
   for(let i in gObj.member){
     let deployedGP = gpDeployed.playerStat.find(x=>x.memberId == gObj.member[i].playerId)
     if(deployedGP?.score){
       if(+deployedGP.score < gObj.member[i].gpChar && gObj.member[i].gpChar - (deployedGP.score) > 100000){
         missingDeployment += (gObj.member[i].gp - (+deployedGP.score) || 0)
-        if(memberCount < 26) embedMsg.fields.push(getMissingGP(gObj.member[i], deployedGP.score))
+        lowMembers.push(getMemberGP(gObj.member[i], deployedGP?.score))
         memberCount++
       }
     }else{
       missingDeployment += (gObj.member[i].gp || 0)
-      if(memberCount < 26) embedMsg.fields.push(getMissingGP(gObj.member[i], '0'));
+      lowMembers.push(getMemberGP(gObj.member[i], 0))
       memberCount++
     }
   }
-  if(memberCount == 0){
-    embedMsg.fields.push({
-      name: 'Deployment Complete',
-      value: '```autohotkey\nEveryone deployed\n```'
-    })
-  }
-  embedMsg.description = '```autohotkey\nTotal missing Deployent : '+numeral(missingDeployment).format('0,0')+'\nThere is '+memberCount+' with Deployment issues\n'
-  if(memberCount > 25) embedMsg.description += 'Below is 25 of them\n'
-  embedMsg.description += '```'
-  return { content: null, embeds: [embedMsg] }
+  if(lowMembers?.length > 0) lowMembers = sorter([{ column: 'name', order: 'ascending'}], lowMembers || [])
+
+  if(memberCount == 0) return { content: 'Char Deployment Complete' }
+
+  let webHTML = getHTML({ members: lowMembers, missingDeployment: numeral(missingDeployment || 0).format('0,0'), memberCount: memberCount, guildMemberCount: gObj.member?.length || 0, guildName: gObj.name })
+  if(!webHTML) return { content: 'Error getting HTML' }
+
+  let webImg = await getImg(webHTML, obj.id, 800, false)
+  if(!webImg) return { content: 'Error getting image' }
+
+  return { content: null, file: webImg, fileName: `${gObj.name}-gpChar.png` }
 }

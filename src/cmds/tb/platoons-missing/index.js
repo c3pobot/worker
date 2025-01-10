@@ -65,7 +65,7 @@ module.exports = async(obj = {}, opt = {})=>{
   }
 
   let unitMap = tempData.unitMap
-  await mongo.set('tempCache', { _id: 'unitMap' }, unitMap)
+
   let rosterProject = {}
   for(let i in unitMap){
     if(unitMap[i].defId) rosterProject[unitMap[i].defId] = { baseId: 1, nameKey: 1, combatType: 1, icon: 1, gp: 1, rarity: 1, level: 1, relicTier: 1, gearTier: 1 }
@@ -77,7 +77,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!missingUnitMap || missingUnitMap.length === 0) return { content: 'error getting missing unit map' }
 
   missingUnitMap = sorter([{column: 'sort', order: 'ascending'}], missingUnitMap)
-
+  mongo.set('webCache', { _id: 'unitMap' }, { data: missingUnitMap })
   let webData = getHtml.missing({ name: gObj.profile.name, tbName: tbDef.nameKey, currentRound: territoryBattleData.currentRound, timeTillEnd: getTimeTillEnd(territoryBattleData.currentRoundEndTime), data: missingUnitMap, showPlayers: showPlayers })
   if(!webData) return { content: 'Error getting html' }
 

@@ -328,30 +328,7 @@
           {
             "type": 1,
             "name": "char",
-            "description": "(requires google/fb link) Reports if player char GP is less than deployed GP",
-            "options": [
-              {
-                "type": 3,
-                "name": "allycode_option",
-                "description": "primary or alt allycode",
-                "required": false,
-                "choices": [
-                  {
-                    "name": "Primary",
-                    "value": "primary"
-                  },
-                  {
-                    "name": "Alt",
-                    "value": "alt"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": 1,
-            "name": "low",
-            "description": "(requires google/fb link) Reports if player deployed GP is less than 2mil",
+            "description": "Reports if player char GP is less than deployed GP (requires google/EA auth)",
             "options": [
               {
                 "type": 3,
@@ -374,7 +351,7 @@
           {
             "type": 1,
             "name": "total",
-            "description": "(requires google/fb link) Reports if player total GP is less than deployed GP",
+            "description": "Reports if player total GP is less than deployed GP (requires google/EA auth)",
             "options": [
               {
                 "type": 3,

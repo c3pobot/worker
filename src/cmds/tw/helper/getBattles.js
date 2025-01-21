@@ -42,7 +42,6 @@ module.exports = (events = [], squad = {})=>{
       complete.totalUnits = battleStart[i].totalUnits
       complete.finsihTM = battleStart[i].startTM
     }
-    if(complete) console.log(complete)
     let tempObj = {...battleStart[i],...complete}
     tempObj.playerPreloaded = false
     tempObj.dateTime = formatDate(battleStart[i].timestamp)

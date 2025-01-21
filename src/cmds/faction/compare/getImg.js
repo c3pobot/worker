@@ -4,7 +4,7 @@ const { getTopUnits, getFactionUnits, getImg } = require('src/helpers')
 const getHTML = require('webimg').faction
 const { formatWebUnitStats } = require('src/format')
 
-module.exports = async(fInfo = {}, pObj = {}, eObj = {}, fInfo2 = {})=>{
+module.exports = async(fInfo = {}, pObj = {}, eObj = {}, fInfo2 = {}, eInfo = {})=>{
   try{
     let [ pUnits, eUnits ] = await Promise.allSettled([
       getFactionUnits(fInfo, pObj.rosterUnit, formatWebUnitStats, 40),
@@ -16,12 +16,15 @@ module.exports = async(fInfo = {}, pObj = {}, eObj = {}, fInfo2 = {})=>{
     let fUnits = getTopUnits(pUnits.value, eUnits.value)
     if(!fUnits?.player || fUnits?.player?.length == 0) return { content: 'error gettin top units...' }
 
-    let webData = await getHTML.compare(fUnits.player, fUnits.enemy, {
+    let tempInfo = {
       player: pObj.name,
       enemy: eObj.name,
-      nameKey: fInfo.nameKey+(fInfo2.nameKey ? ' '+fInfo2.nameKey:''),
+      nameKey: fInfo.nameKey,
       footer: 'Data updated ' + (new Date(pObj.updated)).toLocaleString('en-US', {timeZone: 'America/New_York'})
-    })
+    }
+    if(fInfo2.nameKey) tempInfo.nameKey += ' '+fInfo2.nameKey
+    if(eInfo.nameKey) tempInfo.nameKey += ` Excluding ${eInfo.nameKey}`
+    let webData = await getHTML.compare(fUnits.player, fUnits.enemy, tempInfo)
     if(!webData?.html) return { content: 'Error getting html...' }
 
     let windowWidth = 634

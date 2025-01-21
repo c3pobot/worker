@@ -4,7 +4,7 @@ const getHTML = require('webimg').faction
 const { getFactionUnits, getImg } = require('src/helpers')
 const { formatWebUnit } = require('src/format')
 
-module.exports = async(fInfo = {}, pObj = {}, fInfo2 = {})=>{
+module.exports = async(fInfo = {}, pObj = {}, fInfo2 = {}, eInfo = {})=>{
   try{
     let webUnits = await getFactionUnits(fInfo, pObj.rosterUnit, formatWebUnit, 40)
     if(!webUnits || webUnits?.length == 0) return { content: 'Error calculating info' }
@@ -16,6 +16,7 @@ module.exports = async(fInfo = {}, pObj = {}, fInfo2 = {})=>{
       footer: 'Data updated ' + (new Date(pObj.updated)).toLocaleString('en-US', {timeZone: 'America/New_York'})
     }
     if(fInfo2.nameKey) tempInfo.nameKey += ' '+fInfo2.nameKey
+    if(eInfo.nameKey) tempInfo.nameKey += ` Excluding ${eInfo.nameKey}`
     let webData = await getHTML.basic(webUnits, tempInfo)
     if(!webData) return { content: 'error getting html...' }
 

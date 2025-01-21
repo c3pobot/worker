@@ -25,6 +25,13 @@
             "focused": true
           },
           {
+            "type": 3,
+            "name": "faction-exclude",
+            "description": "exclude by faction",
+            "autocomplete": true,
+            "focused": true
+          },
+          {
             "type": 4,
             "name": "option",
             "description": "char/ship (defaults to char)",
@@ -90,6 +97,13 @@
             "focused": true
           },
           {
+            "type": 3,
+            "name": "faction-exclude",
+            "description": "exclude by faction",
+            "autocomplete": true,
+            "focused": true
+          },
+          {
             "type": 4,
             "name": "option",
             "description": "char/ship (defaults to char)",
@@ -151,6 +165,13 @@
             "type": 3,
             "name": "faction-2",
             "description": "2nd Faction to filter by",
+            "autocomplete": true,
+            "focused": true
+          },
+          {
+            "type": 3,
+            "name": "faction-exclude",
+            "description": "exclude by faction",
             "autocomplete": true,
             "focused": true
           },

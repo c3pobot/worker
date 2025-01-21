@@ -4,16 +4,20 @@ const getHTML = require('webimg').faction
 const { formatWebUnitStats } = require('src/format')
 const { getFactionUnits, getImg } = require('src/helpers')
 
-module.exports = async(fInfo = {}, pObj = {}, fInfo2 = {})=>{
+module.exports = async(fInfo = {}, pObj = {}, fInfo2 = {}, eInfo = {})=>{
   try{
     let webUnits = await getFactionUnits(fInfo, pObj.rosterUnit, formatWebUnitStats, 40)
     if(!webUnits || webUnits?.length == 0) return { content: 'Error calculating info' }
 
-    let webData = await getHTML.stats(webUnits, {
+    let tempInfo = {
       player: pObj.name,
-      nameKey: fInfo.nameKey+(fInfo2.nameKey ? ' '+fInfo2.nameKey:''),
+      enemy: '',
+      nameKey: fInfo.nameKey,
       footer: 'Data updated ' + (new Date(pObj.updated)).toLocaleString('en-US', {timeZone: 'America/New_York'})
-    })
+    }
+    if(fInfo2.nameKey) tempInfo.nameKey += ' '+fInfo2.nameKey
+    if(eInfo.nameKey) tempInfo.nameKey += ` Excluding ${eInfo.nameKey}`
+    let webData = await getHTML.stats(webUnits, tempInfo)
     if(!webData?.html) return { content: 'error getting html...' }
 
     let windowWidth = 1268

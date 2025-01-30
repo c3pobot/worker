@@ -12,7 +12,7 @@ let DATA_ROUTING_KEY = process.env.GAME_DATA_TOPIC || `${NAME_SPACE}.${DATA_EXCH
 
 let exchanges = [{ exchange: DATA_EXCHANGE_NAME, type: 'topic'}]
 let queueBindings = [{ exchange: DATA_EXCHANGE_NAME, routingKey: DATA_ROUTING_KEY, queue: QUE_NAME }]
-let consumer
+let consumer, publisher, publisherReady
 const cmdProcessor = (msg = {})=>{
   try{
     if(!msg.body || !msg.routingKey) return
@@ -48,4 +48,24 @@ const startConsumer = async()=>{
     setTimeout(startConsumer, 5000)
   }
 }
+const createPublisher = async()=>{
+  try{
+    if(!rabbitmq.ready){
+      setTimeout(createPublisher, 5000)
+      return
+    }
+    publisher = rabbitmq.createPublisher({ confirm: true, exchanges: [{ exchange: DATA_EXCHANGE_NAME, type: 'topic', maxAttempts: 5 }]})
+    publisherReady = true
+    log.info(`${POD_NAME} ${DATA_EXCHANGE_NAME} publisher is ready...`)
+    return
+  }catch(e){
+    log.error(e)
+    setTimeout(createPublisher, 5000)
+  }
+}
 startConsumer()
+createPublisher()
+module.exports.send = async(routingKey, data = {})=>{
+  await publisher.send({ exchange: DATA_EXCHANGE_NAME, routingKey: routingKey || DATA_ROUTING_KEY }, data)
+  return true
+}

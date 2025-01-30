@@ -1,6 +1,7 @@
 'use strict'
 const Cmds = {}
 Cmds['ga-clear'] = require('./ga-clear')
+Cmds['log-level'] = require('./log-level')
 Cmds.syncguild = require('./syncguild')
 Cmds.updatedata = require('./updatedata')
 Cmds.updateweather = require('./updateweather')

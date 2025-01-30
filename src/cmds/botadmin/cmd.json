@@ -115,6 +115,28 @@
             ]
           }
         ]
+      },
+      {
+        "type": 1,
+        "name": "log-level",
+        "description": "Set logging level",
+        "options": [
+          {
+            "type": 3,
+            "name": "log_level",
+            "description": "option for log level",
+            "choices": [
+              {
+                "name": "info",
+                "value": "info"
+              },
+              {
+                "name": "debug",
+                "value": "debug"
+              }
+            ]
+          }
+        ]
       }
     ]
   },

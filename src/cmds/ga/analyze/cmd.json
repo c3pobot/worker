@@ -1,6 +1,6 @@
 {
   "type": 1,
-  "name": "analize",
+  "name": "analyze",
   "description": "perform GA analysis (requires google/ea_connect auth)",
   "options": [
     {

@@ -1,5 +1,6 @@
 'use strict'
 const Cmds = {}
+Cmds.analize = require('./analize')
 Cmds.cache = require('./cache')
 Cmds.enemy = require('./enemy')
 Cmds.faction = require('./faction')

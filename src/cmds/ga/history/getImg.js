@@ -8,18 +8,15 @@ const sortOption = [{column: 'startTime', order: 'ascending'}]
 
 const { getImg, replyMsg, replyComponent } = require('src/helpers')
 
-module.exports = async(obj = {}, opt = {}, playerId)=>{
+module.exports = async(obj = {}, opt = {}, playerId, mode = '5v5')=>{
   if(!playerId) return { content: `playerId not provided..` }
 
-  let key = opt['ga-date']?.value, round = +(obj.confirm?.round || opt.round?.value || 1), holdOnly = opt['hold-only']?.value || false, side = (obj.confirm?.side || opt.side?.value || 'd')
-  if(!key) return { content: 'you did not specify a date..' }
+  let round = +(obj.confirm?.round || opt.round?.value || 1), holdOnly = opt['hold-only']?.value || false, side = (obj.confirm?.side || opt.side?.value || 'd')
 
-  let gaEvent = (await mongo.find('gaEvents', { key: key }, { _id: 0, eventInstanceId: 1, date: 1, mode: 1, season: 1 }))[0]
-  if(!gaEvent) return { content: `error finding eventId for ${key}` }
+  let pObj = await fetchHistory(playerId, mode)
+  if(!pObj?.matchResult || pObj?.matchResult?.length == 0) return { content: `Error finding ga history for ${mode}` }
 
-  let pObj = await fetchHistory(playerId, key, gaEvent.season)
-  //let pObj = (await mongo.aggregate('gaHistory', { _id: playerId+'-'+gaEvent.eventInstanceId }, JSON.parse(JSON.stringify(pipeline))))[0]
-  if(!pObj?.matchResult || pObj?.matchResult?.length == 0) return { content: `Error finding ga history for ${gaEvent.mode} ${gaEvent.date}` }
+  let gaEvent = { date: pObj.date, mode: mode, season: pObj.season, eventInstanceId: pObj.eventInstanceId, league: pObj.league }
 
   let gaMatch = pObj.matchResult.find(x=>x.matchId === round)
   if(!gaMatch?.attackResult || !gaMatch?.defenseResult) return { content: `error finding ga history for ${gaEvent.mode} ${gaEvent.date} round ${round}` }

@@ -12,14 +12,15 @@ module.exports = async(obj = {})=>{
     if(mode !== '5v5' && mode !== '3v3') return { content: 'unknown ga mode' }
     if(!dataList?.unitList) return { content: 'unitList data is empty..' }
 
+    let season = botSettings['ga-'+mode]
+    if(!season) return { content: 'Error getting season...' }
+
     let dObj = (await mongo.find('discordId', { _id: obj.member?.user?.id }, { settings: 1 }))[0]
     let defaultSettings = dObj?.settings?.ga
-    let leader = opt.leader?.value, season = opt.season?.value, gl_only = opt.gl_only?.value || false, sort = opt.sort?.value || defaultSettings?.sort || 'rate'
+    let leader = opt.leader?.value, gl_only = opt.gl_only?.value || false, sort = opt.sort?.value || defaultSettings?.sort || 'rate'
     if(!leader || !dataList.unitList[leader]) return { content: 'you did not specify a valid leader' }
 
     let minBattles = opt.battles?.value || 2, battleLimit = opt.limit?.value || 10, league = opt.league?.value || 'KYBER'
-    if(!season && botSettings['ga-'+mode]) season = botSettings['ga-'+mode]
-    if(!season) return { content: 'you did not specify a proper season' }
 
     let method = 'PATCH', skip = +(obj.confirm?.skip || 0), totalBattles = +(obj.confirm?.t || 0), numCounters = +(obj.confirm?.n || 0)
     if(minBattles >= 0) minBattles = +minBattles
@@ -34,7 +35,7 @@ module.exports = async(obj = {})=>{
         if(dataList.unitList[baseId]) info.units.push(baseId)
       }
     }
-    let pipeline = [], countPipeline = [], searchString = '^'+season+'-d.*a'+leader+'-'
+    let pipeline = [], countPipeline = [], searchString = '^d.*a'+leader+'-', collection = `gaCounter-${season}`
     let msg2send = { content: 'No results found for **'+dataList.unitList[leader].name+'**' }
     if(info?.units?.length > 0){
       info.units.sort()
@@ -79,16 +80,16 @@ module.exports = async(obj = {})=>{
     let payload = {_id: {$regex: searchString}, total: {$gte: +minBattles}, rate: {$gte: 0}, attackLeader: leader}
     if(gl_only) payload.defendGl = true
 
-    let tempSquads = await mongo.aggregate('gaCounter', payload, pipeline)
-    
+    let tempSquads = await mongo.aggregate(collection, payload, pipeline)
+
     if(!tempSquads || tempSquads?.length == 0) return msg2send
 
     if(!totalBattles){
-      let countSquads = (await mongo.aggregate('gaCounter', payload, countPipeline))[0]
+      let countSquads = (await mongo.aggregate(collection, payload, countPipeline))[0]
       totalBattles = +(countSquads?.total || 0)
     }
 
-    if(!numCounters) numCounters = await mongo.count('gaCounter', payload)
+    if(!numCounters) numCounters = await mongo.count(collection, payload)
 
     let squads = []
     for(let i in tempSquads){

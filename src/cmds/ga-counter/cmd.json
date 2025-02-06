@@ -60,11 +60,6 @@
             "type": 4,
             "name": "battles",
             "description": "minimum number of battles (default is 2)"
-          },
-          {
-            "type": 4,
-            "name": "season",
-            "description": "ga season to use results from (this will ignore game mode)"
           }
         ]
       },
@@ -124,11 +119,6 @@
             "type": 4,
             "name": "battles",
             "description": "minimum number of battles (default is 2)"
-          },
-          {
-            "type": 4,
-            "name": "season",
-            "description": "minimum number of battles for a result to be included (default is 2)"
           }
         ]
       }

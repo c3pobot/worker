@@ -21,6 +21,7 @@
     "json-array-sorter": "^0.0.5",
     "json2xls": "^0.1.2",
     "logger": "github:c3pobot/logger",
+    "minio": "^8.0.0",
     "mongoclient": "github:c3pobot/mongoclient",
     "node-fetch": "^2.6.7",
     "numeral": "^2.0.6",

@@ -1,12 +1,10 @@
 'use strict'
-const getImg = require('./getImg')
-const { getPlayerId } = require('src/helpers')
+const Cmds = {}
+Cmds["5v5"] = require('./5v5')
+Cmds["3v3"] = require('./3v3')
 
 module.exports = async(obj = {}, opt = {})=>{
-  let allyObj = await getPlayerId(obj, opt)
-  let playerId = allyObj?.playerId
-  if(allyObj.mentionError) msg2send.content = 'That user does not have allyCode linked to discordId'
-  if(!playerId) return { content: 'Your allyCode is not linked to your discord id' }
-
-  return await getImg(obj, opt, playerId)
+  let tempCmd = obj.subCmd, msg2send = { content: 'command not recongnized' }
+  if(tempCmd && Cmds[tempCmd]) msg2send = await Cmds[tempCmd](obj, opt)
+  return msg2send
 }

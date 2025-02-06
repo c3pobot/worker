@@ -2,6 +2,7 @@
 const log = require('logger')
 const mongo = require('mongoclient')
 
+const minio = require('./minio')
 const cmdQue = require('./cmdQue')
 const swgohClient = require('./swgohClient')
 const saveSlashCmds = require('./saveSlashCmds')
@@ -17,10 +18,24 @@ const CheckMongo = ()=>{
   log.info(`start up mongo check...`)
   let status = mongo.status()
   if(status){
-    CheckApi()
+    CheckMinio()
     return
   }
   setTimeout(CheckMongo, 5000)
+}
+const CheckMinio = ()=>{
+  try{
+    log.info(`start up minio check...`)
+    let status = minio.status()
+    if(status){
+      CheckApi()
+      return
+    }
+    setTimeout(CheckMinio, 5000)
+  }catch(e){
+    log.error(e)
+    setTimeout(CheckMinio, 5000)
+  }
 }
 const CheckApi = async()=>{
   try{

@@ -55,7 +55,7 @@ module.exports = async(obj = {}, msg2send, method = 'PATCH')=>{
       await sendWebHook(obj.token, { content: 'I do not have the correct permissions please make sure I have ViewChannel, EmbedLinks, AttachFiles and SendMessages permissions in this channel...' }, 'POST')
       return await sendWebHook(obj.token, msg2send, method)
     }
-    return await rabbitmq.notify({ cmd: method, msg: msg2send, sId: obj.guild_id, chId: obj.channel_id, msgId: msgId, podName: podName }, podName, 'bot.msg')
+    return await rabbitmq.notify({ cmd: method, msg: msg2send, sId: obj.guild_id, chId: obj.channel_id, msgId: msgId, podName: podName, token: obj.token }, podName, 'bot.msg')
   }catch(e){
     log.error(e)
   }

@@ -1,34 +1,17 @@
 'use strict'
 const log = require('logger')
-const fetch = require('./fetch')
-const { getPodName, getNumShards } = require('./botInfo')
-let BOT_SVC = process.env.BOT_SVC || 'bot', BOT_SVC_PORT = process.env.BOT_SVC_PORT || 3000, BOT_SET_NAME = process.env.BOT_SET_NAME || 'bot', BOT_NAMESPACE = process.env.BOT_NAMESPACE || process.env.NAME_SPACE || 'default'
-const retryCount = 7
+const rpcClient = require('src/rpcClient')
 
-const requestWithRetry = async(uri, opts = {}, count = 0)=>{
-  let res = await fetch(uri, opts)
-  if(res?.error === 'FetchError'){
-    if(count < retryCount){
-      count++
-      return await requestWithRetry(uri, opts, count)
-    }else{
-      throw(`tried request ${count} time(s) and errored with ${res.error} : ${res.message}`)
-    }
-  }
-  return res
-}
+const { dataList } = require('src/helpers/dataList')
 
-let singleBotRequest = async(cmd, podName, opt = {})=>{
-  let payload = { method: 'POST', timeout: 60000, compress: true, headers: {"Content-Type": "application/json"} }
-  payload.body = JSON.stringify({ ...opt, ...{ cmd: cmd, podName: `${podName}` } })
-  let obj = await requestWithRetry(`http://${podName}.${BOT_SVC}.${BOT_NAMESPACE}:${BOT_SVC_PORT}/cmd`, payload)
-  return obj?.body
-}
+let BOT_SET_NAME = process.env.BOT_SET_NAME || 'bot'
+
 const allBotRequest = async(cmd, opts = {})=>{
-  let array = [], res = [], i = getNumShards(), count = 0
-  if(!i) return
+  if(!dataList?.numBotShards) return
+
+  let array = [], res = [], i = dataList?.numBotShards, count = 0
   while(count<i){
-    array.push(singleBotRequest(cmd, `${BOT_SET_NAME}-${count}`, opts))
+    array.push(rpcClient.get(cmd, {...opts,...{ podName: `${BOT_SET_NAME}-${count}` }}))
     count++
   }
   let tempRes = await Promise.allSettled(array)
@@ -44,5 +27,5 @@ module.exports = async(cmd, opts = {})=>{
   if(!podName) podName = getPodName(opts.sId)
   if(!podName) return
   if(podName === 'all') return await allBotRequest(cmd, opts)
-  return await singleBotRequest(cmd, podName, opts)
+  return await rpcClient.get(cmd, {...opts,...{ podName: podName }})
 }

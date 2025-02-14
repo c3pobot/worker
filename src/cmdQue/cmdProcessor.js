@@ -10,7 +10,7 @@ module.exports = async(obj = {})=>{
     if(!obj?.cmd || !cmdMap || !cmdMap[obj.cmd]) return
 
     if(!obj.timestamp) obj.timestamp = Date.now()
-    //mongo.set('cmdMsgCache', { _id: obj.id }, obj)
+    mongo.set('cmdMsgCache', { _id: obj.id }, obj)
     let msg2send = await cmdMap[obj.cmd](obj)
     if(msg2send && obj.token) await replyMsg(obj, msg2send)
   }catch(e){

@@ -5,9 +5,15 @@ const { checkGuildAdmin, checkBotPerms, getGuildId } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
 
 module.exports = async(obj = {}, opt = {})=>{
+
+  if(opt.channel?.data){
+    let channelPerm = checkBotPerms('SEND_MESSAGES', opt.channel?.botPerms)
+    if(!channelPerm) return { content: `I do not have permissions to send messages to <#${opt.channel.value}>...`}
+  }
+
   let auth = await checkGuildAdmin(obj, opt)
   if(!auth) return { content: 'This command is only available to guild admins' }
-
+    
   let pObj = await getGuildId({dId: obj.member.user.id}, {}, opt)
   if(!pObj?.guildId) return { content: 'Error getting player guild' }
 
@@ -52,10 +58,7 @@ module.exports = async(obj = {}, opt = {})=>{
     tempObj.mins = tempReset.getMinutes()
   }
   if(guild.sId) tempObj.sId = guild.sId
-  if(opt.channel?.data){
-    let channelPerm = checkBotPerms('SEND_MESSAGES', opt.channel?.botPerms)
-    if(!channelPerm) return { content: `I do not have permissions to send messages to <#${opt.channel.value}>...`}
-  }
+
   await mongo.set('guilds', { _id: pObj.guildId }, { auto: tempObj })
   return await show(obj, opt)
 }

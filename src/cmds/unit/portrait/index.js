@@ -48,7 +48,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let webImg2 = await getImg(webData2.html, obj.id, 758, false)
   if(!webImg2) return { content: 'error getting new image' }
 
-  let webImg = await joinImages( [ Buffer.from(webImg1, 'base64'), Buffer.from(webImg2, 'base64') ], { direction: 'horizontal', color: { alpha: 1.0, b: 0, g: 0, r: 0 } })
+  let webImg = await joinImages( [ webImg1, webImg2 ], { direction: 'horizontal', color: { alpha: 1.0, b: 0, g: 0, r: 0 } })
   let actionRow = [], votes = { type: 1, components : [] }, adminControl = { type: 1, components : [] }
   votes.components.push({
     type: 2,

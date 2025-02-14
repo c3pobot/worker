@@ -1,6 +1,6 @@
 'use strict'
 const PRIVATE_WORKER = process.env.PRIVATE_WORKER
-const rabbitmq = require('src/cmdQue/publisher')
+const rabbitmq = require('src/rabbitmq')
 const Cmds = {}
 Cmds['attack-log'] = require('./attack-log')
 Cmds.export = require('./export')
@@ -19,10 +19,8 @@ module.exports = async(obj = {})=>{
     let msg2send = { content: 'command not recongnized' }
     if(!tempCmd) return msg2send
     if(!Cmds[tempCmd]){
-      let key = 'tw-guild'
-      if(PRIVATE_WORKER) key += '.private'
       obj.cmd = 'tw-guild'
-      await rabbitmq.add(key, obj)
+      await rabbitmq.add('tw-guild', obj)
       return
     }
     if(tempCmd && Cmds[tempCmd]) msg2send = await Cmds[tempCmd](obj, opt)

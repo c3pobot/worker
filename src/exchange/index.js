@@ -1,35 +1,37 @@
 'use strict'
 const log = require('logger')
-const client = require('src/rabbitmq/client')
-const cmdProcessor = require('./cmdProcessor')
+const client = require('../rabbitmq/client')
 
-let POD_NAME = process.env.POD_NAME || 'worker', consumerStatus = false, WORKER_TYPE = process.env.WORKER_TYPE || 'swgoh'
-let QUE_NAME = `worker.${WORKER_TYPE}`
-if(process.env.PRIVATE_WORKER) QUE_NAME += '.private'
+const exchangeProcessor = require('./exchangeProcessor')
+
+let POD_NAME = process.env.POD_NAME || 'worker'
+let QUE_NAME = `xtopic.${POD_NAME}`, consumerStatus = false, NAME_SPACE = process.env.NAME_SPACE || 'default'
+
+let exchanges = [{ exchange: `${NAME_SPACE}.cmds`, type: 'topic' }]
+let queueBindings = [{ exchange: `${NAME_SPACE}.cmds`, queue: QUE_NAME }]
 
 const processCmd = async(msg = {})=>{
   try{
     if(!msg.body) return
-    return await cmdProcessor(msg?.body)
+    return await exchangeProcessor({...msg.body,...{ routingKey: msg.routingKey, exchange: msg.exchange, timestamp: msg.timestamp }})
   }catch(e){
     log.error(e)
   }
 }
-
-const consumer = client.createConsumer({
+let consumer = client.createConsumer({
   consumerTag: POD_NAME,
-  concurrency: 1,
-  qos: { prefetchCount: 1 },
   queue: QUE_NAME,
-  queueOptions: { arguments: { 'x-message-ttl': 600000 } },
-  lazy: true
+  lazy: true,
+  exchanges: exchanges,
+  queueBindings: queueBindings,
+  queueOptions: { queue: QUE_NAME, durable: false, exclusive: true, arguments: { 'x-message-ttl': 60000 } }
 }, processCmd)
 
 consumer.on('error', (err)=>{
   log.error(err)
 })
 consumer.on('ready', ()=>{
-  log.info(`${POD_NAME} ${QUE_NAME} consumer created...`)
+  log.info(`${POD_NAME} topic consumer created...`)
 })
 
 const stopConsumer = async()=>{
@@ -56,13 +58,13 @@ const watch = async() =>{
       if(!consumerStatus){
         consumerStatus = await startConsumer()
         if(consumerStatus){
-          log.info(`${POD_NAME} ${QUE_NAME} consumer started...`)
+          log.info(`${POD_NAME} topic consumer started...`)
         }
       }
     }else{
       if(consumerStatus){
         consumerStatus = await stopConsumer()
-        if(!consumerStatus) log.info(`${POD_NAME} ${QUE_NAME} consumer stopped...`)
+        if(!consumerStatus) log.info(`${POD_NAME} topic consumer stopped...`)
       }
     }
     setTimeout(watch, 5000)
@@ -71,10 +73,4 @@ const watch = async() =>{
     setTimeout(watch, 5000)
   }
 }
-module.exports.start = () =>{
-  try{
-    watch()
-  }catch(e){
-    log.error(e)
-  }
-}
+watch()

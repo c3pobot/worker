@@ -3,6 +3,7 @@ const log = require('logger')
 const mongo = require('mongoclient')
 
 const minio = require('./minio')
+const rabbitmq = require('./rabbitmq')
 const cmdQue = require('./cmdQue')
 const swgohClient = require('./swgohClient')
 const saveSlashCmds = require('./saveSlashCmds')
@@ -16,18 +17,30 @@ let workerType = process.env.WORKER_TYPE || 'swgoh'
 
 const CheckMongo = ()=>{
   log.info(`start up mongo check...`)
-  let status = mongo.status()
-  if(status){
-    CheckMinio()
+  if(mongo.status()){
+    CheckRabbitMQ()
     return
   }
   setTimeout(CheckMongo, 5000)
 }
+const CheckRabbitMQ = ()=>{
+  try{
+    if(!rabbitmq?.status) log.debug(`rabbitmq is not ready...`)
+    if(rabbitmq?.status){
+      log.debug(`rabbitmq is ready...`)
+      CheckMinio()
+      return
+    }
+    setTimeout(CheckRabbitMQ, 5000)
+  }catch(e){
+    log.error(e)
+    setTimeout(CheckRabbitMQ, 5000)
+  }
+}
 const CheckMinio = ()=>{
   try{
     log.info(`start up minio check...`)
-    let status = minio.status()
-    if(status){
+    if(minio.status()){
       CheckApi()
       return
     }
@@ -73,7 +86,7 @@ const CheckCmdMap = async()=>{
     let status = await createCmdMap()
     if(status){
       cmdQue.start()
-      require('./exchanges')
+      require('./exchange')
       return
     }
     setTimeout(CheckCmdMap, 5000)

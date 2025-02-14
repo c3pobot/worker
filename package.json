@@ -25,7 +25,7 @@
     "mongoclient": "github:c3pobot/mongoclient",
     "node-fetch": "^2.6.7",
     "numeral": "^2.0.6",
-    "rabbitmq-client": "^4.5.3",
+    "rabbitmq-client": "^5.0.2",
     "redis": "^4.6.13",
     "shyriiwook": "^1.0.0",
     "statcalc": "github:c3pobot/statcalc",

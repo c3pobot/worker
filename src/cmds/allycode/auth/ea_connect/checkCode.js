@@ -40,5 +40,5 @@ module.exports = async(obj = {}, opt = {}, allyCode, email, authCode, googleId)=
   }
   await mongo.set('eaconnectTokens', { _id: identity.deviceId }, { _nx_mpcid: data._nx_mpcid, remid: encryptedToken })
   await mongo.set('discordId', { _id: obj.member?.user?.id, 'allyCodes.allyCode': +allyCode }, { 'allyCodes.$.uId': data.deviceId, 'allyCodes.$.type': 'eaconnect' })
-  return { content: `Successfully linked EA Connect auth for ${allyCode}` }
+  return { flags: 64, content: `Successfully linked EA Connect auth for ${allyCode}` }
 }

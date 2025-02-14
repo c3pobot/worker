@@ -77,8 +77,9 @@ module.exports = async(obj = {})=>{
     }
     pipeline.push({ $skip: +skip})
     pipeline.push({ $limit: +battleLimit })
-    let payload = {_id: {$regex: searchString}, total: {$gte: +minBattles}, rate: {$gte: 0}, attackLeader: leader}
-    if(gl_only) payload.defendGl = true
+    if(gl_only) searchString += `.*defendGl-`
+    let payload = {_id: { $regex: searchString }, total: {$gte: +minBattles}, attackLeader: leader}
+    //if(gl_only) payload.defendGl = true
 
     let tempSquads = await mongo.aggregate(collection, payload, pipeline)
 

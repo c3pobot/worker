@@ -78,6 +78,7 @@ Cmds.replyTokenError = require('./replyTokenError')
 
 Cmds.saveCmdOptions = require('./saveCmdOptions')
 Cmds.sendMsg = require('./sendMsg')
+Cmds.sendHiddenMsg = require('./sendHiddenMsg')
 Cmds.sendMessages = require('./sendMessages')
 Cmds.showRotationSchedule = require('./showRotationSchedule')
 Cmds.squads = require('./squads')

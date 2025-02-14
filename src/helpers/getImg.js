@@ -6,8 +6,10 @@ const parseResponse = async(res)=>{
   if(!res) return
   if(res.status?.toString().startsWith('5')) throw('Bad status code '+res.status)
   if(res.status?.toString().startsWith('2') && res.body){
-    let body = await res.text()
-    if(body) return await Buffer.from(body, 'base64')
+    return await res.text()
+
+    //let body = await res.text()
+    //if(body) return await Buffer.from(body, 'base64')
   }
 }
 module.exports = async(html, pKey, width = 80, resizeImg = false)=>{

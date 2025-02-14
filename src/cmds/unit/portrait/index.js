@@ -48,7 +48,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let webImg2 = await getImg(webData2.html, obj.id, 758, false)
   if(!webImg2) return { content: 'error getting new image' }
 
-  let webImg = await joinImages( [ webImg1, webImg2 ], { direction: 'horizontal', color: { alpha: 1.0, b: 0, g: 0, r: 0 } })
+  let webImg = await joinImages( [ Buffer.from(webImg1, 'base64'), Buffer.from(webImg2, 'base64') ], { direction: 'horizontal', color: { alpha: 1.0, b: 0, g: 0, r: 0 } })
   let actionRow = [], votes = { type: 1, components : [] }, adminControl = { type: 1, components : [] }
   votes.components.push({
     type: 2,
@@ -76,6 +76,6 @@ module.exports = async(obj = {}, opt = {})=>{
   })
   actionRow.push(votes)
   actionRow.push(adminControl)
-  await mongo.set('unitPortraitPoll', { _id: obj.id }, { baseId: uInfo.baseId, thumbnailName: uInfo.thumbnailName, image_link: image_link, base64Img: base64Img, y: 0, n: 0, dId: obj?.member?.user?.id, status: true })
+  await mongo.set('unitPortraitPoll', { _id: obj.id }, { baseId: uInfo.baseId, thumbnailName: uInfo.thumbnailName, image_link: image_link, base64Img: base64Img, y: 0, n: 0, dId: obj?.member?.user?.id, status: true, votes: [] })
   return { content: `Vote for the new portrait (right) to replace the current (left)\n<${image_link}>`, file: webImg, fileName: 'unit-'+uInfo.baseId+'.png', components: actionRow || [] }
 }

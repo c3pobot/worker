@@ -4,7 +4,7 @@ const { replyComponent } = require('src/helpers')
 module.exports = async(obj = {}, opt = {})=>{
   let status = await sendEmail(obj.data?.options?.allyCode, obj.data?.options?.email)
   if(!status) return { content: 'Error sending email code' }
-  await replyComponent(obj, { content: `Please click button below to input the EA Connect code emailed to you for ${obj.data?.options?.allyCode}`, components: [{ type: 1, components: [
+  await replyComponent(obj, { flags: 64, content: `Please click button below to input the EA Connect code emailed to you for ${obj.data?.options?.allyCode}`, components: [{ type: 1, components: [
     {
       type: 2,
       label: 'Enter EA Connect Code',

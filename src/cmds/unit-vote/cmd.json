@@ -1,0 +1,8 @@
+{
+  "type": "public",
+  "worker": "swgoh",
+  "hidden": true,
+  "cmd": {
+    "name": "unit-vote"
+  }
+}

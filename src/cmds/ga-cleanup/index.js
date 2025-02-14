@@ -51,12 +51,14 @@ module.exports = async(obj = {})=>{
       }
     }
     if(exclude_gl) msg2send.content += ' exclude_gl'
+    /*
     if(!leader) pipeline.push({
         $match:
         {
           noLead: true
         }
       })
+    */
     pipeline.push({
       $project: {
         _id: 1,
@@ -68,12 +70,14 @@ module.exports = async(obj = {})=>{
         rate: 1
       }
     })
+    /*
     if(!leader) countPipeline.push({
         $match:
         {
           noLead: true
         }
       })
+    */
     countPipeline.push({
       $project: {
         _id: 1,
@@ -96,9 +100,14 @@ module.exports = async(obj = {})=>{
     }
     pipeline.push({ $skip: +skip})
     pipeline.push({ $limit: +battleLimit })
-    let payload = {_id: {$regex: searchString}, total: {$gte: +minBattles}, rate: {$gte: 0} }
-    if(exclude_gl) payload.attackGl = false
-    if(singleUnit) payload.defendUnitCount = 1
+    if(exclude_gl) searchString += `.*noAttackGl-`
+    if(!leader) searchString += `.*noLead-`
+    if(singleUnit) searchString += `.*singleUnit-`
+
+    console.log(searchString)
+    let payload = {_id: {$regex: searchString}, total: {$gte: +minBattles} }
+    //if(exclude_gl) payload.attackGl = false
+    //if(singleUnit) payload.defendUnitCount = 1
     let tempSquads = await mongo.aggregate(collection, payload, pipeline)
     if(!tempSquads || tempSquads?.length == 0) return msg2send
     if(!totalBattles){

@@ -8,9 +8,21 @@ const { getPodName, getNumShards } = require('./botRequest/botInfo')
 
 const checkPermissions = (msg, method = 'PATCH', botPerms)=>{
   try{
-    if(msg?.embeds?.length > 0 && !botPerms?.has('EmbedLinks')) return
-    if((msg.file || msg.files?.length > 0) && !botPerms?.has('AttachFiles')) return
-    if(method === 'POST' && !botPerms?.has('SendMessages')) return
+    if(!botPerms?.has('ViewChannel')){
+      log.debug(`missing ViewChannel permissions`)
+      return
+    }
+    if(msg?.embeds?.length > 0 && !botPerms?.has('EmbedLinks')){
+      log.debug(`missing EmbedLinks permissions`)
+       return
+    }
+    if((msg.file || msg.files?.length > 0) && !botPerms?.has('AttachFiles')){
+      log.debug(`missing AttachFiles permissions`)
+      return
+    }
+    if(method === 'POST' && !botPerms?.has('SendMessages')){
+      log.debug(`missing SendMessages permissions`)
+    }
     return true
   }catch(e){
     log.error(e)
@@ -39,8 +51,8 @@ module.exports = async(obj = {}, msg2send, method = 'PATCH')=>{
     }
     let hasPermission = checkPermissions(msg2send, method, new Set(obj?.channel?.botPerms || []))
     if(!hasPermission){
-      log.debug(`I do not have permissions to reply thru the bot for guild ${obj.guild_id}, using discord api`)
-      await sendWebHook(obj.token, { content: 'I do not have the correct permissions please make sure I have EmbedLinks, AttachFiles and SendMessages permissions in this channel...' }, 'POST')
+      log.debug(`I do not have permissions to reply thru the bot for guild ${obj.guild_id} in channel ${obj.channel_id}, using discord api`)
+      await sendWebHook(obj.token, { content: 'I do not have the correct permissions please make sure I have ViewChannel, EmbedLinks, AttachFiles and SendMessages permissions in this channel...' }, 'POST')
       return await sendWebHook(obj.token, msg2send, method)
     }
     return await rabbitmq.notify({ cmd: method, msg: msg2send, sId: obj.guild_id, chId: obj.channel_id, msgId: msgId, podName: podName }, podName, 'bot.msg')

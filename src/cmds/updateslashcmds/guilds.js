@@ -1,7 +1,7 @@
 'use strict'
 const { botSettings } = require('src/helpers/botSettings')
 const mongo = require('mongoclient')
-const rabbitmq = require('src/cmdQue/publisher')
+const rabbitmq = require('src/rabbitmq')
 const { addGuildCmd } = require('src/helpers/discordmsg')
 const BOT_OWNER_ID = process.env.BOT_OWNER_ID
 const addJob = async(sId, cmds = [])=>{

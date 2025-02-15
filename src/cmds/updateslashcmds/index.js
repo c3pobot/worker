@@ -1,7 +1,7 @@
 'use strict'
 const Cmds = {}
-//Cmds.global = require('./global')
-//Cmds.guilds = require('./guilds')
+Cmds.global = require('./global')
+Cmds.guilds = require('./guilds')
 Cmds['add-guild-cmds'] = require('./add-guild-cmds')
 const updateWeb = require('./updateWeb')
 const { replyError, checkBotOwner } = require('src/helpers')

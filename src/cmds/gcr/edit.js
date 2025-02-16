@@ -3,12 +3,12 @@ const mongo = require('mongoclient')
 
 module.exports = async(obj = {}, opt = {})=>{
   let id = opt.id?.value, trigger = opt.trigger?.value?.toString()?.trim()?.toLowerCase(), response = opt.response?.value?.toString()?.trim(), crca = opt.anywhere?.value
-  if(id) return { content: 'That is not a global custom reaction' }
+  if(!id) return { content: 'You must provide an id...' }
 
   let lcr = (await mongo.find('reactions', { _id: 'global' }))[0]
   if(!lcr || lcr?.cr?.length == 0) return { content: 'there are no global custom reaction' }
 
-  let tempObj = lcr.cr.find(x=>x.id == id)
+  let tempObj = lcr.cr.find(x=>x.id == +id)
   if(!tempObj) return { content: 'That is not a global custom reaction' }
   if(trigger && lcr.cr.filter(x=>x.trigger == trigger && x.id !== id).length > 0) return { content: `**${trigger}** is already a global custom reaction on this server...`}
 

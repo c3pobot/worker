@@ -1,6 +1,6 @@
 'use strict'
 const mongo = require('mongoclient')
-const botInfo = require('src/helpers/botRequest/botInfo')
+const { getId } = require('src/helpers/botRequest')
 
 const { getGuild, getUser, getRoles } = require('src/helpers/discordmsg')
 const { replyComponent } = require('src/helpers')
@@ -32,7 +32,7 @@ module.exports = async(obj = {}, opt = {}, shard)=>{
   basicField.value += 'ID         : '+shard._id+'\n'
   basicField.value += 'sId        : '+shard.sId+'\n'
   basicField.value += 'Players    : '+(playerCount || 0)+'\n'
-  basicField.value += 'Shard Num  : '+botInfo.getId(shard.sId)+'\n'
+  basicField.value += 'Shard Num  : '+getId(shard.sId)+'\n'
   if(shard.patreonId) basicField.value += 'Patreon    : @'+(usr ? usr.username:'UNKNOWN')+'\n'
   basicField.value += 'PO Sort    : '+shard.poSort+'\n'
   basicField.value += 'Group Sort : '+shard.sort+'\n'

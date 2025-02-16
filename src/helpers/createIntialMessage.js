@@ -1,6 +1,6 @@
 'use strict'
-const botRequest = require('./botRequest')
+const { sendMsg } = require('./discordmsg')
 module.exports = async(obj = {})=>{
-  if(!obj.chId || !obj.sId) return
-  return await botRequest('sendMsg', { sId: obj.sId, chId: obj.chId, msg: { embeds: [{ description: "Placeholder", color: 15844367 }] } })
+  if(!obj.chId) return
+  return await sendMsg({ sId: obj.sId, chId: obj.chId }, { embeds: [{ description: "Placeholder", color: 15844367 }] })
 }

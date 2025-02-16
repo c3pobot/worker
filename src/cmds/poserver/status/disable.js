@@ -1,6 +1,5 @@
 'use strict'
 const mongo = require('mongoclient')
-const botInfo = require('src/helpers/botRequest/botInfo')
 const showStatus = require('./show')
 
 const { getGuild } = require('src/helpers/discordmsg')

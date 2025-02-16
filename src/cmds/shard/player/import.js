@@ -5,10 +5,11 @@ const swgohClient = require('src/swgohClient')
 const { addPlayer } = require('./helper')
 const { checkShardAdmin, getDiscordAC, replyButton, replyTokenError } = require('src/helpers')
 
-const importPlayer = async(shard = {}, obj = {}, emoji = null)=>{
+const importPlayer = async(shard = {}, obj = {}, emoji = null, existingPlayers = [])=>{
   let count
-  let exists = (await mongo.find('shardPlayers', {shardId: shard._id, playerId: obj.id}))[0]
-  if(!exists){
+  let exists = existingPlayers.find(x=>x.playerId === obj.id)
+  //let exists = (await mongo.find('shardPlayers', {shardId: shard._id, playerId: obj.id}))[0]
+  if(!exists?.playerId){
     let pObj = await swgohClient.post('getArenaPlayer', {playerId: obj.id}, null)
     if(pObj?.allyCode){
       count = {
@@ -46,8 +47,10 @@ module.exports = async(obj = {}, shard = {}, opt = {})=>{
     color: 15844367,
     description: 'Rank'+(emoji ? ' : emoji':'')+' : Name\n```\n'
   }
+
+  let existingPlayers = await mongo.find('shardPlayers', { _id: {$regex: shard._id } }, { playerId: 1})
   for(let i in lb.data.player){
-    let status = await importPlayer(shard, lb.data.player[i], emoji)
+    let status = await importPlayer(shard, lb.data.player[i], emoji, existingPlayers)
     if(!status?.name) continue
     count++;
     pCount++;

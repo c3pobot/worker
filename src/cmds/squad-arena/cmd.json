@@ -1,0 +1,25 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "squad-arena",
+    "description": "Get top 50 fleet arena player allyCodes (requires google/ea_connect auth)",
+    "options": [
+      {
+        "type": 3,
+        "name": "allycode_option",
+        "description": "primary or alt allycode",
+        "choices": [
+          {
+            "name": "Primary",
+            "value": "primary"
+          },
+          {
+            "name": "Alt",
+            "value": "alt"
+          }
+        ]
+      }
+    ]
+  },
+  "worker": "oauth"
+}

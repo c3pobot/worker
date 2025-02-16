@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 
 module.exports = async(obj = {}, opt = {})=>{
   let id = opt.id?.value
-  if(id) return { content: 'You did not provide an id of a custom reaction to remove...' }
+  if(!id) return { content: 'You did not provide an id of a custom reaction to remove...' }
 
   let lcr = (await mongo.find('reactions', { _id: 'global' }))[0]
   if(!lcr?.cr || lcr?.cr?.length === 0) return { content: 'There are no global reactions ...'}

@@ -4,7 +4,7 @@ const timeTillPayout = require('./timeTillPayout')
 const mongo = require('mongoclient')
 module.exports = async(obj = {}, players = [], auto = false)=>{
   let array
-  if(players.length == 0) players = await mongo.find('shardRankCache', {shardId: obj._id}, {name: 1, poOffSet: 1, rank: 1, emoji: 1})
+  if(players.length == 0) players = await mongo.find('shardRankCache', { _id: {$regex: obj._id } }, {name: 1, poOffSet: 1, rank: 1, emoji: 1})
   if(players?.length > 0){
     if(auto && obj.poLimit) players = players.filter(x=>obj.poLimit >= x.rank)
     let pObj = {}

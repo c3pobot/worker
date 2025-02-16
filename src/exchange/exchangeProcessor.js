@@ -10,6 +10,7 @@ Cmds.setLogLevel = (data = {})=>{
     }else{
       log.setLevel('info');
     }
+    console.log(`logLevel set to ${data.logLevel}`)
   }catch(e){
     log.error(e)
   }

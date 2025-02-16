@@ -4,7 +4,6 @@ const rabbitmq = require('src/rabbitmq')
 
 const convertFiles = require('./convertFiles')
 const { webHookFile, webHookMsg} = require('./discordmsg')
-const { getPodName, getNumShards } = require('./botRequest/botInfo')
 
 const checkPermissions = (msg, method = 'PATCH', botPerms)=>{
   try{

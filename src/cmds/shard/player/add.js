@@ -10,7 +10,7 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
   if(!auth) auth = await checkShardAdmin(obj, shard)
   if(!auth) return { content: 'Adding players requires admin permissions' }
 
-  let players = await mongo.find('shardPlayers', { shardId: shard._id }, { allyCode: 1, name: 1 }) || []
+  let players = await mongo.find('shardPlayers', { _id: {$regex: shard._id } }, { allyCode: 1, name: 1 }) || []
   if(players?.length >= shard.shardLimit) return { content: 'You are limited to **'+shard.shardLimit+'** registered shard players. You currently have **'+players.length+'**' }
 
   let allyCode = opt.allycode?.value?.toString()?.trim()?.replace(/-/g, ''), emoji = opt.emoji?.value

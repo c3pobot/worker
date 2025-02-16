@@ -19,7 +19,7 @@ Cmds.addPlayer = async(shard = {}, pObj = {}, emoji = null)=>{
     poOffSet: pObj.poOffSet,
     type: shard.type
   }
-  await mongo.set('shardPlayers', {_id: pObj.allyCode+'-'+shard._id}, tempObj)
+  await mongo.set('shardPlayers', { _id: pObj.allyCode+'-'+shard._id}, tempObj)
   return true
 }
 Cmds.showNotifyStatus = async(shard, pId)=>{

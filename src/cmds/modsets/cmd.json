@@ -1,0 +1,18 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "modsets",
+    "description": "Show recommended for modsets",
+    "options": [
+      {
+        "type": 3,
+        "name": "mod-set",
+        "description": "mod set to check",
+        "required": true,
+        "autocomplete": true,
+        "focused": true
+      }
+    ]
+  },
+  "worker": "swgoh"
+}

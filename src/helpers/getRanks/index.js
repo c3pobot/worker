@@ -6,7 +6,7 @@ const getLeadName = require('./getLeadName')
 const { dataList } = require('src/helpers/dataList')
 
 module.exports = async(obj, players = [], auto = false) => {
-  if(players.length == 0) players = await mongo.find('shardRankCache', {shardId: obj._id}, {name: 1, poOffSet: 1, rank: 1, emoji: 1, arena: 1, allyCode: 1})
+  if(players.length == 0) players = await mongo.find('shardRankCache', {_id: {$regex: obj._id }}, {name: 1, poOffSet: 1, rank: 1, emoji: 1, arena: 1, allyCode: 1})
   if(players?.length > 0 ){
     if(auto && obj.rankLimit) players = players.filter(x=>obj.rankLimit >= x.rank)
     players = sorter([{column: 'rank', order: (obj.rankSort ? obj.rankSort:'ascending')}], players)

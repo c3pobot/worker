@@ -6,7 +6,6 @@ module.exports = async(obj = {}, msg, method = 'PATCH')=>{
   await saveCmdOptions(obj)
   await replyMsg(obj, {
     content: msg,
-    flags: 64,
     components: [{
       type: 1,
       components: [

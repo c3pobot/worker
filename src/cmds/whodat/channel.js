@@ -1,6 +1,7 @@
 'use strict'
 const { getChannel, getGuild, getGuildMember } = require('src/helpers/discordmsg')
-const { getId, getNumShards } = require('src/helpers/botRequest/botInfo')
+const { dataList } = require('src/helpers/dataList')
+const { getId } = require('src/helpers/botRequest')
 module.exports = async(obj = {}, opt = {})=>{
   if(!opt.id?.value) return { content: 'channel not provided' }
 
@@ -15,7 +16,7 @@ module.exports = async(obj = {}, opt = {})=>{
   let embedMsg = { color: 15844367, description: 'chId '+opt.id.value+' info for C3PO\n```\n' }
   embedMsg.description += 'Guild Name   : '+(guild ? guild.name:'UNKONWN')+'\n'
   embedMsg.description += 'Guild ID     : '+(channel.guild_id ? channel.guild_id:'UNKNOWN')+'\n'
-  embedMsg.description += `Bot Client   : ${getId(guild.id)}/${getNumShards()}\n`
+  embedMsg.description += `Bot Client   : ${getId(guild.id)}/${dataList?.numBotShards}\n`
   embedMsg.description += 'Member Count : '+(guild ? guild.approximate_member_count:'UNKNOWN')+'\n'
   if(usr){
     if(usr.nick){

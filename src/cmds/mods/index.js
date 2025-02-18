@@ -40,7 +40,7 @@ module.exports = async(obj = {})=>{
     if(!mods?.sets) return { content: `error find mods for ${uInfo.nameKey}` }
 
     let iconURL = `https://game-assets.swgoh.gg/textures/${uInfo.thumbnailName}.png`
-    let embedMsg = { color: 15844367, author: { icon_url: iconURL }, thumbnail:{ url: iconURL }, description: '' }
+    let embedMsg = { color: 15844367, author: { icon_url: iconURL }, thumbnail:{ url: iconURL }, description: '', footer: { text: "Data updated" }, timestamp: mods.TTL }
     if(dataList?.swgohgg[uInfo.baseId]?.url){
       embedMsg.description += `[${uInfo.nameKey}](${dataList?.swgohgg[uInfo.baseId]?.url}best-mods)`
     }else{
@@ -62,6 +62,12 @@ module.exports = async(obj = {})=>{
       let modField = getModField(mods.stats[i])
       if(modField?.name && modField?.value) embedMsg.fields.push(modField)
     }
+    if(mods.unitStats){
+      let statsField = { name: 'Stats', value: 'stat : min/avg/max\n' }
+      for(let i in mods.unitStats) statsField.value += `${mods.unitStats[i].nameKey} : ${mods.unitStats[i].min}/${(Math.floor(mods.unitStats[i].total/mods.unitStats[i].count))}/${mods.unitStats[i].max}\n`
+      embedMsg.fields.push(statsField)
+    }
+
     embedMsg.fields.push({ name: 'Note:', value: 'Data is from top 1000 players in Kyber and limited to 5 for each category' })
     return { content: null, components: [], embeds: [embedMsg] }
   }catch(e){

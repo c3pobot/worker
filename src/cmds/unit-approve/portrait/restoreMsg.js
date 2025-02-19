@@ -10,13 +10,13 @@ module.exports = async(obj, opt = {})=>{
   let actionRow = [], votes = { type: 1, components : [] }, adminControl = { type: 1, components : [] }
   votes.components.push({
     type: 2,
-    label: `Yes (${poll.y})`,
+    label: `Yes (${poll?.yesVotes?.length || 0})`,
     style: 3,
     custom_id: JSON.stringify({ y: poll.y, n: poll.n, cmd: 'unit-vote', poll: opt.poll, value: 'yes' })
   })
   votes.components.push({
     type: 2,
-    label: `No (${poll.n})`,
+    label: `No (${poll?.noVotes?.length || 0})`,
     style: 4,
     custom_id: JSON.stringify({ y: poll.y, n: poll.n, cmd: 'unit-vote', poll: opt.poll, value: 'no' })
   })

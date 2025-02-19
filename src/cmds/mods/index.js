@@ -63,8 +63,8 @@ module.exports = async(obj = {})=>{
       if(modField?.name && modField?.value) embedMsg.fields.push(modField)
     }
     if(mods.unitStats){
-      let statsField = { name: 'Stats', value: 'stat : min/avg/max\n' }
-      for(let i in mods.unitStats) statsField.value += `${mods.unitStats[i].nameKey} : ${mods.unitStats[i].min}/${(Math.floor(mods.unitStats[i].total/mods.unitStats[i].count))}/${mods.unitStats[i].max}\n`
+      let statsField = { name: 'Stats', value: `stat\u1CBC\u1CBC\u1CBC: min / avg / max\n` }
+      for(let i in mods.unitStats) statsField.value += `${mods.unitStats[i].nameKey?.padEnd(7, '\u1CBC')}: ${numeral(mods.unitStats[i].min || 0).format('0,0')} / ${numeral(Math.floor(mods.unitStats[i].total/mods.unitStats[i].count)).format('0,0')} / ${numeral(mods.unitStats[i].max).format('0,0')}\n`
       embedMsg.fields.push(statsField)
     }
 

@@ -11,29 +11,30 @@ module.exports = async(obj = {}, opt = {})=>{
   let poll = (await mongo.find('unitPortraitPoll', { _id: opt.poll }))[0]
   if(!poll.status) return
 
-  let hasVoted = poll?.votes?.filter(x=>x == obj?.member?.user?.id).length || 0, msg2send = { content: 'You vote was recorded', flags: 64 }
+  let hasVoted = poll?.yesVotes?.filter(x=>x == obj?.member?.user?.id).length || 0, msg2send = { content: 'You vote was recorded', flags: 64 }
+  if(!hasVoted) hasVoted = poll?.noVotes?.filter(x=>x == obj?.member?.user?.id).length || 0
   if(hasVoted) msg2send.content = 'You have already voted'
-  if(hasVoted == 0){
+  if(!hasVoted){
     if(opt.value == 'yes'){
-      let yesVotes = await mongo.next('unitPortraitPoll', { _id: opt.poll }, 'y')
-      if(yesVotes >= 0) poll.y++
+      await mongo.push('unitPortraitPoll', { _id: opt.poll }, { yesVotes: obj?.member?.user?.id })
+      poll.yesVotes.push(obj?.member?.user?.id)
     }
     if(opt.value == 'no'){
-      let noVotes = await mongo.next('unitPortraitPoll', { _id: opt.poll }, 'n')
-      if(noVotes >= 0) poll.n++
+      await mongo.push('unitPortraitPoll', { _id: opt.poll }, { noVotes: obj?.member?.user?.id })
+      poll.noVotes.push(obj?.member?.user?.id)
     }
-    await mongo.push('unitPortraitPoll', { _id: opt.poll }, { votes: obj?.member?.user?.id })
+    //await mongo.push('unitPortraitPoll', { _id: opt.poll }, { votes: obj?.member?.user?.id })
   }
   let actionRow = [], votes = { type: 1, components : [] }, adminControl = { type: 1, components : [] }
   votes.components.push({
     type: 2,
-    label: `Yes (${poll.y})`,
+    label: `Yes (${poll?.yesVotes?.length || 0})`,
     style: 3,
     custom_id: JSON.stringify({ y: poll.y, n: poll.n, cmd: 'unit-vote', poll: opt.poll, value: 'yes' })
   })
   votes.components.push({
     type: 2,
-    label: `No (${poll.n})`,
+    label: `No (${poll?.noVotes?.length || 0})`,
     style: 4,
     custom_id: JSON.stringify({ y: poll.y, n: poll.n, cmd: 'unit-vote', poll: opt.poll, value: 'no' })
   })
@@ -51,6 +52,6 @@ module.exports = async(obj = {}, opt = {})=>{
   })
   actionRow.push(votes)
   actionRow.push(adminControl)
-  await replyMsg(obj, msg2send)
+  await replyMsg(obj, msg2send, 'POST')
   return { components: actionRow }
 }

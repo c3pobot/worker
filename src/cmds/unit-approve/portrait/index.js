@@ -33,5 +33,5 @@ module.exports = async(obj = {}, opt = {})=>{
   let status = await rabbitmq.add('assets', { cmd: 'save', id: `portrait-${poll.thumbnailName}`, img: poll.thumbnailName, dir: 'portrait', base64Img: poll?.base64Img })
   if(!status) return await restoreMsg(obj, opt)
   await mongo.set('unitPortraitPoll', { _id: opt.poll }, { status: false, approved: opt.value })
-  return { content: `portrait change was ${(opt.value == 'yes' ? 'Approved':'Rejected')} with poll results of ${poll.y} to ${poll.n}`, components: [] }
+  return { content: `portrait change was ${(opt.value == 'yes' ? 'Approved':'Rejected')} with poll results of ${poll?.yesVotes?.length || 0} to ${poll?.noVotes?.length || 0}`, components: [] }
 }

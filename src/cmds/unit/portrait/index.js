@@ -76,6 +76,6 @@ module.exports = async(obj = {}, opt = {})=>{
   })
   actionRow.push(votes)
   actionRow.push(adminControl)
-  await mongo.set('unitPortraitPoll', { _id: obj.id }, { baseId: uInfo.baseId, thumbnailName: uInfo.thumbnailName, image_link: image_link, base64Img: base64Img, y: 0, n: 0, dId: obj?.member?.user?.id, status: true, votes: [] })
+  await mongo.set('unitPortraitPoll', { _id: obj.id }, { baseId: uInfo.baseId, thumbnailName: uInfo.thumbnailName, image_link: image_link, base64Img: base64Img, dId: obj?.member?.user?.id, status: true, yesVotes: [], noVotes: [] })
   return { content: `Vote for the new portrait (right) to replace the current (left)\n<${image_link}>`, file: webImg, fileName: 'unit-'+uInfo.baseId+'.png', components: actionRow || [] }
 }

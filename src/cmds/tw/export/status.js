@@ -47,7 +47,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!showHomeDefense) guildData.optedInMember = []
   guildData.channelId = null
   let data = Buffer.from(JSON.stringify(guildData))
-  let msg2send = { content: 'TW data attached', file: data, fileName: `${gObj.data.guild.profile.id}-tw.json` }
+  let msg2send = { content: 'TW data attached', flags: 64, file: data, fileName: `${gObj.data.guild.profile.id}-tw.json` }
   if(!guildData?.homeGuild?.conflictStatus) msg2send.content += `\n Home guild defense has been removed. Check again after TW finishes.`
   await replyMsg(obj, msg2send, 'POST')
 }

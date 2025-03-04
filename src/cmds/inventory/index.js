@@ -6,7 +6,7 @@ Cmds.export = require('./export')
 Cmds.unit = require('./unit')
 Cmds.journey = require('./journey')
 Cmds.squad = require('./squad')
-
+Cmds['unequipped-mod-loadouts'] = require('./unequipped-mod-loadouts')
 const { replyError } = require('src/helpers')
 
 module.exports = async(obj = {})=>{

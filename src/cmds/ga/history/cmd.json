@@ -77,7 +77,7 @@
     {
       "type": 1,
       "name": "3v3",
-      "description": "pull last ga 5v5 history",
+      "description": "pull last ga 3v3 history",
       "options": [
         {
           "type": 4,

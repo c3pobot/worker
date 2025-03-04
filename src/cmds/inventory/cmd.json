@@ -136,6 +136,29 @@
             ]
           }
         ]
+      },
+      {
+        "type": 1,
+        "name": "unequipped-mod-loadouts",
+        "description": "find unequipped mods that are part of a loadout (requires google/ea_connect link)",
+        "options": [
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "required": false,
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
       }
     ]
   }

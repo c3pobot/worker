@@ -102,7 +102,7 @@ module.exports = async(obj = {})=>{
     pipeline.push({ $limit: +battleLimit })
     if(exclude_gl) searchString += `.*noAttackGl-`
     if(!leader) searchString += `.*noLead-`
-    if(singleUnit) searchString += `.*singleUnit-`
+    if(singleUnit) searchString += `.*singleDefender-`
 
     console.log(searchString)
     let payload = {_id: {$regex: searchString}, total: {$gte: +minBattles} }

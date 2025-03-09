@@ -12,7 +12,7 @@ module.exports = async(obj = {}, opt = {}, dObj, gaInfo)=>{
   let allyCode = dObj?.allyCode
   if(!allyCode) return { content: 'Your allyCode is not linked to your discord id' }
 
-  if(gaInfo) gaInfo = (await mongo.find('ga', {_id: allyCode.toString()}))[0]
+  if(!gaInfo) gaInfo = (await mongo.find('ga', {_id: allyCode.toString()}))[0]
   if(!gaInfo?.currentEnemy) return { content: 'You do not have a GA opponent configured' }
 
   if(!gaInfo?.playerId) gaInfo.playerId = dObj.playerId

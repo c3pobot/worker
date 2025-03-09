@@ -51,7 +51,7 @@ module.exports = async(obj = {}, msg2send, method = 'PATCH')=>{
     let hasPermission = checkPermissions(msg2send, method, new Set(obj?.channel?.botPerms || []))
     if(!hasPermission){
       log.debug(`I do not have permissions to reply thru the bot for guild ${obj.guild_id} in channel ${obj.channel_id}, using discord api`)
-      await sendWebHook(obj.token, { content: 'I do not have the correct permissions please make sure I have ViewChannel, EmbedLinks, AttachFiles and SendMessages permissions in this channel...' }, 'POST')
+      //await sendWebHook(obj.token, { content: 'I do not have the correct permissions please make sure I have ViewChannel, EmbedLinks, AttachFiles and SendMessages permissions in this channel...' }, 'POST')
       return await sendWebHook(obj.token, msg2send, method)
     }
     return await rabbitmq.notify({ cmd: method, msg: msg2send, sId: obj.guild_id, chId: obj.channel_id, msgId: msgId, podName: podName, token: obj.token }, podName, 'bot.msg')

@@ -84,35 +84,24 @@
         ]
       },
       {
-        "type": 2,
-        "name": "ga-clear",
-        "description": "clear ga history and counters (bot owner only)",
+        "type": 1,
+        "name": "subscriptions",
+        "description": "(Bot Owner only) Set server subscription roles",
         "options": [
           {
-            "type": 1,
-            "name": "history",
-            "description": "clear ga history for given season (bot owner only)",
-            "options": [
-              {
-                "type": 4,
-                "name": "season",
-                "description": "season to clear",
-                "required": true
-              }
-            ]
+            "type": 8,
+            "name": "vip",
+            "description": "role to add as vip to the bot"
           },
           {
-            "type": 1,
-            "name": "counters",
-            "description": "clear ga counters for given season (bot owner only)",
-            "options": [
-              {
-                "type": 4,
-                "name": "season",
-                "description": "season to clear",
-                "required": true
-              }
-            ]
+            "type": 8,
+            "name": "guild",
+            "description": "role to add as guild to the bot"
+          },
+          {
+            "type": 8,
+            "name": "shard",
+            "description": "role to add as shard to the bot"
           }
         ]
       },

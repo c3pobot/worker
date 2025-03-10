@@ -42,6 +42,13 @@ module.exports = async(obj = {})=>{
     await addJob(guilds[i]._id, guildCmds)
     gDeferedCount++
   }
+  if(botSettings?.botSID && (!guilds || guilds?.filter(x=>x._id == botSettings?.botSID).length == 0)){
+    let boCmds = JSON.parse(JSON.stringify(cmdObj['bo'])) || []
+    if(boCmds?.length > 0){
+      await addGuildCmd(botSettings?.botSID.toString(), boCmds, 'PUT')
+      gCount++;
+    }
+  }
   for(let i in payouts){
     if(guilds.filter(x=>x._id == payouts[i].sId).length > 0) continue;
     let shardCmds = JSON.parse(JSON.stringify(cmdObj.shard)) || []

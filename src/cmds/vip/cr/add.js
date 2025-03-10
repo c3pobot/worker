@@ -2,7 +2,7 @@
 const mongo = require('mongoclient')
 
 module.exports = async(obj = {}, opt = {})=>{
-  let msg2send = {content: 'You did not provide the correct information'}, limit = 100, cr = []
+  let msg2send = {content: 'You did not provide the correct information'}, limit = 100000, cr = []
   let trigger = opt.trigger?.value?.trim()?.toLowerCase()
   let response = opt.response?.value?.trim()
   let crca = +(opt.anywhere?.value || 0)

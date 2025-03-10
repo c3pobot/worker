@@ -5,6 +5,7 @@ Cmds['log-level'] = require('./log-level')
 Cmds.syncguild = require('./syncguild')
 Cmds.updatedata = require('./updatedata')
 Cmds.updateweather = require('./updateweather')
+Cmds.subscriptions = require('./subscriptions')
 const { checkBotOwner, replyError } = require('src/helpers')
 
 module.exports = async(obj = {})=>{

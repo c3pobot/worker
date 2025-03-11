@@ -4,17 +4,8 @@ const minio = require('src/minio')
 const fetch = require('node-fetch')
 
 const fetchHistory = async(playerId, mode)=>{
-  let fileName = `5v5/${playerId}.json`, bucket = 'ga-history'
-  if(mode === '3v3'){
-    bucket = 'ga-history-season-61'
-    fileName = `${playerId}-61-1-14-2025.json`
-  }
+  let fileName = `${mode}/${playerId}.json`, bucket = 'ga-history'
   return await minio.get(bucket, fileName)
-  /*
-  if(!GA_HIST_OBJECT_STORAGE_ENDPOINT) return
-  let res = await fetch(`${GA_HIST_OBJECT_STORAGE_ENDPOINT}:ga-history/${mode}/${playerId}.json`, { timeout: 30000, compress: true, method: 'GET' })
-  if(res?.headers?.get('Content-Type')?.includes('application/json') || res?.headers?.get('Content-Type')?.includes('binary/octet-stream')) return await res.json()
-  */
 }
 
 module.exports = async(playerId, mode)=>{

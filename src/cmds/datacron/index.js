@@ -9,14 +9,16 @@ module.exports = async(obj = {})=>{
     let datacronSet = opt['datacron-set']?.value || 'all'
     let datacronLvl = opt.level?.value || 3
     if(+datacronLvl >= 0){
-      if(datacronLvl > 9 ) datacronLvl = 9
+      if(datacronLvl > 15 ) datacronLvl = 15
     }else{
       datacronLvl = 3
     }
     if(!datacronSet || !datacronLvl) return { content: 'error with the provided input...' }
 
     let datacronList = await mongo.aggregate('datacronList', {expirationTimeMs: {$gte: +(Date.now())}}, [{$sort: {_id: -1}}])
+    let statMap = (await mongo.find('configMaps', { _id: 'statDefMap'}))[0]?.data
     if(!datacronList || datacronList?.length == 0) return { content: 'Error getting datacronList from db...' }
+    if(!statMap) return { content: 'Error getting statMap from db...' }
 
     let allyObj = await getPlayerAC(obj, opt)
     if(allyObj?.mentionError) return { content: 'that user does not have allyCode linked to discordId' }
@@ -40,7 +42,7 @@ module.exports = async(obj = {})=>{
     }
     if(!webData?.data || webData?.data?.length == 0) return { content: 'Error getting player datacrons' }
 
-    let webHtml = await getHTML(webData)
+    let webHtml = await getHTML(webData, statMap)
     if(!webHtml) return { content: 'Error getting html' }
 
     let webImg = await getImg(webHtml, obj.id, 1400, false)

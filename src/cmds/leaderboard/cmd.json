@@ -1,0 +1,56 @@
+{
+  "type": "public",
+  "worker": "oauth",
+  "cmd": {
+    "name": "leaderboard",
+    "description": "Show leaderboard (requires android/ea_connect link)",
+    "options": [
+      {
+        "type": 1,
+        "name": "fleet",
+        "description": "Get allyCodes for top 50 in fleet arena (requires android/ea_connect link)",
+        "options": [
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "required": false,
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "squad",
+        "description": "Get allyCodes for top 50 in squad arena (requires android/ea_connect link)",
+        "options": [
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "required": false,
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -6,7 +6,7 @@
     {
       "type": 3,
       "name": "option",
-      "description": "Squad, fleet (default is squad)",
+      "description": "Squad, fleet (default is fleet)",
       "required": false,
       "choices": [
         {

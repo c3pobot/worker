@@ -5,7 +5,7 @@ const getHTML = require('webimg').arena
 
 const { getImg } = require('src/helpers')
 
-module.exports = async(pObj = {}, type = 'char')=>{
+module.exports = async(pObj = {}, type = 'ship')=>{
   try{
     let arena = await getSquadInfo(pObj?.arena[type]?.squad, pObj.rosterUnit)
     if(!arena || arena?.length == 0) return { content: 'error calculating data' }

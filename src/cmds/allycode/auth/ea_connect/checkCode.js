@@ -7,17 +7,18 @@ const getIdentity = require('./getIdentity')
 const { v5: uuidv5 } = require('uuid')
 
 module.exports = async(obj = {}, opt = {}, allyCode, email, authCode, googleId)=>{
-  if(!authCode || !allyCode || !email) return { content: 'no authcode or allycode provided' }
+  let msgContent = '{0}\nThis could be caused by the updated terms and conditions on the webstore. Try going to the webstore and going thru authorization there, including getting a new code, than come back and try this command again.'
+  if(!authCode || !allyCode || !email) return { flags: 64, content: 'no authcode or allycode provided' }
 
   let cache = (await mongo.find('eaconnectCache', { _id: allyCode?.toString() }))[0]
-  mongo.del('eaconnectCache', {_id: allyCode?.toString() })
-  if(!cache || !cache?.initref || !cache?.executionId || !cache?.fId || !cache?.JSESSIONID) return { content: 'command timed out.' }
+  //mongo.del('eaconnectCache', {_id: allyCode?.toString() })
+  if(!cache || !cache?.initref || !cache?.executionId || !cache?.fId || !cache?.JSESSIONID) return { flags: 64, content: 'command timed out.' }
 
   let data = await getIdentity(cache, authCode)
-  if(!data?.auth || !data?.remid || !data._nx_mpcid || !data?.auth?.authToken || !data?.auth?.authId) return { content: 'error getting auth from code' }
+  if(!data?.auth || !data?.remid || !data._nx_mpcid || !data?.auth?.authToken || !data?.auth?.authId) return { flags: 64, content: msgContent.replace('{0}', 'error getting auth from code') }
 
   data.deviceId = uuidv5(data.auth.authId, uuidv5.URL)
-  if(!data.deviceId) return { content: 'error generating a UUID' }
+  if(!data.deviceId) return { flags: 64, content: 'error generating a UUID' }
 
   let identity = {
     auth: data.auth,
@@ -26,10 +27,10 @@ module.exports = async(obj = {}, opt = {}, allyCode, email, authCode, googleId)=
     platform: 'Android'
   }
   let pObj = await swgohClient.oauthPost('getInitialData', {}, identity)
-  if(!pObj?.player?.allyCode) return { content: 'error trying to get player data' }
+  if(!pObj?.player?.allyCode) return { flags: 64, content: 'error trying to get player data' }
   if(pObj.player.allyCode.toString() !== allyCode.toString()){
     log.error(`ea connect error: Requested: ${allyCode} From game: ${pObj.player.allyCode}`)
-    return { content: `the allyCode from the game did not match ${allyCode}. Make sure you are using the correct allyCode and email` }
+    return { flags: 64, content: `the allyCode from the game did not match ${allyCode}. Make sure you are using the correct allyCode and email` }
   }
   let encryptedToken = await swgohClient.Google.Encrypt(data.remid)
   await mongo.set('identity', { _id: identity.deviceId }, identity)

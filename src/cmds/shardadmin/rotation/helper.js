@@ -90,12 +90,10 @@ Cmds.getPlayers = async(shard = {}, pArray = [])=>{
             }
           }
         }
-        if(pObj){
-          let user = await getGuildMember(shard.sId, pArray[i].replace(/[<@!>]/g, ''))
-          if(user){
-            nPlayer.name = (user.nick ? user.nick:user.user.username)
-            nPlayer.discord = '<@'+user.user.id+'>'
-          }
+        let user = await getGuildMember(shard.sId, pArray[i].replace(/[<@!>]/g, ''))
+        if(user){
+          nPlayer.name = (user.nick ? user.nick:user.user.username)
+          nPlayer.discord = '<@'+user.user.id+'>'
         }
       }
       if(pArray[i].replace(/-/g, '') > 999999){

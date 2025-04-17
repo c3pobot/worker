@@ -15,10 +15,12 @@ module.exports = async(obj = {}, shard = {}, opt = [])=>{
     if(!rots[schedule].poOffSet) content += '**Note: There is no poOffSet for the rotation schedule.\nYou need to provide an allyCode or mention a user that has allyCode linked to discordId**'
     return { content: content }
   }
-
-  let guild = await GetGuild(shard.sId)
+  let guild = await getGuild(shard.sId)
   let content = '>>> '+(guild ? guild.name+' ':'')+'Shard rotation schedules\n```\n'
-  for(let i in rots) content += rots[i].id+' ('+(rots[i].players ? rots[i].players.length:0)+')\n'
+  for(let i in rots){
+    if(!rots[i]?.id) continue
+    content += rots[i].id+' ('+(rots[i].players ? rots[i].players.length:0)+')\n'
+  }
   content += '```'
   return { content: content }
 }

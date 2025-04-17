@@ -73,6 +73,7 @@ Cmds.forceMessage = (rObj = {})=>{
   sendMsg({chId: rObj.chId, sId: rObj.sId}, { content: msg2Send })
 }
 Cmds.getPlayers = async(shard = {}, pArray = [])=>{
+  let res = { players: [] }
   for(let i in pArray){
     pArray[i] = pArray[i].trim()
     let pObj, cachePlayer, nPlayer = {}

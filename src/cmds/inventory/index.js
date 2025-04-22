@@ -11,7 +11,7 @@ const { replyError } = require('src/helpers')
 
 module.exports = async(obj = {})=>{
   try{
-    if(obj.confirm?.resposne == 'no') return { content: 'command canceled...' }
+    if(obj.confirm?.response == 'no') return { content: 'command canceled...' }
 
     let tempCmd = obj.subCmdGroup || obj.subCmd, opt = obj.data?.options || {}, msg2send = { content: 'command not recongnized' }
     let pObj = await getData(obj, opt)

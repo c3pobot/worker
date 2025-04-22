@@ -1,0 +1,38 @@
+{
+  "type": "public",
+  "worker": "oauth",
+  "cmd": {
+    "name": "export",
+    "description": "export player data for other tools",
+    "options": [
+      {
+        "type": 1,
+        "name": "mods",
+        "description": "Export mods (requires android/ea_connect auth for un-equipped mods)",
+        "options": [
+          {
+            "type": 5,
+            "name": "equipped_only",
+            "description": "get equipped mods only"
+          },
+          {
+            "type": 3,
+            "name": "allycode_option",
+            "description": "primary or alt allycode",
+            "required": false,
+            "choices": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Alt",
+                "value": "alt"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

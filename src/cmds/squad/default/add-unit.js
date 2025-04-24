@@ -26,7 +26,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!pObj) pObj = { allyCode: +allyCode, units: [], nameKey: 'default units' }
   if(!pObj?.units) return { content: 'error getting data' }
 
-  if(pObj.units?.length >= 15) return { content: 'you can only add 15 units to the list' }
+  //if(pObj.units?.length >= 15) return { content: 'you can only add 15 units to the list' }
 
   if(pObj.units?.filter(x=>x.baseId === uInfo.baseId).length > 0) return { content: `${uInfo.nameKey} is already in default unit list for allyCode ${allyCode}` }
   let { gLevel, rLevel } = getRelicLevel(opt, 7, 13)

@@ -30,6 +30,7 @@ module.exports = async(obj = {}, opt = {})=>{
     getUnitDataCrons(gObj.member, cronDef),
     getUnitDataCrons(eObj.member, cronDef)
   ])
+  
   gCrons = gCrons?.value, eCrons = eCrons?.value
 
   if(!gCrons) return { content: 'error getting home guild datacrons' }

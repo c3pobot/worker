@@ -7,6 +7,10 @@ const { webHookFile, webHookMsg} = require('./discordmsg')
 
 const checkPermissions = (msg, method = 'PATCH', botPerms)=>{
   try{
+    if(!botPerms?.has('ReadMessageHistory')){
+      log.debug(`missing ReadMessageHistory permissions`)
+      return
+    }
     if(!botPerms?.has('ViewChannel')){
       log.debug(`missing ViewChannel permissions`)
       return

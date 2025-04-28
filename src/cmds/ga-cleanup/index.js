@@ -104,7 +104,6 @@ module.exports = async(obj = {})=>{
     if(!leader) searchString += `.*noLead-`
     if(singleUnit) searchString += `.*singleDefender-`
 
-    console.log(searchString)
     let payload = {_id: {$regex: searchString}, total: {$gte: +minBattles} }
     //if(exclude_gl) payload.attackGl = false
     //if(singleUnit) payload.defendUnitCount = 1

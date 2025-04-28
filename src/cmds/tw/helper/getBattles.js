@@ -3,7 +3,7 @@ const formatDate = (timestamp)=>{
   return (new Date(+timestamp)).toLocaleString('en-US', {timeZone: 'America/New_York'})
 }
 module.exports = (events = [], squad = {})=>{
-  let battleStart = events.filter(x=>x.data[0]?.payload?.warSquad?.squadId === squad.squadId && x.data[0]?.payload?.warSquad?.squadStatus === 'SQUADLOCKED').map(x=>{
+  let battleStart = events.filter(x=>x.data[0]?.payload?.warSquad?.squadId === squad.squadId && x.data[0]?.payload?.warSquad?.squadStatus === 'SQUAD_LOCKED').map(x=>{
     return Object.assign({}, {
       playerId: x.authorId,
       playerName: x.authorName,
@@ -15,7 +15,7 @@ module.exports = (events = [], squad = {})=>{
       squadStatus: x.data[0]?.payload?.warSquad?.squadStatus
     })
   })
-  let battleFinish = events.filter(x=>x.data[0]?.payload?.warSquad?.squadId === squad.squadId && x.data[0]?.payload?.warSquad?.squadStatus !== 'SQUADLOCKED').map(x=>{
+  let battleFinish = events.filter(x=>x.data[0]?.payload?.warSquad?.squadId === squad.squadId && x.data[0]?.payload?.warSquad?.squadStatus !== 'SQUAD_LOCKED').map(x=>{
     return Object.assign({}, {
       playerId: x.authorId,
       playerName: x.authorName,
@@ -45,7 +45,7 @@ module.exports = (events = [], squad = {})=>{
     let tempObj = {...battleStart[i],...complete}
     tempObj.playerPreloaded = false
     tempObj.dateTime = formatDate(battleStart[i].timestamp)
-    if(tempObj.squadStatus === 'SQUADAVAILABLE' && tempObj.finsihTM && !tempObj.startTM){
+    if(tempObj.squadStatus === 'SQUAD_AVAILABLE' && tempObj.finsihTM && !tempObj.startTM){
       if(tempObj.startUnits === tempObj.finishUnits && !squad.preload){
         tempObj.playerPreloaded = true
         squad.preload = true

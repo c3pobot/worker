@@ -85,11 +85,11 @@ module.exports = async(obj = {}, method, dObj = {}, payload)=>{
     loginConfirm = 'no'
   }
   let identity = await getIdentity(dObj.uId, dObj.type, forceNewIdentity)
-  if(!identity) return await confirmButton(obj, 'Using this command will temporarly log you out of the game on your device.\n Are you sure you want to do this?')
+  if(!identity) return await confirmButton(obj, 'Using this command will temporarily log you out of the game on your device.\n Are you sure you want to do this?')
   if(identity?.error) return {status: 'error', error: 'invalid_grant'}
   if(identity?.description) return {status: 'error', error: identity?.description}
   if(identity?.auth?.authId && identity?.auth?.authToken) data = await processAPIRequest(method, payload, identity)
-  if(loginConfirm !== 'no' && data?.code && reAuthCodes[data?.code]) return await confirmButton(obj, 'Using this command will temporarly log you out of the game on your device.\n Are you sure you want to do this?')
+  if(loginConfirm !== 'no' && data?.code && reAuthCodes[data?.code]) return await confirmButton(obj, 'Using this command will temporarily log you out of the game on your device.\n Are you sure you want to do this?')
   /*
   if((!data || (data?.code && reAuthCodes[data?.code])) && loginConfirm !== 'no'){
     await confirmButton(obj, msg2send)

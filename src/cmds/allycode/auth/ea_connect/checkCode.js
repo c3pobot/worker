@@ -7,7 +7,7 @@ const getIdentity = require('./getIdentity')
 const { v5: uuidv5 } = require('uuid')
 
 module.exports = async(obj = {}, opt = {}, allyCode, email, authCode, googleId)=>{
-  let msgContent = '{0}\nThis could be caused by the updated terms and conditions on the webstore. Try going to the webstore and going thru authorization there, including getting a new code, than come back and try this command again.'
+  let msgContent = '{0}\nThis could be caused by the updated terms and conditions on the webstore. Go to the webstore and log out and go thru the entire login process at the store, including getting a new code, so you can accept the new terms. You must log out, auto login / remember me login will not show you the new terms page to accept.\n Then come back and try this command again.'
   if(!authCode || !allyCode || !email) return { flags: 64, content: 'no authcode or allycode provided' }
 
   let cache = (await mongo.find('eaconnectCache', { _id: allyCode?.toString() }))[0]

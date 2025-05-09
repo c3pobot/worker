@@ -18,7 +18,7 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!gObj?.data?.guild) return { content: 'Error getting guild data...'}
 
   if(!gObj?.data?.guild?.territoryWarStatus || gObj?.data?.guild?.territoryWarStatus?.length === 0) return { content: 'There is not a TW in progress'}
-  if(!gObj.data.guild.territoryWarStatus[0].awayGuild) return { content: 'There is not a TW in progress'}
+  //if(!gObj.data.guild.territoryWarStatus[0].awayGuild) return { content: 'There is not a TW in progress'}
 
   let guildData = gObj.data.guild.territoryWarStatus[0]
 
@@ -43,8 +43,10 @@ module.exports = async(obj = {}, opt = {})=>{
       guildData.homeGuild.conflictStatus[i].zoneStatus.commandMessage = null
     }
   }
-  for(let i in guildData?.awayGuild?.conflictStatus) guildData.awayGuild.conflictStatus[i].zoneStatus.channelId = null
-  if(!showHomeDefense) guildData.optedInMember = []
+  if(guildData?.awayGuild){
+    for(let i in guildData?.awayGuild?.conflictStatus) guildData.awayGuild.conflictStatus[i].zoneStatus.channelId = null
+  }
+  //if(!showHomeDefense) guildData.optedInMember = []
   guildData.channelId = null
   let data = Buffer.from(JSON.stringify(guildData))
   let msg2send = { content: 'TW data attached', flags: 64, file: data, fileName: `${gObj.data.guild.profile.id}-tw.json` }

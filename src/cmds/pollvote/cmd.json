@@ -1,0 +1,8 @@
+{
+  "type": "private",
+  "worker": "discord",
+  "hidden": true,
+  "cmd": {
+    "name": "pollvote"
+  }
+}

@@ -5,6 +5,29 @@
         "name": "tw",
         "description": "tw info",
         "options": [
+          {
+              "type": 1,
+              "name": "banners",
+              "description": "Get current banner count by member (requires ea_connect/android link)",
+              "options": [
+                  {
+                      "type": 3,
+                      "name": "allycode_option",
+                      "description": "primary or alt allycode",
+                      "required": false,
+                      "choices": [
+                          {
+                              "name": "Primary",
+                              "value": "primary"
+                          },
+                          {
+                              "name": "Alt",
+                              "value": "alt"
+                          }
+                      ]
+                  }
+              ]
+          },
             {
                 "type": 1,
                 "name": "status",
@@ -477,7 +500,7 @@
                             }
                         ]
                     }
-                  ]                
+                  ]
                 }
               ]
             }

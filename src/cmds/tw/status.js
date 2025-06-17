@@ -3,7 +3,7 @@ const mongo = require('mongoclient')
 const twStats = require('./helper/twStats')
 const getHtml = require('webimg').tw
 
-const { getDiscordAC, getImg } = require('src/helpers')
+const { getDiscordAC, getImg, replyTokenError } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
 
 module.exports = async(obj = {}, opt = {})=>{

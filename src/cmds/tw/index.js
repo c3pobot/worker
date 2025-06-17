@@ -3,6 +3,7 @@ const PRIVATE_WORKER = process.env.PRIVATE_WORKER
 const rabbitmq = require('src/rabbitmq')
 const Cmds = {}
 Cmds['attack-log'] = require('./attack-log')
+Cmds.banners = require('./banners')
 Cmds.export = require('./export')
 Cmds.defense = require('./defense')
 Cmds.opponent = require('./opponent')

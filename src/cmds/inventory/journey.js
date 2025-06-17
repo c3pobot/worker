@@ -17,7 +17,7 @@ module.exports = async(obj = {}, opt = {}, pObj = {})=>{
   if(!guideTemplate) return { content: 'error finding guide '+guideId }
 
   let squadData = await checkGuide(guideTemplate, pObj?.inventory?.unit)
-  await mongo.set('tempCache', { _id: 'guideUnits'}, squadData)
+  //await mongo.set('tempCache', { _id: 'guideUnits'}, squadData)
   if(!squadData?.units) return { content: 'Error getting guide requirements' }
 
   let guideUnits = squadData.units.filter(x=>x.notMet && x.combatType === 1)

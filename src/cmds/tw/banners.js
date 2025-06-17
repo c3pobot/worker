@@ -21,9 +21,16 @@ module.exports = async(obj = {}, opt = {})=>{
   if(!gObj?.data?.guild?.territoryWarStatus || gObj?.data?.guild?.territoryWarStatus?.length === 0) return { content: 'There is not a TW in progress'}
   if(!gObj.data.guild.territoryWarStatus[0].awayGuild) return { content: 'There is not a TW in progress'}
 
-
-  let playerStat = gObj?.data?.guild?.territoryWarStatus[0]?.currentStat?.find(x=>x.mapStatId == 'stars')?.playerStat
-  let joined = gObj?.data?.guild?.territoryWarStatus[0]?.optedInMember?.map(x=>x.memberId)
+  
+  let guildData = gObj.data.guild.territoryWarStatus[0]
+  let conflictStatus = guildData?.homeGuild?.conflictStatus || []
+  let defenseSet = 0, defenseTotal = 0
+  for(let i in conflictStatus){
+    defenseSet += +(conflictStatus[i]?.squadCount || 0)
+    defenseTotal += +(conflictStatus[i]?.squadCapacity || 0)
+  }
+  let playerStat = guildData?.currentStat?.find(x=>x.mapStatId == 'stars')?.playerStat
+  let joined = guildData?.optedInMember?.map(x=>x.memberId)
   let member = gObj?.data?.guild?.member.filter(x=>x.memberLevel !== 1).map(x=>{
     return {
       playerId: x.playerId,
@@ -44,8 +51,9 @@ module.exports = async(obj = {}, opt = {})=>{
   let embedMsg = {
     color: 15844367,
     title: `${gObj.data.guild.profile?.name} TW Total Banner Count (${joined?.length})`,
-    description: '```\n'
+    description: `Defense ${defenseSet}/${defenseTotal}`
   }
+  embedMsg.description += '\n```\n'
   for(let i in scores){
     embedMsg.description += `${scores[i].score?.toString()?.padStart(3, ' ')} : ${scores[i].name}\n`
   }

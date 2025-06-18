@@ -33,7 +33,6 @@ module.exports = async(obj = {}, opt = {})=>{
 
   guildData.currentStat = battleStats.data.currentStat
 
-  await mongo.set('webCache', { _id: "twdata" }, { data: guildData })
   let conflictStatus = guildData?.homeGuild?.conflictStatus || []
   let defenseSet = 0, defenseTotal = 0
   for(let i in conflictStatus){

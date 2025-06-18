@@ -3,6 +3,7 @@ const Cmds = {}
 
 Cmds.adminNotAuth = require('./adminNotAuth')
 Cmds.addShardCmds = require('./addShardCmds')
+Cmds.apiFetch = require('./apiFetch')
 Cmds.arrayToObject = require('./arrayToObject')
 
 Cmds.botRequest = require('./botRequest')
